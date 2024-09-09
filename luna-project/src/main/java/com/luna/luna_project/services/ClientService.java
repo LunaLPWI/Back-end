@@ -1,10 +1,11 @@
 package com.luna.luna_project.services;
-
+import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.ClientDTO;
+import com.luna.luna_project.exceptions.InvalidCepException;
 import com.luna.luna_project.mapper.ClientMapper;
+import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.repositories.ClientRepository;
-import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,19 +13,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
 public class ClientService {
-
     @Autowired
     private ClientRepository clientRepository;
-
     @Autowired
     private ClientMapper clientMapper;
 
-    public ClientDTO saveClient(@Valid ClientDTO clientDTO) {
+    @Autowired
+    private ViaCepService viaCepService;
+
+    public ClientDTO saveClient(ClientDTO clientDTO, AddressDTO addressDTO) {
+        if (existsCpf(clientDTO.cpf())) {
+            throw new RuntimeException("CPF já existe.");
+        }
+        if (!viaCepService.isCepValid(clientDTO.address().getCep())) {
+            throw new InvalidCepException("CEP não existe ou está inválido.");
+        }
+        Address address = viaCepService.saveAddress(addressDTO);
         Client client = clientMapper.clientDTOtoClient(clientDTO);
+        client.setAddress(address);
         Client savedClient = clientRepository.save(client);
+
         return clientMapper.clientToClientDTO(savedClient);
     }
 

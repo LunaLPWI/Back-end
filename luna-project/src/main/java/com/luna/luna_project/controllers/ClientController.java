@@ -1,6 +1,5 @@
 package com.luna.luna_project.controllers;
 
-
 import com.luna.luna_project.dtos.ClientDTO;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.services.ClientService;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
@@ -27,7 +25,6 @@ public class ClientController {
         return ResponseEntity.ok().body(clients);
     }
 
-
     @GetMapping("/search-by-cpf/{cpf}")
     public ResponseEntity<ClientDTO> searchClientByCpf(@PathVariable String cpf) {
         ClientDTO client = clientService.searchClientByCpf(cpf);
@@ -39,13 +36,12 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientDTO> saveClient(@RequestBody @Valid ClientDTO clientDTO) {
-        if (clientService.existsCpf(clientDTO.cpf())){
+        if (clientService.existsCpf(clientDTO.cpf())) {
             return ResponseEntity.status(409).build();
         }
-        ClientDTO client = clientService.saveClient(clientDTO);
+        ClientDTO client = clientService.saveClient(clientDTO, clientDTO.address());
         return ResponseEntity.ok().body(client);
     }
-
 
     @DeleteMapping("/delete-by-cpf/{cpf}")
     public ResponseEntity<String> deleteClientByCpf(@PathVariable String cpf) {
