@@ -1,4 +1,5 @@
 package com.luna.luna_project.services;
+
 import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.ClientDTO;
 import com.luna.luna_project.exceptions.InvalidCepException;
@@ -12,11 +13,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
 @Service
 public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
+
     @Autowired
     private ClientMapper clientMapper;
 
@@ -44,7 +48,7 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
-    public Boolean existsCpf(String cpf){
+    public Boolean existsCpf(String cpf) {
         return clientRepository.existsByCpf(cpf);
     }
 
@@ -53,8 +57,17 @@ public class ClientService {
         return clientMapper.clientToClientDTO(client);
     }
 
+    public ClientDTO searchClientById(Long id) {
+        Optional<Client> clientOptional = clientRepository.findById(id);
+        if (clientOptional.isPresent()) {
+            return clientMapper.clientToClientDTO(clientOptional.get());
+        } else {
+            return null; // Or throw an exception if preferred
+        }
+    }
+
     @Transactional
-    public void deleteClient(String cpf){
+    public void deleteClient(String cpf) {
         Client client = clientRepository.findByCpf(cpf);
         if (client != null) {
             clientRepository.delete(client);
