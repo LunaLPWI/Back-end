@@ -27,6 +27,7 @@ public class ClientService {
     @Autowired
     private ViaCepService viaCepService;
 
+
     public ClientDTO saveClient(ClientDTO clientDTO, AddressDTO addressDTO) {
         if (existsCpf(clientDTO.cpf())) {
             throw new RuntimeException("CPF já existe.");
@@ -36,6 +37,7 @@ public class ClientService {
         }
         Address address = viaCepService.saveAddress(addressDTO);
         Client client = clientMapper.clientDTOtoClient(clientDTO);
+
         client.setAddress(address);
         Client savedClient = clientRepository.save(client);
 
@@ -59,11 +61,7 @@ public class ClientService {
 
     public ClientDTO searchClientById(Long id) {
         Optional<Client> clientOptional = clientRepository.findById(id);
-        if (clientOptional.isPresent()) {
-            return clientMapper.clientToClientDTO(clientOptional.get());
-        } else {
-            return null;
-        }
+        return clientOptional.map(client -> clientMapper.clientToClientDTO(client)).orElse(null);
     }
 
     @Transactional
@@ -75,4 +73,24 @@ public class ClientService {
             throw new ValidationException("Cliente com CPF " + cpf + " não encontrado.");
         }
     }
+
+    public List<ClientDTO> sortClientsByName() {
+        List<ClientDTO> clients = searchClients();
+        bubbleSort(clients);
+        return clients;
+    }
+
+    private void bubbleSort(List<ClientDTO> clients) {
+        int n = clients.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 1; j < n - i; j++) {
+                if (clients.get(j - 1).name().compareTo(clients.get(j).name()) > 0) {
+                    ClientDTO temp = clients.get(j);
+                    clients.set(j, clients.get(j - 1));
+                    clients.set(j - 1, temp);
+                }
+            }
+        }
+    }
+
 }

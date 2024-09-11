@@ -67,4 +67,9 @@ public class ClientController {
         }
         return ResponseEntity.ok().body(client);
     }
+
+    @GetMapping("/sorted")
+    public List<ClientDTO> getSortedClients() {
+        return clientService.sortClientsByName();
+    }
 }

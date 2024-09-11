@@ -14,4 +14,6 @@ public class Client {
     @OneToOne
     @JoinColumn(name = "address_id_address", nullable = false)
     private Address address;
+    private String distance;
+    private Double duration;
 }
