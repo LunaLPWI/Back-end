@@ -62,7 +62,7 @@ public class ClientService {
         if (clientOptional.isPresent()) {
             return clientMapper.clientToClientDTO(clientOptional.get());
         } else {
-            return null; // Or throw an exception if preferred
+            return null;
         }
     }
 
