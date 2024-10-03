@@ -10,10 +10,10 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String email;
+    private String password;
     private String cpf;
     @OneToOne
     @JoinColumn(name = "address_id_address", nullable = false)
     private Address address;
-    private String distance;
-    private Double duration;
 }

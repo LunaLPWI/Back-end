@@ -1,6 +1,8 @@
 package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.dtos.ClientDTO;
+import com.luna.luna_project.dtos.ClientLoginDTO;
+import com.luna.luna_project.dtos.ClientTokenDTO;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.services.ClientService;
 import jakarta.validation.Valid;
@@ -38,7 +40,7 @@ public class ClientController {
     }
 
     // Cria um novo cliente
-    @PostMapping
+    @PostMapping("/save-client")
     public ResponseEntity<ClientDTO> saveClient(@RequestBody @Valid ClientDTO clientDTO) {
         if (clientService.existsCpf(clientDTO.cpf())) {
             return ResponseEntity.status(409).build(); // Conflict - CPF já existente
@@ -46,6 +48,15 @@ public class ClientController {
         ClientDTO client = clientService.saveClient(clientDTO, clientDTO.address());
         return ResponseEntity.ok().body(client);
     }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<ClientTokenDTO> login(@RequestBody ClientLoginDTO usuarioLoginDto) {
+        ClientTokenDTO usuarioTokenDto = this.clientService.autenticar(usuarioLoginDto);
+
+        return ResponseEntity.status(200).body(usuarioTokenDto);
+    }
+
 
     // Deleta cliente por CPF usando @RequestParam
     @DeleteMapping("/delete-by-cpf")
