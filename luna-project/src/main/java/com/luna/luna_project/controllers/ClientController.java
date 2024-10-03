@@ -17,7 +17,7 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
-    // Busca todos os clientes
+
     @GetMapping
     public ResponseEntity<List<ClientDTO>> searchClients() {
         List<ClientDTO> clients = clientService.searchClients();
@@ -27,7 +27,7 @@ public class ClientController {
         return ResponseEntity.ok().body(clients);
     }
 
-    // Busca cliente por CPF usando @RequestParam
+
     @GetMapping("/search-by-cpf")
     public ResponseEntity<ClientDTO> searchClientByCpf(@RequestParam String cpf) {
         ClientDTO client = clientService.searchClientByCpf(cpf);
@@ -37,17 +37,17 @@ public class ClientController {
         return ResponseEntity.ok().body(client);
     }
 
-    // Cria um novo cliente
+
     @PostMapping
     public ResponseEntity<ClientDTO> saveClient(@RequestBody @Valid ClientDTO clientDTO) {
         if (clientService.existsCpf(clientDTO.cpf())) {
-            return ResponseEntity.status(409).build(); // Conflict - CPF já existente
+            return ResponseEntity.status(409).build();
         }
         ClientDTO client = clientService.saveClient(clientDTO, clientDTO.address());
         return ResponseEntity.ok().body(client);
     }
 
-    // Deleta cliente por CPF usando @RequestParam
+
     @DeleteMapping("/delete-by-cpf")
     public ResponseEntity<String> deleteClientByCpf(@RequestParam String cpf) {
         try {
@@ -58,12 +58,12 @@ public class ClientController {
         }
     }
 
-    // Busca cliente por ID usando @PathVariable
+
     @GetMapping("/{id}")
     public ResponseEntity<ClientDTO> searchClientById(@PathVariable Long id) {
         ClientDTO client = clientService.searchClientById(id);
         if (client == null) {
-            return ResponseEntity.notFound().build(); // 404 Not Found
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(client);
     }
