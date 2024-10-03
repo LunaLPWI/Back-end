@@ -55,8 +55,8 @@ public class ClientService {
 
         client.setAddress(address);
 
-        String senhaCriptografada = passwordEncoder.encode(client.getPassword());
-        client.setPassword(senhaCriptografada);
+        String encryptedPassword  = passwordEncoder.encode(client.getPassword());
+        client.setPassword(encryptedPassword);
 
         Client savedClient = clientRepository.save(client);
 
