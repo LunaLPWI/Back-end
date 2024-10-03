@@ -17,7 +17,6 @@ public class AuthenticationService implements UserDetailsService {
     @Autowired
     private ClientRepository clientRepository;
 
-    // Método da interface implementada
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 

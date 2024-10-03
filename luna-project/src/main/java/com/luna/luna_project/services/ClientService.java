@@ -54,6 +54,10 @@ public class ClientService {
         Client client = clientMapper.clientDTOtoClient(clientDTO);
 
         client.setAddress(address);
+
+        String senhaCriptografada = passwordEncoder.encode(client.getPassword());
+        client.setPassword(senhaCriptografada);
+
         Client savedClient = clientRepository.save(client);
 
         return clientMapper.clientToClientDTO(savedClient);
