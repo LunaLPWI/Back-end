@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/process-payment")
+@CrossOrigin(origins = "http://127.0.0.1:5174")
 public class PaymentController {
 
     @PostMapping

@@ -1,8 +1,10 @@
 package com.luna.luna_project.models;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class AssinaturaRequest {
     private String back_url;
     private String reason;
@@ -12,6 +14,7 @@ public class AssinaturaRequest {
     private String status = "authorized";
 
     @Data
+    @Builder
     public static class AutoRecurring {
         private int frequency;
         private String frequency_type;

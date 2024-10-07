@@ -7,20 +7,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 
-    @RestController
-    @RequestMapping("https://api.mercadopago.com")
+
+@RestController
+    @RequestMapping("/preapproval")
+    @CrossOrigin(origins = "http://127.0.0.1:5174")
     public class AssinaturaController {
 
         @Autowired
         private AssinaturaService assinaturaService;
 
-        @PostMapping("/preapproval")
+        @PostMapping
         public ResponseEntity<?> criarAssinatura(@RequestBody AssinaturaRequest request) {
+            System.out.println("to aq");
             try {
-                return ResponseEntity.ok(assinaturaService.criarAssinatura(request));
+                Object resultado = assinaturaService.criarAssinatura(request);
+                return ResponseEntity.ok(Map.of("message", "Assinatura criada com sucesso", "data", resultado));
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error Controller", e.getMessage()));
             }
         }
 
