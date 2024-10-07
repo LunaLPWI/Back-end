@@ -1,29 +1,28 @@
 package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.dtos.PaymentRequestDTO;
+import com.luna.luna_project.models.AssinaturaRequest;
+import com.luna.luna_project.services.AssinaturaService;
+import com.luna.luna_project.services.PaymentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/process-payment")
-@CrossOrigin(origins = "http://127.0.0.1:5174")
+@RequestMapping("/preapproval")
+@CrossOrigin(origins = "http://127.0.0.1:5173")
 public class PaymentController {
 
-    @PostMapping
-    public ResponseEntity<String> processPayment(@RequestBody PaymentRequestDTO paymentRequest) {
-        // Aqui você pode processar o pagamento
-        System.out.println("Token: " + paymentRequest.getToken());
-        System.out.println("Issuer ID: " + paymentRequest.getIssuer_id());
-        System.out.println("Payment Method ID: " + paymentRequest.getPayment_method_id());
-        System.out.println("Transaction Amount: " + paymentRequest.getTransaction_amount());
-        System.out.println("Installments: " + paymentRequest.getInstallments());
-        System.out.println("Description: " + paymentRequest.getDescription());
-        System.out.println("Payer Email: " + paymentRequest.getPayer().getEmail());
-        System.out.println("Payer Identification Type: " + paymentRequest.getPayer().getIdentification().getType());
-        System.out.println("Payer Identification Number: " + paymentRequest.getPayer().getIdentification().getNumber());
+    @Autowired
+    private PaymentService paymentService;
 
-        // Retornar uma resposta apropriada
-        return ResponseEntity.ok("Payment processed successfully");
+    @PostMapping
+    public ResponseEntity<AssinaturaRequest> processPayment(@RequestBody PaymentRequestDTO paymentRequest) {
+        AssinaturaRequest assinaturaRequest = AssinaturaService.criarAssinatura(paymentRequest);
+
+
+        return ResponseEntity.ok(assinaturaRequest);
     }
+
 }
 
