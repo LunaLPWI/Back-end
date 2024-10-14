@@ -114,7 +114,7 @@ public class ClientService {
 
 
 
-    public ClientTokenDTO autenticar(ClientLoginDTO clientLoginDTO) {
+    public ClientTokenDTO authenticate(ClientLoginDTO clientLoginDTO) {
 
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
                 clientLoginDTO.getEmail(), clientLoginDTO.getPassword());
