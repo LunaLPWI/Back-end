@@ -2,6 +2,9 @@ package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.dtos.ClientDTO;
 import com.luna.luna_project.exceptions.ValidationException;
+import com.luna.luna_project.mapper.ClientMapper;
+import com.luna.luna_project.mapper.ClientMapperImpl;
+import com.luna.luna_project.models.Client;
 import com.luna.luna_project.services.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,8 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private ClientMapperImpl clientMapperImpl;
 
 
     @GetMapping
@@ -61,11 +66,12 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ClientDTO> searchClientById(@PathVariable Long id) {
-        ClientDTO client = clientService.searchClientById(id);
+        Client client = clientService.searchClientById(id);
+        ClientDTO clientDTO = clientMapperImpl.clientToClientDTO(client);
         if (client == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(client);
+        return ResponseEntity.ok().body(clientDTO);
     }
 
     @GetMapping("/sorted")

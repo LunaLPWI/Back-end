@@ -59,9 +59,9 @@ public class ClientService {
         return clientMapper.clientToClientDTO(client);
     }
 
-    public ClientDTO searchClientById(Long id) {
+    public Client searchClientById(Long id) {
         Optional<Client> clientOptional = clientRepository.findById(id);
-        return clientOptional.map(client -> clientMapper.clientToClientDTO(client)).orElse(null);
+        return clientOptional.orElse(null); // Retorna null se o cliente não for encontrado
     }
 
     @Transactional
@@ -79,6 +79,7 @@ public class ClientService {
         bubbleSort(clients);
         return clients;
     }
+
 
     private void bubbleSort(List<ClientDTO> clients) {
         int n = clients.size();
