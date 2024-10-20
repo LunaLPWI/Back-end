@@ -7,10 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.br.CPF;
-@Data
+
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public record ClientDTO(
         Long id,
         @NotBlank(message = "O campo name não estar em branco.")
