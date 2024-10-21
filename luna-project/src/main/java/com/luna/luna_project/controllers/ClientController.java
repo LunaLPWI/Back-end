@@ -1,9 +1,9 @@
 package com.luna.luna_project.controllers;
 
-import com.luna.luna_project.dtos.ClientDTO;
+import com.luna.luna_project.dtos.client.ClientRequestDTO;
+import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.mapper.ClientMapper;
-import com.luna.luna_project.mapper.ClientMapperImpl;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.services.ClientService;
 import jakarta.validation.Valid;
@@ -19,13 +19,12 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
-    @Autowired
-    private ClientMapperImpl clientMapperImpl;
+
 
 
     @GetMapping
-    public ResponseEntity<List<ClientDTO>> searchClients() {
-        List<ClientDTO> clients = clientService.searchClients();
+    public ResponseEntity<List<ClientResponseDTO>> searchClients() {
+        List<ClientResponseDTO> clients = clientService.searchClients();
         if (clients.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -34,8 +33,8 @@ public class ClientController {
 
 
     @GetMapping("/search-by-cpf")
-    public ResponseEntity<ClientDTO> searchClientByCpf(@RequestParam String cpf) {
-        ClientDTO client = clientService.searchClientByCpf(cpf);
+    public ResponseEntity<ClientResponseDTO> searchClientByCpf(@RequestParam String cpf) {
+        ClientResponseDTO client = clientService.searchClientByCpf(cpf);
         if (client == null) {
             return ResponseEntity.noContent().build();
         }
@@ -44,12 +43,14 @@ public class ClientController {
 
 
     @PostMapping
-    public ResponseEntity<ClientDTO> saveClient(@RequestBody @Valid ClientDTO clientDTO) {
-        if (clientService.existsCpf(clientDTO.cpf())) {
+    public ResponseEntity<ClientResponseDTO> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
+        System.out.println(clientDTO);
+        if (clientService.existsCpf(clientDTO.getCpf())) {
             return ResponseEntity.status(409).build();
         }
-        ClientDTO client = clientService.saveClient(clientDTO, clientDTO.address());
-        return ResponseEntity.ok().body(client);
+        Client client = clientService.saveClient(clientDTO, clientDTO.getAddress());
+        ClientResponseDTO clientResponseDTO = ClientMapper.clientToClientDTOResponse(client);
+        return ResponseEntity.ok().body(clientResponseDTO);
     }
 
 
@@ -65,9 +66,9 @@ public class ClientController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientDTO> searchClientById(@PathVariable Long id) {
+    public ResponseEntity<ClientRequestDTO> searchClientById(@PathVariable Long id) {
         Client client = clientService.searchClientById(id);
-        ClientDTO clientDTO = clientMapperImpl.clientToClientDTO(client);
+        ClientRequestDTO clientDTO = ClientMapper.clientToClientDTORequest(client);
         if (client == null) {
             return ResponseEntity.notFound().build();
         }
@@ -75,7 +76,12 @@ public class ClientController {
     }
 
     @GetMapping("/sorted")
-    public List<ClientDTO> getSortedClients() {
+    public List<ClientResponseDTO> getSortedClients() {
         return clientService.sortClientsByName();
+    }
+    @PatchMapping("/redefine-password")
+    public ResponseEntity<ClientResponseDTO> redefinePassword(@RequestParam Long id,  @RequestParam String password) {
+       Client client =  clientService.redefinePassword(id, password);
+       return ResponseEntity.ok(ClientMapper.clientToClientDTOResponse(client));
     }
 }

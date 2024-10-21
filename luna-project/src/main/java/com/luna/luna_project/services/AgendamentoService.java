@@ -3,18 +3,15 @@ package com.luna.luna_project.services;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.models.Agendamento;
 import com.luna.luna_project.repositories.AgendamentoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class AgendamentoService {
-    @Autowired
+
     private AgendamentoRepository agendamentoRepository;
 
-    @Autowired
-    private ClientService clientService;
 
 
     public Boolean existsById(Long id) {

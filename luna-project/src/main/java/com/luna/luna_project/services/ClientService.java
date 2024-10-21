@@ -1,7 +1,8 @@
 package com.luna.luna_project.services;
 
 import com.luna.luna_project.dtos.AddressDTO;
-import com.luna.luna_project.dtos.ClientDTO;
+import com.luna.luna_project.dtos.client.ClientRequestDTO;
+import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.exceptions.InvalidCepException;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.models.Address;
@@ -22,41 +23,50 @@ public class ClientService {
     private ClientRepository clientRepository;
 
     @Autowired
-    private ClientMapper clientMapper;
-
-    @Autowired
     private ViaCepService viaCepService;
 
 
-    public ClientDTO saveClient(ClientDTO clientDTO, AddressDTO addressDTO) {
-        if (existsCpf(clientDTO.cpf())) {
+    public Client saveClient(ClientRequestDTO clientDTO, AddressDTO addressDTO) {
+        if (existsCpf(clientDTO.getCpf())) {
             throw new RuntimeException("CPF já existe.");
         }
-        if (!viaCepService.isCepValid(clientDTO.address().getCep())) {
+        if (existsEmail(clientDTO.getCpf())) {
+            throw new RuntimeException("CPF já existe.");
+        }
+
+
+        if (!viaCepService.isCepValid(clientDTO.getAddress().getCep())) {
             throw new InvalidCepException("CEP não existe ou está inválido.");
         }
+
         Address address = viaCepService.saveAddress(addressDTO);
-        Client client = clientMapper.clientDTOtoClient(clientDTO);
+        Client client = ClientMapper.clientRequestDTOtoClient(clientDTO);
 
         client.setAddress(address);
+        System.out.println(addressDTO);
+        System.out.println(client.getAddress());
         Client savedClient = clientRepository.save(client);
+        savedClient.setAddress(address);
 
-        return clientMapper.clientToClientDTO(savedClient);
+        return savedClient;
     }
 
-    public List<ClientDTO> searchClients() {
+    public List<ClientResponseDTO> searchClients() {
         return clientRepository.findAll().stream()
-                .map(clientMapper::clientToClientDTO)
+                .map(ClientMapper::clientToClientDTOResponse)
                 .collect(Collectors.toList());
     }
 
     public Boolean existsCpf(String cpf) {
         return clientRepository.existsByCpf(cpf);
     }
+    public Boolean existsEmail(String email) {
+        return clientRepository.existsByEmail(email);
+    }
 
-    public ClientDTO searchClientByCpf(String cpf) {
+    public ClientResponseDTO searchClientByCpf(String cpf) {
         Client client = clientRepository.findByCpf(cpf);
-        return clientMapper.clientToClientDTO(client);
+        return ClientMapper.clientToClientDTOResponse(client);
     }
 
     public Client searchClientById(Long id) {
@@ -74,19 +84,25 @@ public class ClientService {
         }
     }
 
-    public List<ClientDTO> sortClientsByName() {
-        List<ClientDTO> clients = searchClients();
+    public List<ClientResponseDTO> sortClientsByName() {
+        List<ClientResponseDTO> clients = searchClients();
         bubbleSort(clients);
         return clients;
     }
 
+    public Client redefinePassword(Long id, String password) {
+       Client client = searchClientById(id);
+       client.setPassword(password);
+       return clientRepository.save(client);
+    }
 
-    private void bubbleSort(List<ClientDTO> clients) {
+
+    private void bubbleSort(List<ClientResponseDTO> clients) {
         int n = clients.size();
         for (int i = 0; i < n - 1; i++) {
             for (int j = 1; j < n - i; j++) {
-                if (clients.get(j - 1).name().compareTo(clients.get(j).name()) > 0) {
-                    ClientDTO temp = clients.get(j);
+                if (clients.get(j - 1).getName().compareTo(clients.get(j).getName()) > 0) {
+                    ClientResponseDTO temp = clients.get(j);
                     clients.set(j, clients.get(j - 1));
                     clients.set(j - 1, temp);
                 }
