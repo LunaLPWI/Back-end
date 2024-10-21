@@ -79,6 +79,7 @@ public class ClientController {
     public List<ClientResponseDTO> getSortedClients() {
         return clientService.sortClientsByName();
     }
+
     @PatchMapping("/redefine-password")
     public ResponseEntity<ClientResponseDTO> redefinePassword(@RequestParam Long id,  @RequestParam String password) {
        Client client =  clientService.redefinePassword(id, password);

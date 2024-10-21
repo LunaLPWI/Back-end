@@ -10,9 +10,6 @@ public class AddressDTO {
     private String localidade;
     private String bairro;
     private String uf;
-    private String ibge;
-    private String gia;
-    private String ddd;
-    private String siafi;
+    private int number;
 }
 
