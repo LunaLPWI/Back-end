@@ -46,5 +46,7 @@ public class AgendamentoController {
     public ResponseEntity<Set<LocalDateTime>>getHorariosCheios(LocalDateTime inicio, LocalDateTime fim, Long idClient){
         return ResponseEntity.ok(agendamentoService.listHorariosOcupados(idClient,inicio,fim));
     }
+//    @GetMapping("/agendamento-ocupado-admin")
+//    public ResponseEntity<>
 
 }
