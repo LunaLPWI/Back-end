@@ -29,6 +29,10 @@ public class Agendamento {
 
     @ManyToOne
     private Client client;
+    @ManyToOne
+    private Client funcionario;
+
+
 
 
     public int calcularDuracaoTotal() {

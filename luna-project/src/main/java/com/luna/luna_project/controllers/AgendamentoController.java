@@ -3,6 +3,7 @@ package com.luna.luna_project.controllers;
 
 
 import com.luna.luna_project.dtos.agendamentos.AgendamentoRequestDTO;
+import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseAdminDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseDTO;
 import com.luna.luna_project.mapper.AgendamentoMapper;
 import com.luna.luna_project.models.Agendamento;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -46,7 +48,14 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamentoService.listHorariosOcupados(idClient,inicio,fim));
     }
 
-//    @GetMapping("/agendamento-ocupado-admin")
-//    public ResponseEntity<>
+    @GetMapping("/agendamento-ocupado-admin")
+
+    public ResponseEntity<List<AgendamentoResponseAdminDTO>>getAgendamentosClientsAdmin(LocalDateTime inicio,
+                                                                                        LocalDateTime fim, Long idFunc){
+         List<Agendamento> agendamentos = agendamentoService.listarAgendamentosbyFuncId(idFunc,inicio,fim);
+
+    return ResponseEntity.ok(agendamentos.stream()
+            .map(AgendamentoMapper::EntityToResponseAdmin).toList());
+    }
 
 }

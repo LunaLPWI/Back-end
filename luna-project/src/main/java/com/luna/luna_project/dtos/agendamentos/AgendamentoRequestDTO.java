@@ -18,6 +18,7 @@ public class AgendamentoRequestDTO {
 
     @NotBlank
     private Long idClient;
+    private Long idFunc;
     @Future
     private LocalDateTime dataHoraInicio;
     @NotBlank

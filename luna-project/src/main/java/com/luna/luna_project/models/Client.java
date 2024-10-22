@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -30,4 +32,5 @@ public class Client {
     @OneToOne
     @JoinColumn(name = "address_id_address", nullable = false)
     private Address address;
+    private Boolean isAdmin = false;
 }

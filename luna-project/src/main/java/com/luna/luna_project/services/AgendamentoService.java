@@ -1,5 +1,6 @@
 package com.luna.luna_project.services;
 
+import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseAdminDTO;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.models.Agendamento;
 import com.luna.luna_project.repositories.AgendamentoRepository;
@@ -19,7 +20,7 @@ public class AgendamentoService {
     }
 
     public Set<LocalDateTime> listHorariosOcupados(Long clientId, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
-        List<Agendamento> agendamentos = agendamentoRepository.findByClient_IdAndDataHoraInicioBetween(clientId, dataHoraInicio, dataHoraFim);
+        List<Agendamento> agendamentos = agendamentoRepository.findAgendamentoByClient_IdAndDataHoraInicioBetween(clientId, dataHoraInicio, dataHoraFim);
         Set<LocalDateTime> horariosOcupados = new HashSet<>();
         for (Agendamento agendamento : agendamentos) {
             LocalDateTime inicio = agendamento.getDataHoraInicio();
@@ -36,7 +37,7 @@ public class AgendamentoService {
     }
 
     public List<LocalDateTime> listHorariosDisponiveis(Long clientId, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
-        List<Agendamento> agendamentos = agendamentoRepository.findByClient_IdAndDataHoraInicioBetween(clientId, dataHoraInicio, dataHoraFim);
+        List<Agendamento> agendamentos = agendamentoRepository.findAgendamentoByClient_IdAndDataHoraInicioBetween(clientId, dataHoraInicio, dataHoraFim);
         Set<LocalDateTime> horariosOcupados = new HashSet<>();
         for (Agendamento agendamento : agendamentos) {
             LocalDateTime inicio = agendamento.getDataHoraInicio();
@@ -58,6 +59,14 @@ public class AgendamentoService {
             return (List<LocalDateTime>) new ValidationException("Não há horários disponíveis");
         }
         return horariosDisponiveis;
+    }
+
+
+    public List<Agendamento> listarAgendamentosbyFuncId(Long funcId, LocalDateTime dataHoraInicio,
+                                                        LocalDateTime dataHoraFim) {
+       return agendamentoRepository.findAgendamentoByFuncionario_IdAndDataHoraInicioBetween
+                (funcId, dataHoraInicio, dataHoraFim);
+
     }
 
 
