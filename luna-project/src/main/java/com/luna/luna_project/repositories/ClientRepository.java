@@ -11,4 +11,8 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     Client deleteByCpf(String cpf);
 
     Boolean existsByEmail(String email);
+
+    Client findByEmail(String email);
+
+    Client findByEmailAndPassword(String email, String senha);
 }

@@ -30,8 +30,8 @@ public class ClientService {
         if (existsCpf(clientDTO.getCpf())) {
             throw new RuntimeException("CPF já existe.");
         }
-        if (existsEmail(clientDTO.getCpf())) {
-            throw new RuntimeException("CPF já existe.");
+        if (existsEmail(clientDTO.getEmail())) {
+            throw new RuntimeException("Email já existe.");
         }
 
 
@@ -68,6 +68,16 @@ public class ClientService {
         Client client = clientRepository.findByCpf(cpf);
         return ClientMapper.clientToClientDTOResponse(client);
     }
+    public ClientResponseDTO searchClientByEmail(String email) {
+        Client client = clientRepository.findByEmail(email);
+        return ClientMapper.clientToClientDTOResponse(client);
+    }
+
+    public ClientResponseDTO searchClientByEmailAndSenha(String email, String senha){
+        Client client = clientRepository.findByEmailAndPassword(email, senha);
+        return ClientMapper.clientToClientDTOResponse(client);
+    }
+
 
     public Client searchClientById(Long id) {
         Optional<Client> clientOptional = clientRepository.findById(id);

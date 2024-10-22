@@ -35,7 +35,6 @@ public class AgendamentoController {
                                                                       AgendamentoRequestDTO agendamentoRequestDTO){
         Agendamento agendamento = agendamentoService.agendamentoSave
                 (AgendamentoMapper.RequestToEntity(agendamentoRequestDTO));
-
         return ResponseEntity.ok(AgendamentoMapper.EntityToResponse(agendamento));
     }
     @GetMapping("/agendamento-vagos")
@@ -46,6 +45,7 @@ public class AgendamentoController {
     public ResponseEntity<Set<LocalDateTime>>getHorariosCheios(LocalDateTime inicio, LocalDateTime fim, Long idClient){
         return ResponseEntity.ok(agendamentoService.listHorariosOcupados(idClient,inicio,fim));
     }
+
 //    @GetMapping("/agendamento-ocupado-admin")
 //    public ResponseEntity<>
 

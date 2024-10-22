@@ -85,4 +85,22 @@ public class ClientController {
        Client client =  clientService.redefinePassword(id, password);
        return ResponseEntity.ok(ClientMapper.clientToClientDTOResponse(client));
     }
+
+    @GetMapping("/search-by-email")
+    public ResponseEntity<Long> searchClientByEmail(@RequestParam String email) {
+        ClientResponseDTO client = clientService.searchClientByEmail(email);
+        if (client == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(client.getId());
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<ClientResponseDTO> login(@RequestParam String email, @RequestParam String senha) {
+        ClientResponseDTO client = clientService.searchClientByEmailAndSenha(email, senha);
+        if (client == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(client);
+    }
 }
