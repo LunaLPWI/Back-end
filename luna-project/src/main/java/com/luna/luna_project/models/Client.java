@@ -18,14 +18,14 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String nome;
     @CPF
     private String cpf;
     @Email
     private String email;
     @NotNull
     @Pattern(regexp = "^(\\d{10}|\\d{11})$", message = "Número de telefone deve ter 10 ou 11 dígitos")
-    private String phone;
+    private String cellphone;
     private String password;
     @OneToOne
     @JoinColumn(name = "address_id_address", nullable = false)

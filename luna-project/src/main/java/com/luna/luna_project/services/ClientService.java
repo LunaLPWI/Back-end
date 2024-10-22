@@ -111,7 +111,7 @@ public class ClientService {
         int n = clients.size();
         for (int i = 0; i < n - 1; i++) {
             for (int j = 1; j < n - i; j++) {
-                if (clients.get(j - 1).getName().compareTo(clients.get(j).getName()) > 0) {
+                if (clients.get(j - 1).getNome().compareTo(clients.get(j).getNome()) > 0) {
                     ClientResponseDTO temp = clients.get(j);
                     clients.set(j, clients.get(j - 1));
                     clients.set(j - 1, temp);

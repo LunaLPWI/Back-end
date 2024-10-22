@@ -10,9 +10,9 @@ import lombok.*;
 @Data
 public class ClientResponseDTO {
     private Long id;
-    private String name;
+    private String nome;
     private String email;
-    private String phone;
+    private String cellphone;
     private String cep;
 }
 

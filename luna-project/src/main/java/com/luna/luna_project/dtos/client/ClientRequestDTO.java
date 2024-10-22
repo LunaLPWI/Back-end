@@ -9,10 +9,10 @@ import lombok.*;
 @Data
 public class ClientRequestDTO {
     private Long id;
-    private String name;
+    private String nome;
     private String cpf;
     private String email;
-    private String phone;
+    private String cellphone;
     private String password;
     private AddressDTO address;
 }

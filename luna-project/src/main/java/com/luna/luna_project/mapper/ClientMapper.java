@@ -9,9 +9,9 @@ public class ClientMapper {
         return Client.builder()
                 .id(clientDTO.getId())
                 .cpf(clientDTO.getCpf())
-                .name(clientDTO.getName())
+                .nome(clientDTO.getNome())
                 .email(clientDTO.getEmail())
-                .phone(clientDTO.getPhone())
+                .cellphone(clientDTO.getCellphone())
                 .password(clientDTO.getPassword())
                 .build();
     }
@@ -19,8 +19,8 @@ public class ClientMapper {
         return ClientRequestDTO.builder()
                 .id(client.getId())
                 .cpf(client.getCpf())
-                .name(client.getName())
-                .phone(client.getPhone())
+                .nome(client.getNome())
+                .cellphone(client.getCellphone())
                 .email(client.getEmail())
                 .password(client.getPassword())
                 .build();
@@ -28,8 +28,8 @@ public class ClientMapper {
     public static ClientResponseDTO clientToClientDTOResponse (Client client) {
         return ClientResponseDTO.builder()
                 .id(client.getId())
-                .name(client.getName())
-                .phone(client.getPhone())
+                .nome(client.getNome())
+                .cellphone(client.getCellphone())
                 .email(client.getEmail())
                 .cep(client.getAddress().getCep())
                 .build();
