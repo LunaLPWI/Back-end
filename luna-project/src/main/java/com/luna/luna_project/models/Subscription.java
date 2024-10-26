@@ -8,8 +8,8 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 @Entity
-@Getter
-@Setter
+@Data
+@Table(name = "subscription_seq")
 public class Subscription {
 
     @Id

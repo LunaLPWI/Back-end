@@ -1,12 +1,13 @@
 package com.luna.luna_project.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "charge")
+@Data
 public class Charge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
