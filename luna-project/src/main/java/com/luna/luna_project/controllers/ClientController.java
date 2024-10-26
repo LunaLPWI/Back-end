@@ -145,7 +145,7 @@ public class ClientController {
 
     @PostMapping("/login")
     public ResponseEntity<ClientTokenDTO> login(@RequestBody ClientLoginDTO usuarioLoginDto) {
-            ClientTokenDTO usuarioTokenDto = this.clientService.authenticate(usuarioLoginDto);
+        ClientTokenDTO usuarioTokenDto = this.clientService.authenticate(usuarioLoginDto);
 
         return ResponseEntity.status(200).body(usuarioTokenDto);
     }

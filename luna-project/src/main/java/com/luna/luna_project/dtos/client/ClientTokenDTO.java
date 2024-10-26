@@ -14,4 +14,6 @@ public class ClientTokenDTO {
     private String email;
     private String token;
     private Address address;
+    private Boolean isAdmin = false;
+    private Boolean isFuncionario = false;
 }

@@ -33,4 +33,5 @@ public class Client {
     @JoinColumn(name = "address_id_address", nullable = false)
     private Address address;
     private Boolean isAdmin = false;
+    private Boolean isFuncionario = false;
 }
