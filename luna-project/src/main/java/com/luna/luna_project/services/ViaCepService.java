@@ -34,12 +34,12 @@ public class ViaCepService {
     }
 
     public Address saveAddress(AddressDTO addressDTO){
-        AddressDTO addressSave = searchAddressByCep(addressDTO.getCep());
 
         if (addressDTO.getCep() == null) {
             throw new InvalidCepException("CEP não existe ou está inválido.");
         }
-        Address addressConvert = addressMapper.addressDTOtoAddress(addressSave);
+        Address addressConvert = addressMapper.addressDTOtoAddress(addressDTO);
+        addressConvert.setCidade(addressDTO.getCidade());
         addressConvert.setComplemento(addressDTO.getComplemento());
 
         addressRepository.save(addressConvert);

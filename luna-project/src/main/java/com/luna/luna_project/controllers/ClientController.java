@@ -1,11 +1,16 @@
 package com.luna.luna_project.controllers;
 
+import com.luna.luna_project.GerenciadorTokenJwt;
+import com.luna.luna_project.dtos.client.ClientLoginDTO;
 import com.luna.luna_project.dtos.client.ClientRequestDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
+import com.luna.luna_project.dtos.client.ClientTokenDTO;
 import com.luna.luna_project.exceptions.ValidationException;
-import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.models.Client;
+import com.luna.luna_project.repositories.ClientMapper;
 import com.luna.luna_project.services.ClientService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +24,10 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
-
+    @Autowired
+    private ClientMapper clientMapper;
+//    @Autowired
+//    private GerenciadorTokenJwt gerenciadorTokenJwt;
 
 
     @GetMapping
@@ -49,7 +57,7 @@ public class ClientController {
             return ResponseEntity.status(409).build();
         }
         Client client = clientService.saveClient(clientDTO, clientDTO.getAddress());
-        ClientResponseDTO clientResponseDTO = ClientMapper.clientToClientDTOResponse(client);
+        ClientResponseDTO clientResponseDTO = clientMapper.clientToClientDTOResponse(client);
         return ResponseEntity.ok().body(clientResponseDTO);
     }
 
@@ -68,7 +76,7 @@ public class ClientController {
     @GetMapping("/{id}")
     public ResponseEntity<ClientRequestDTO> searchClientById(@PathVariable Long id) {
         Client client = clientService.searchClientById(id);
-        ClientRequestDTO clientDTO = ClientMapper.clientToClientDTORequest(client);
+        ClientRequestDTO clientDTO = clientMapper.clientToClientDTORequest(client);
         if (client == null) {
             return ResponseEntity.notFound().build();
         }
@@ -80,27 +88,65 @@ public class ClientController {
         return clientService.sortClientsByName();
     }
 
-    @PatchMapping("/redefine-password")
-    public ResponseEntity<ClientResponseDTO> redefinePassword(@RequestParam Long id,  @RequestParam String password) {
-       Client client =  clientService.redefinePassword(id, password);
-       return ResponseEntity.ok(ClientMapper.clientToClientDTOResponse(client));
-    }
+//    @PostMapping("/request-password-reset")
+//    public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
+//        Client client = clientService.searchClientByEmail(email);
+//        if (client == null) {
+//            return ResponseEntity.status(404).body("Cliente não encontrado.");
+//        }
+//
+//        String token = gerenciadorTokenJwt.generatePasswordResetToken(client.getNome());
+//
+//
+//
+//
+//        return ResponseEntity.ok("E-mail de redefinição de senha enviado.");
+//    }
+//
+//    @PatchMapping("/reset-password")
+//    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+//        Claims claims;
+//        try {
+//            claims = Jwts.parserBuilder()
+//                    .setSigningKey(gerenciadorTokenJwt.parseSecret())
+//                    .build()
+//                    .parseClaimsJws(token).getBody();
+//        } catch (Exception e) {
+//            return ResponseEntity.status(400).body("Token inválido ou expirado.");
+//        }
+//
+//        String username = claims.getSubject();
+//        Client client = clientService.searchByUsername(username);
+//        if (client == null) {
+//            return ResponseEntity.status(404).body("Cliente não encontrado.");
+//        }
+//
+//        clientService.redefinePassword(client.getId(), newPassword);
+//        return ResponseEntity.ok("Senha redefinida com sucesso.");
+//    }
 
     @GetMapping("/search-by-email")
     public ResponseEntity<Long> searchClientByEmail(@RequestParam String email) {
-        ClientResponseDTO client = clientService.searchClientByEmail(email);
+        Client client = clientService.searchClientByEmail(email);
         if (client == null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(client.getId());
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<ClientResponseDTO> login(@RequestParam String email, @RequestParam String senha) {
-        ClientResponseDTO client = clientService.searchClientByEmailAndSenha(email, senha);
-        if (client == null) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok().body(client);
+//    @GetMapping("/reset-password")
+//    public ResponseEntity<String> resetPassword(@RequestParam String id,String) {
+//        Client client = clientService.redefinePassword();
+//        if (client == null) {
+//            return ResponseEntity.noContent().build();
+//        }
+//        return ResponseEntity.ok().body("Senha alterada com sucesso");
+//    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ClientTokenDTO> login(@RequestBody ClientLoginDTO usuarioLoginDto) {
+            ClientTokenDTO usuarioTokenDto = this.clientService.authenticate(usuarioLoginDto);
+
+        return ResponseEntity.status(200).body(usuarioTokenDto);
     }
 }
