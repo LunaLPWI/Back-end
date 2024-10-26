@@ -18,6 +18,7 @@ public record ClientDTO(
         String cpf,
         AddressDTO address,
         Boolean isAdmin,
-        Boolean isFuncionario
+        Boolean isFuncionario,
+        String cellphone
 ) {
 }
