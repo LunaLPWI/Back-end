@@ -4,6 +4,8 @@ import com.luna.luna_project.enums.Task;
 import jakarta.persistence.ElementCollection;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,11 +24,12 @@ public class AgendamentoResponseDTO {
     Long id;
     @Future
     private LocalDateTime dataHoraInicio;
-    @NotBlank
+    @NotEmpty
     @ElementCollection(targetClass = Task.class)
     private List<Task> itens;
-    @NotBlank
+    @NotNull
     private Long idClient;
+    @NotNull
     private Long idFuncionario;
 
 }
