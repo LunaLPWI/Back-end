@@ -4,16 +4,21 @@ import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseAdminDTO;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.models.Agendamento;
 import com.luna.luna_project.repositories.AgendamentoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class AgendamentoService {
 
-    private AgendamentoRepository agendamentoRepository;
+    private final AgendamentoRepository agendamentoRepository;
 
-
+    @Autowired
+    public AgendamentoService(AgendamentoRepository agendamentoRepository) {
+        this.agendamentoRepository = agendamentoRepository;
+    }
 
     public Boolean existsById(Long id) {
         return agendamentoRepository.existsById(id);
@@ -22,6 +27,7 @@ public class AgendamentoService {
     public Set<LocalDateTime> listHorariosOcupados(Long clientId, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
         List<Agendamento> agendamentos = agendamentoRepository.findAgendamentoByClient_IdAndDataHoraInicioBetween(clientId, dataHoraInicio, dataHoraFim);
         Set<LocalDateTime> horariosOcupados = new HashSet<>();
+
         for (Agendamento agendamento : agendamentos) {
             LocalDateTime inicio = agendamento.getDataHoraInicio();
             LocalDateTime fim = agendamento.calcularDataFim();
@@ -30,15 +36,18 @@ public class AgendamentoService {
                 horariosOcupados.add(horario);
             }
         }
-        if(horariosOcupados.isEmpty()){
-            return (Set<LocalDateTime>) new ValidationException("Não há horários ocupados");
+
+        if (horariosOcupados.isEmpty()) {
+            throw new ValidationException("Não há horários ocupados");
         }
+
         return horariosOcupados;
     }
 
     public List<LocalDateTime> listHorariosDisponiveis(Long clientId, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
         List<Agendamento> agendamentos = agendamentoRepository.findAgendamentoByClient_IdAndDataHoraInicioBetween(clientId, dataHoraInicio, dataHoraFim);
         Set<LocalDateTime> horariosOcupados = new HashSet<>();
+
         for (Agendamento agendamento : agendamentos) {
             LocalDateTime inicio = agendamento.getDataHoraInicio();
             LocalDateTime fim = agendamento.calcularDataFim();
@@ -55,35 +64,26 @@ public class AgendamentoService {
             }
         }
 
-        if(horariosDisponiveis.isEmpty()){
-            return (List<LocalDateTime>) new ValidationException("Não há horários disponíveis");
+        if (horariosDisponiveis.isEmpty()) {
+            throw new ValidationException("Não há horários disponíveis");
         }
+
         return horariosDisponiveis;
     }
 
-
-    public List<Agendamento> listarAgendamentosbyFuncId(Long funcId, LocalDateTime dataHoraInicio,
-                                                        LocalDateTime dataHoraFim) {
-       return agendamentoRepository.findAgendamentoByFuncionario_IdAndDataHoraInicioBetween
-                (funcId, dataHoraInicio, dataHoraFim);
-
+    public List<Agendamento> listarAgendamentosbyFuncId(Long funcId, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
+        return agendamentoRepository.findAgendamentoByFuncionario_IdAndDataHoraInicioBetween(funcId, dataHoraInicio, dataHoraFim);
     }
 
-
-    public Agendamento agendamentoSave(Agendamento agendamento){
+    public Agendamento agendamentoSave(Agendamento agendamento) {
         agendamento.setId(null);
         return agendamentoRepository.save(agendamento);
     }
 
-
-    public void deleteById (Long id){
-        if(!agendamentoRepository.existsById(id)){
+    public void deleteById(Long id) {
+        if (!agendamentoRepository.existsById(id)) {
             throw new ValidationException("Agendamento de id: %d não encontrado".formatted(id));
         }
         agendamentoRepository.deleteById(id);
     }
-
-
-
-
 }

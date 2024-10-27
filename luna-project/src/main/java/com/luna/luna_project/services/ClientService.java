@@ -158,4 +158,18 @@ public class ClientService {
         return  clientMapper.clientToClientDTO(clientAuthentication, token);
     }
 
+
+    public void resetPassword(String email, String newPassword) {
+        Optional<Client> clientOptional = clientRepository.findByEmail(email);
+        if (clientOptional.isEmpty()) {
+            throw new ValidationException("Usuário com e-mail " + email + " não encontrado.");
+        }
+
+        Client client = clientOptional.get();
+        String encryptedPassword = passwordEncoder.encode(newPassword);
+        client.setPassword(encryptedPassword);
+        clientRepository.save(client);
+    }
+
+
 }

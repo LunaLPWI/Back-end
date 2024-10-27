@@ -88,42 +88,6 @@ public class ClientController {
         return clientService.sortClientsByName();
     }
 
-//    @PostMapping("/request-password-reset")
-//    public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
-//        Client client = clientService.searchClientByEmail(email);
-//        if (client == null) {
-//            return ResponseEntity.status(404).body("Cliente não encontrado.");
-//        }
-//
-//        String token = gerenciadorTokenJwt.generatePasswordResetToken(client.getNome());
-//
-//
-//
-//
-//        return ResponseEntity.ok("E-mail de redefinição de senha enviado.");
-//    }
-//
-//    @PatchMapping("/reset-password")
-//    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
-//        Claims claims;
-//        try {
-//            claims = Jwts.parserBuilder()
-//                    .setSigningKey(gerenciadorTokenJwt.parseSecret())
-//                    .build()
-//                    .parseClaimsJws(token).getBody();
-//        } catch (Exception e) {
-//            return ResponseEntity.status(400).body("Token inválido ou expirado.");
-//        }
-//
-//        String username = claims.getSubject();
-//        Client client = clientService.searchByUsername(username);
-//        if (client == null) {
-//            return ResponseEntity.status(404).body("Cliente não encontrado.");
-//        }
-//
-//        clientService.redefinePassword(client.getId(), newPassword);
-//        return ResponseEntity.ok("Senha redefinida com sucesso.");
-//    }
 
     @GetMapping("/search-by-email")
     public ResponseEntity<Long> searchClientByEmail(@RequestParam String email) {
@@ -134,14 +98,6 @@ public class ClientController {
         return ResponseEntity.ok().body(client.getId());
     }
 
-//    @GetMapping("/reset-password")
-//    public ResponseEntity<String> resetPassword(@RequestParam String id,String) {
-//        Client client = clientService.redefinePassword();
-//        if (client == null) {
-//            return ResponseEntity.noContent().build();
-//        }
-//        return ResponseEntity.ok().body("Senha alterada com sucesso");
-//    }
 
     @PostMapping("/login")
     public ResponseEntity<ClientTokenDTO> login(@RequestBody ClientLoginDTO usuarioLoginDto) {
@@ -149,4 +105,15 @@ public class ClientController {
 
         return ResponseEntity.status(200).body(usuarioTokenDto);
     }
+
+    @PatchMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String email, @RequestParam String newPassword) {
+        try {
+            clientService.resetPassword(email, newPassword);
+            return ResponseEntity.ok().body("Senha alterada com sucesso!");
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
