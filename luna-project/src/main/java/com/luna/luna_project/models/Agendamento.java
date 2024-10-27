@@ -4,7 +4,6 @@ import com.luna.luna_project.enums.Task;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -24,7 +23,7 @@ public class Agendamento {
     @Future
     private LocalDateTime dataHoraInicio;
 
-    @NotEmpty
+    @NotBlank
     @ElementCollection(targetClass = Task.class)
     private List<Task> itens;
 

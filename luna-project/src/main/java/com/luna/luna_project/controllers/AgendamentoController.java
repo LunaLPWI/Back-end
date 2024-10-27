@@ -1,5 +1,7 @@
 package com.luna.luna_project.controllers;
 
+
+
 import com.luna.luna_project.dtos.agendamentos.AgendamentoRequestDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseAdminDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseDTO;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -18,45 +21,41 @@ import java.util.Set;
 @RequestMapping("/agendamentos")
 public class AgendamentoController {
     private final AgendamentoService agendamentoService;
-    private final AgendamentoMapper agendamentoMapper; // Injeção do mapper
 
-    public AgendamentoController(AgendamentoService agendamentoService, AgendamentoMapper agendamentoMapper) {
+    public AgendamentoController(AgendamentoService agendamentoService) {
         this.agendamentoService = agendamentoService;
-        this.agendamentoMapper = agendamentoMapper; // Atribuição do mapper
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable long id) {
+    public ResponseEntity<Void> deleteById(long id){
         agendamentoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping
-    public ResponseEntity<AgendamentoResponseDTO> saveAgendamento(@RequestBody @Valid AgendamentoRequestDTO agendamentoRequestDTO) {
-        Agendamento agendamento = agendamentoService.agendamentoSave(agendamentoMapper.RequestToEntity(agendamentoRequestDTO));
-        return ResponseEntity.ok(agendamentoMapper.EntityToResponse(agendamento));
+    @PutMapping
+    public ResponseEntity<AgendamentoResponseDTO> saveAgendamento(@RequestBody @Valid
+                                                                      AgendamentoRequestDTO agendamentoRequestDTO){
+        Agendamento agendamento = agendamentoService.agendamentoSave
+                (AgendamentoMapper.RequestToEntity(agendamentoRequestDTO));
+        return ResponseEntity.ok(AgendamentoMapper.EntityToResponse(agendamento));
     }
-
     @GetMapping("/agendamento-vagos")
-    public ResponseEntity<List<LocalDateTime>> getHorariosVagos(@RequestParam LocalDateTime inicio,
-                                                                @RequestParam LocalDateTime fim,
-                                                                @RequestParam Long idClient) {
-        return ResponseEntity.ok(agendamentoService.listHorariosDisponiveis(idClient, inicio, fim));
+    public ResponseEntity<List<LocalDateTime>> getHorariosVagos(LocalDateTime inicio, LocalDateTime fim, Long idClient){
+        return ResponseEntity.ok(agendamentoService.listHorariosDisponiveis(idClient,inicio,fim));
     }
-
     @GetMapping("/agendamento-ocupado")
-    public ResponseEntity<Set<LocalDateTime>> getHorariosCheios(@RequestParam LocalDateTime inicio,
-                                                                @RequestParam LocalDateTime fim,
-                                                                @RequestParam Long idClient) {
-        return ResponseEntity.ok(agendamentoService.listHorariosOcupados(idClient, inicio, fim));
+    public ResponseEntity<Set<LocalDateTime>>getHorariosCheios(LocalDateTime inicio, LocalDateTime fim, Long idClient){
+        return ResponseEntity.ok(agendamentoService.listHorariosOcupados(idClient,inicio,fim));
     }
 
     @GetMapping("/agendamento-ocupado-admin")
-    public ResponseEntity<List<AgendamentoResponseAdminDTO>> getAgendamentosClientsAdmin(@RequestParam LocalDateTime inicio,
-                                                                                         @RequestParam LocalDateTime fim,
-                                                                                         @RequestParam Long idFunc) {
-        List<Agendamento> agendamentos = agendamentoService.listarAgendamentosbyFuncId(idFunc, inicio, fim);
-        return ResponseEntity.ok(agendamentos.stream()
-                .map(agendamentoMapper::EntityToResponseAdmin).toList());
+
+    public ResponseEntity<List<AgendamentoResponseAdminDTO>>getAgendamentosClientsAdmin(LocalDateTime inicio,
+                                                                                        LocalDateTime fim, Long idFunc){
+         List<Agendamento> agendamentos = agendamentoService.listarAgendamentosbyFuncId(idFunc,inicio,fim);
+
+    return ResponseEntity.ok(agendamentos.stream()
+            .map(AgendamentoMapper::EntityToResponseAdmin).toList());
     }
+
 }

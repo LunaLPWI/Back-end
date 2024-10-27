@@ -62,15 +62,12 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/clients/**"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/h2-console/**/**"),
-            new AntPathRequestMatcher("/error/**"),
-            new AntPathRequestMatcher("/agendamentos/**")
-
+            new AntPathRequestMatcher("/error/**")
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .cors(Customizer.withDefaults())
