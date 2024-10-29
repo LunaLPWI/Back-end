@@ -4,6 +4,7 @@ import com.luna.luna_project.dtos.agendamentos.AgendamentoRequestDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseAdminDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseDTO;
 import com.luna.luna_project.models.Agendamento;
+import com.luna.luna_project.repositories.TaskMapper;
 import com.luna.luna_project.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Component;
 public class AgendamentoMapper {
 
     private final ClientService clientService;
+    private final TaskMapper taskMapper;
 
     @Autowired
-    public AgendamentoMapper(ClientService clientService) {
+    public AgendamentoMapper(ClientService clientService,TaskMapper taskMapper) {
         this.clientService = clientService;
+        this.taskMapper = taskMapper;
     }
 
     public Agendamento RequestToEntity(AgendamentoRequestDTO agendamentoRequestDTO) {
@@ -33,7 +36,7 @@ public class AgendamentoMapper {
                 .idClient(agendamento.getClient().getId())
                 .idFuncionario(agendamento.getFuncionario().getId())
                 .dataHoraInicio(agendamento.getDataHoraInicio())
-                .itens(agendamento.getItens())
+                .itens(agendamento.getItens().stream().map(taskMapper::taskToTaskDTO).toList())
                 .build();
     }
 

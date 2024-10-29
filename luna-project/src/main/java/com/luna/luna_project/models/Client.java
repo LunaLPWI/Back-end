@@ -29,7 +29,7 @@ public class Client {
     @Pattern(regexp = "^(\\d{10}|\\d{11})$", message = "Número de telefone deve ter 10 ou 11 dígitos")
     private String cellphone;
     private String password;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "address_id_address", nullable = false)
     private Address address;
     private Boolean isAdmin = false;

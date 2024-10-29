@@ -24,4 +24,6 @@ public enum Task {
     private final Double value;
     private final String description;
     private final Integer duration;
+
+
 }
