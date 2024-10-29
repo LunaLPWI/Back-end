@@ -53,6 +53,7 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/actuator/*"),
             new AntPathRequestMatcher("/clients/login/**"),
             new AntPathRequestMatcher("/clients/save-client/**"),
+            new AntPathRequestMatcher("/clients/search-by-cpf/**"),
             new AntPathRequestMatcher("/adms/admin/login/**"),
             new AntPathRequestMatcher("/adms/**"),
             new AntPathRequestMatcher("/plans/**"),
@@ -64,13 +65,11 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/h2-console/**/**"),
             new AntPathRequestMatcher("/error/**"),
             new AntPathRequestMatcher("/agendamentos/**")
-
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .cors(Customizer.withDefaults())

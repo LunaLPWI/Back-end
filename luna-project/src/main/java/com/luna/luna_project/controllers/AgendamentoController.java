@@ -1,5 +1,6 @@
 package com.luna.luna_project.controllers;
 
+import com.luna.luna_project.csv.agendamento.AgendamentoCSV;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoRequestDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseAdminDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseDTO;
@@ -34,6 +35,7 @@ public class AgendamentoController {
     @PostMapping
     public ResponseEntity<AgendamentoResponseDTO> saveAgendamento(@RequestBody @Valid AgendamentoRequestDTO agendamentoRequestDTO) {
         Agendamento agendamento = agendamentoService.agendamentoSave(agendamentoMapper.RequestToEntity(agendamentoRequestDTO));
+
         return ResponseEntity.ok(agendamentoMapper.EntityToResponse(agendamento));
     }
 
@@ -56,6 +58,8 @@ public class AgendamentoController {
                                                                                          @RequestParam LocalDateTime fim,
                                                                                          @RequestParam Long idFunc) {
         List<Agendamento> agendamentos = agendamentoService.listarAgendamentosbyFuncId(idFunc, inicio, fim);
+        AgendamentoCSV agendamentoCSV = new AgendamentoCSV(agendamentoService,agendamentoMapper);
+        agendamentoCSV.write(idFunc,inicio,fim);
         return ResponseEntity.ok(agendamentos.stream()
                 .map(agendamentoMapper::EntityToResponseAdmin).toList());
     }

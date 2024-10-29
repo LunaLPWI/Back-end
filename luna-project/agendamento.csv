@@ -1,0 +1,2 @@
+id;dataHoraInicio;dataHoraFim;nomeClient
+AgendamentoResponseAdminDTO(id=1, dataHoraInicio=2024-10-30T11:00, dataHoraFim=2024-10-30T11:30, nomeClient=Fernanda)

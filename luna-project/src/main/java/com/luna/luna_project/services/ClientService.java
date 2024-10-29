@@ -13,6 +13,7 @@ import com.luna.luna_project.repositories.ClientMapper;
 import com.luna.luna_project.repositories.ClientRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -55,7 +56,7 @@ public class ClientService {
 
         Address address = viaCepService.saveAddress(addressDTO);
         Client client = clientMapper.clientRequestDTOtoClient(clientDTO);
-        String encryptedPassword  = passwordEncoder.encode(client.getPassword());
+        String encryptedPassword = passwordEncoder.encode(client.getPassword());
         client.setPassword(encryptedPassword);
         client.setAddress(address);
 
@@ -69,23 +70,46 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
+
+    public static Client pesquisaBinaria(Client[] lista, String cpfAlvo, int esquerda, int direita) {
+        if (esquerda > direita) {
+            return null;
+        }
+
+        int meio = esquerda + (direita - esquerda) / 2;
+
+        if (lista[meio].getCpf().equals(cpfAlvo)) {
+            return lista[meio];
+        } else if (lista[meio].getCpf().compareTo(cpfAlvo) < 0) {
+            return pesquisaBinaria(lista, cpfAlvo, meio + 1, direita);
+        } else {
+            return pesquisaBinaria(lista, cpfAlvo, esquerda, meio - 1);
+        }
+    }
+
     public Boolean existsCpf(String cpf) {
         return clientRepository.existsByCpf(cpf);
     }
+
     public Boolean existsEmail(String email) {
         return clientRepository.existsByEmail(email);
     }
 
     public ClientResponseDTO searchClientByCpf(String cpf) {
-        Client client = clientRepository.findByCpf(cpf);
+        List<Client> clientList = clientRepository.findAll();
+        Client client = pesquisaBinaria(clientList.toArray(new Client[0]), cpf, 0, clientList.size() - 1);
+        if (client == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
+        }
         return clientMapper.clientToClientDTOResponse(client);
     }
+
     public Client searchClientByEmail(String email) {
 
         return clientRepository.findByEmail(email).get();
     }
 
-    public ClientResponseDTO searchClientByEmailAndSenha(String email, String senha){
+    public ClientResponseDTO searchClientByEmailAndSenha(String email, String senha) {
         Client client = clientRepository.findByEmailAndPassword(email, senha);
         return clientMapper.clientToClientDTOResponse(client);
     }
@@ -93,7 +117,7 @@ public class ClientService {
 
     public Client searchClientById(Long id) {
         Optional<Client> clientOptional = clientRepository.findById(id);
-        return clientOptional.orElse(null); // Retorna null se o cliente não for encontrado
+        return clientOptional.orElse(null);
     }
 
     @Transactional
@@ -113,9 +137,9 @@ public class ClientService {
     }
 
     public Client redefinePassword(Long id, String password) {
-       Client client = searchClientById(id);
-       client.setPassword(password);
-       return clientRepository.save(client);
+        Client client = searchClientById(id);
+        client.setPassword(password);
+        return clientRepository.save(client);
     }
 
 
@@ -131,13 +155,14 @@ public class ClientService {
             }
         }
     }
-    public Client searchByUsername (String nome){
+
+    public Client searchByUsername(String nome) {
         return clientRepository.findByNome(nome);
     }
 
     public ClientTokenDTO authenticate(ClientLoginDTO clientLoginDTO) {
 
-        if(searchClientByEmail(clientLoginDTO.getEmail()) == null){
+        if (searchClientByEmail(clientLoginDTO.getEmail()) == null) {
             throw new ResponseStatusException(404, "Email do usuário não cadastrado", null);
         }
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
@@ -146,16 +171,11 @@ public class ClientService {
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
         Client clientAuthentication = searchClientByEmail(clientLoginDTO.getEmail());
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println(clientAuthentication.getAddress().getCep());
-
-
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
-        return  clientMapper.clientToClientDTO(clientAuthentication, token);
+        return clientMapper.clientToClientDTO(clientAuthentication, token);
     }
 
 
