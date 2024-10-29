@@ -54,6 +54,7 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/clients/login/**"),
             new AntPathRequestMatcher("/clients/save-client/**"),
             new AntPathRequestMatcher("/clients/search-by-cpf/**"),
+            new AntPathRequestMatcher("/clients/search-by-name/**"),
             new AntPathRequestMatcher("/adms/admin/login/**"),
             new AntPathRequestMatcher("/adms/**"),
             new AntPathRequestMatcher("/plans/**"),

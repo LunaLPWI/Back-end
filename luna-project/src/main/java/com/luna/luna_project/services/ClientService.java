@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,19 +73,19 @@ public class ClientService {
     }
 
 
-    public static Client pesquisaBinaria(Client[] lista, String cpfAlvo, int esquerda, int direita) {
+    public static Client pesquisaBinaria(Client[] lista, String nomeAlvo, int esquerda, int direita) {
         if (esquerda > direita) {
             return null;
         }
 
         int meio = esquerda + (direita - esquerda) / 2;
 
-        if (lista[meio].getCpf().equals(cpfAlvo)) {
+        if (lista[meio].getNome().equals(nomeAlvo)) {
             return lista[meio];
-        } else if (lista[meio].getCpf().compareTo(cpfAlvo) < 0) {
-            return pesquisaBinaria(lista, cpfAlvo, meio + 1, direita);
+        } else if (lista[meio].getNome().compareTo(nomeAlvo) < 0) {
+            return pesquisaBinaria(lista, nomeAlvo, meio + 1, direita);
         } else {
-            return pesquisaBinaria(lista, cpfAlvo, esquerda, meio - 1);
+            return pesquisaBinaria(lista, nomeAlvo, esquerda, meio - 1);
         }
     }
 
@@ -96,8 +98,7 @@ public class ClientService {
     }
 
     public ClientResponseDTO searchClientByCpf(String cpf) {
-        List<Client> clientList = clientRepository.findAll();
-        Client client = pesquisaBinaria(clientList.toArray(new Client[0]), cpf, 0, clientList.size() - 1);
+        Client client = clientRepository.findByCpf(cpf);
         if (client == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
         }
@@ -157,11 +158,20 @@ public class ClientService {
     }
 
     public Client searchByUsername(String nome) {
-        return clientRepository.findByNome(nome);
+        List<Client> clientList = clientRepository.findAll();
+        Client[] clientVetor = clientList.toArray(new Client[0]);
+        Arrays.sort(clientVetor, Comparator.comparing(Client::getNome));
+
+        Client client = pesquisaBinaria(clientVetor, nome, 0, clientVetor.length - 1);
+        if (client == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Client not found");
+        }
+
+        return client;
     }
 
-    public ClientTokenDTO authenticate(ClientLoginDTO clientLoginDTO) {
 
+    public ClientTokenDTO authenticate(ClientLoginDTO clientLoginDTO) {
         if (searchClientByEmail(clientLoginDTO.getEmail()) == null) {
             throw new ResponseStatusException(404, "Email do usuário não cadastrado", null);
         }

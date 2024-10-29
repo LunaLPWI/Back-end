@@ -71,6 +71,15 @@ public class ClientController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @GetMapping("/search-by-name")
+    public ResponseEntity<ClientRequestDTO> searchClientById(@RequestParam String nome) {
+        Client client = clientService.searchByUsername(nome);
+        ClientRequestDTO clientDTO = clientMapper.clientToClientDTORequest(client);
+        if (client == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(clientDTO);
+    }
 
 
     @GetMapping("/{id}")

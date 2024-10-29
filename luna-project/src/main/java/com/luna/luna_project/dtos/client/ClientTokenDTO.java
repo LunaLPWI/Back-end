@@ -17,4 +17,5 @@ public class ClientTokenDTO {
     private Boolean isAdmin = false;
     private Boolean isFuncionario = false;
     private String cellphone;
+
 }
