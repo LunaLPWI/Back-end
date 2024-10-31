@@ -31,7 +31,6 @@ public class AgendamentoService {
         for (Agendamento agendamento : agendamentos) {
             LocalDateTime inicio = agendamento.getDataHoraInicio();
             LocalDateTime fim = agendamento.calcularDataFim();
-
             for (LocalDateTime horario = inicio; horario.isBefore(fim); horario = horario.plusMinutes(30)) {
                 horariosOcupados.add(horario);
             }
@@ -77,6 +76,23 @@ public class AgendamentoService {
 
     public Agendamento agendamentoSave(Agendamento agendamento) {
         agendamento.setId(null);
+        List<Agendamento> agendamentos = listarAgendamentosbyFuncId(agendamento.getFuncionario().getId(),
+                agendamento.getDataHoraInicio(),agendamento.calcularDataFim());
+
+        for(Agendamento agendamento1 : agendamentos){
+            boolean inicioAnterior= agendamento.getDataHoraInicio().isBefore(agendamento1.getDataHoraInicio());
+            boolean finalPosterior = agendamento.calcularDataFim().isAfter(agendamento1.calcularDataFim());
+
+            boolean inicioMeio = inicioAnterior && agendamento.calcularDataFim().isBefore(agendamento1.calcularDataFim());
+            boolean fimMeio = finalPosterior && agendamento.getDataHoraInicio().isBefore(agendamento1.calcularDataFim());
+            boolean entre = agendamento.getDataHoraInicio().isAfter(agendamento1.getDataHoraInicio())
+                    && agendamento.calcularDataFim().isBefore(agendamento1.calcularDataFim());
+            boolean engloba = inicioAnterior && finalPosterior;
+
+            if(inicioMeio||fimMeio||engloba||entre){
+                throw new ValidationException("Já existe agendamentos nesse horário");
+            }
+        }
         return agendamentoRepository.save(agendamento);
     }
 
