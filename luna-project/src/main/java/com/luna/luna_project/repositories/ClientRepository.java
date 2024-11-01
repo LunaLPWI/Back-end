@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ClientRepository extends JpaRepository<Client, Long> {
     Boolean existsByCpf(String cpf);
 
-    Client findByCpf(String cpf);
+    Optional <Client> findByCpf(String cpf);
 
     Client deleteByCpf(String cpf);
 
@@ -19,5 +19,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     Client findByNome(String nome);
 
 
-    Client findByEmailAndPassword(String email, String senha);
+    Optional <Client> findByEmailAndPassword(String email, String senha);
 }

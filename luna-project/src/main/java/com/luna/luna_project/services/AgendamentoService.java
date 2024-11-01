@@ -5,7 +5,9 @@ import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.models.Agendamento;
 import com.luna.luna_project.repositories.AgendamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -14,10 +16,12 @@ import java.util.*;
 public class AgendamentoService {
 
     private final AgendamentoRepository agendamentoRepository;
+    private final ClientService clientService;
 
     @Autowired
-    public AgendamentoService(AgendamentoRepository agendamentoRepository) {
+    public AgendamentoService(AgendamentoRepository agendamentoRepository, ClientService clientService) {
         this.agendamentoRepository = agendamentoRepository;
+        this.clientService = clientService;
     }
 
     public Boolean existsById(Long id) {
@@ -71,6 +75,8 @@ public class AgendamentoService {
     }
 
     public List<Agendamento> listarAgendamentosbyFuncId(Long funcId, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
+        clientService.searchClientById(funcId);
+
         return agendamentoRepository.findAgendamentoByFuncionario_IdAndDataHoraInicioBetween(funcId, dataHoraInicio, dataHoraFim);
     }
 
@@ -90,7 +96,7 @@ public class AgendamentoService {
             boolean engloba = inicioAnterior && finalPosterior;
 
             if(inicioMeio||fimMeio||engloba||entre){
-                throw new ValidationException("Já existe agendamentos nesse horário");
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe um agendamento neste intervalo de tempo");
             }
         }
         return agendamentoRepository.save(agendamento);

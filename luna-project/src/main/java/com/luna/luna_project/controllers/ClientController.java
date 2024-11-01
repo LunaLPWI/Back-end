@@ -43,19 +43,12 @@ public class ClientController {
     @GetMapping("/search-by-cpf")
     public ResponseEntity<ClientResponseDTO> searchClientByCpf(@RequestParam String cpf) {
         ClientResponseDTO client = clientService.searchClientByCpf(cpf);
-        if (client == null) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok().body(client);
     }
 
 
     @PostMapping
     public ResponseEntity<ClientResponseDTO> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
-        System.out.println(clientDTO);
-        if (clientService.existsCpf(clientDTO.getCpf())) {
-            return ResponseEntity.status(409).build();
-        }
         Client client = clientService.saveClient(clientDTO, clientDTO.getAddress());
         ClientResponseDTO clientResponseDTO = clientMapper.clientToClientDTOResponse(client);
         return ResponseEntity.ok().body(clientResponseDTO);
@@ -101,9 +94,6 @@ public class ClientController {
     @GetMapping("/search-by-email")
     public ResponseEntity<Long> searchClientByEmail(@RequestParam String email) {
         Client client = clientService.searchClientByEmail(email);
-        if (client == null) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok().body(client.getId());
     }
 
