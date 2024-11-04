@@ -51,6 +51,11 @@ public class AgendamentoService {
 
     public List<LocalDateTime> listHorariosDisponiveis(Long clientId, LocalDateTime dataHoraInicio,
                                                        LocalDateTime dataHoraFim) {
+
+        if (existsById(clientId)){
+            throw new ResponseStatusException
+                    (HttpStatus.NOT_FOUND,"Não há usuários com este id cadastrado");
+        }
         List<Agendamento> agendamentos = agendamentoRepository.
                 findAgendamentoByClient_IdAndDataHoraInicioBetween(clientId, dataHoraInicio, dataHoraFim);
         Set<LocalDateTime> horariosOcupados = new HashSet<>();
@@ -106,6 +111,14 @@ public class AgendamentoService {
 
     public Agendamento agendamentoSave(Agendamento agendamento) {
         agendamento.setId(null);
+        if (existsById(agendamento.getClient().getId())){
+            throw new ResponseStatusException
+                    (HttpStatus.NOT_FOUND,"Não há cliente com este id cadastrado");
+        }
+        if (existsById(agendamento.getFuncionario().getId())){
+            throw new ResponseStatusException
+                    (HttpStatus.NOT_FOUND,"Não há Funcionário com este id cadastrado");
+        }
         List<Agendamento> agendamentos = listarAgendamentosbyFuncId(agendamento.getFuncionario().getId(),
                 agendamento.getDataHoraInicio(),agendamento.calcularDataFim());
 
