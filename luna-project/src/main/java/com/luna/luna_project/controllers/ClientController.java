@@ -11,6 +11,7 @@ import com.luna.luna_project.repositories.ClientMapper;
 import com.luna.luna_project.services.ClientService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class ClientController {
 //    @Autowired
 //    private GerenciadorTokenJwt gerenciadorTokenJwt;
 
-
+    @SecurityRequirement(name = "Baerer")
     @GetMapping
     public ResponseEntity<List<ClientResponseDTO>> searchClients() {
         List<ClientResponseDTO> clients = clientService.searchClients();

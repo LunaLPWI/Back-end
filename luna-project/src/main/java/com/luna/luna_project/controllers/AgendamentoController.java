@@ -34,8 +34,8 @@ public class AgendamentoController {
 
     @PostMapping
     public ResponseEntity<AgendamentoResponseDTO> saveAgendamento(@RequestBody @Valid AgendamentoRequestDTO agendamentoRequestDTO) {
-        Agendamento agendamento = agendamentoService.agendamentoSave(agendamentoMapper.RequestToEntity(agendamentoRequestDTO));
 
+        Agendamento agendamento = agendamentoService.agendamentoSave(agendamentoMapper.RequestToEntity(agendamentoRequestDTO));
         return ResponseEntity.ok(agendamentoMapper.EntityToResponse(agendamento));
     }
 
@@ -46,12 +46,20 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamentoService.listHorariosDisponiveis(idClient, inicio, fim));
     }
 
+    @GetMapping("/agendamento-client")
+    public ResponseEntity<List<Agendamento>> getAgendamentos(@RequestParam LocalDateTime inicio,
+                                                                @RequestParam Long idClient) {
+        return ResponseEntity.ok(agendamentoService.listarAgendamentosByClientId(idClient, inicio));
+    }
+
     @GetMapping("/agendamento-ocupado")
     public ResponseEntity<Set<LocalDateTime>> getHorariosCheios(@RequestParam LocalDateTime inicio,
                                                                 @RequestParam LocalDateTime fim,
                                                                 @RequestParam Long idClient) {
         return ResponseEntity.ok(agendamentoService.listHorariosOcupados(idClient, inicio, fim));
     }
+
+
 
     @GetMapping("/agendamento-ocupado-admin")
     public ResponseEntity<List<AgendamentoResponseAdminDTO>> getAgendamentosClientsAdmin(@RequestParam LocalDateTime inicio,

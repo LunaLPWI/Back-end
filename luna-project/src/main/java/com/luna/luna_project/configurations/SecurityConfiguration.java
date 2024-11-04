@@ -53,19 +53,15 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/actuator/*"),
             new AntPathRequestMatcher("/clients/login/**"),
             new AntPathRequestMatcher("/clients/save-client/**"),
-            new AntPathRequestMatcher("/clients/search-by-cpf/**"),
-            new AntPathRequestMatcher("/clients/search-by-name/**"),
             new AntPathRequestMatcher("/adms/admin/login/**"),
             new AntPathRequestMatcher("/adms/**"),
             new AntPathRequestMatcher("/plans/**"),
             new AntPathRequestMatcher("/plans/create-charge**"),
             new AntPathRequestMatcher("/plans/create-plan**"),
             new AntPathRequestMatcher("/plans/create-plan-and-charge**"),
-            new AntPathRequestMatcher("/clients/**"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/h2-console/**/**"),
             new AntPathRequestMatcher("/error/**"),
-            new AntPathRequestMatcher("/agendamentos/**")
     };
 
     @Bean
