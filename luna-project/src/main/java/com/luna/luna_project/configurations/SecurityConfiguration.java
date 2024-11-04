@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -52,7 +53,7 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/v3/api-docs/**"),
             new AntPathRequestMatcher("/actuator/*"),
             new AntPathRequestMatcher("/clients/login/**"),
-            new AntPathRequestMatcher("/clients/save-client/**"),
+            new AntPathRequestMatcher("/clients/**"),
             new AntPathRequestMatcher("/adms/admin/login/**"),
             new AntPathRequestMatcher("/adms/**"),
             new AntPathRequestMatcher("/plans/**"),
@@ -62,6 +63,7 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/h2-console/**/**"),
             new AntPathRequestMatcher("/error/**"),
+            new AntPathRequestMatcher("/clients/**"),
     };
 
     @Bean
@@ -71,8 +73,16 @@ public class SecurityConfiguration {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers(URLS_PERMITIDAS)
-                        .permitAll()
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(URLS_PERMITIDAS)
+                        .access((authentication, context) -> {
+                            // Permitir apenas requisições POST
+                            if ("POST".equalsIgnoreCase(context.getRequest().getMethod())) {
+                                return new AuthorizationDecision(true);
+                            } else {
+                                return new AuthorizationDecision(false);
+                            }
+                        })
                         .anyRequest()
                         .authenticated()
                 )

@@ -40,7 +40,7 @@ public class ClientController {
         return ResponseEntity.ok().body(clients);
     }
 
-
+    @SecurityRequirement(name = "Baerer")
     @GetMapping("/search-by-cpf")
     public ResponseEntity<ClientResponseDTO> searchClientByCpf(@RequestParam String cpf) {
         ClientResponseDTO client = clientService.searchClientByCpf(cpf);
@@ -55,7 +55,7 @@ public class ClientController {
         return ResponseEntity.ok().body(clientResponseDTO);
     }
 
-
+    @SecurityRequirement(name = "Baerer")
     @DeleteMapping("/delete-by-cpf")
     public ResponseEntity<String> deleteClientByCpf(@RequestParam String cpf) {
         try {
@@ -65,6 +65,7 @@ public class ClientController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @SecurityRequirement(name = "Baerer")
     @GetMapping("/search-by-name")
     public ResponseEntity<ClientRequestDTO> searchClientById(@RequestParam String nome) {
         Client client = clientService.searchByUsername(nome);
@@ -75,7 +76,7 @@ public class ClientController {
         return ResponseEntity.ok().body(clientDTO);
     }
 
-
+    @SecurityRequirement(name = "Baerer")
     @GetMapping("/{id}")
     public ResponseEntity<ClientRequestDTO> searchClientById(@PathVariable Long id) {
         Client client = clientService.searchClientById(id);
@@ -85,13 +86,13 @@ public class ClientController {
         }
         return ResponseEntity.ok().body(clientDTO);
     }
-
+    @SecurityRequirement(name = "Baerer")
     @GetMapping("/sorted")
     public List<ClientResponseDTO> getSortedClients() {
         return clientService.sortClientsByName();
     }
 
-
+    @SecurityRequirement(name = "Baerer")
     @GetMapping("/search-by-email")
     public ResponseEntity<Long> searchClientByEmail(@RequestParam String email) {
         Client client = clientService.searchClientByEmail(email);
