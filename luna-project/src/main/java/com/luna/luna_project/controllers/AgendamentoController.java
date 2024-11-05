@@ -43,13 +43,17 @@ public class AgendamentoController {
     public ResponseEntity<List<LocalDateTime>> getHorariosVagos(@RequestParam LocalDateTime inicio,
                                                                 @RequestParam LocalDateTime fim,
                                                                 @RequestParam Long idClient) {
+
         return ResponseEntity.ok(agendamentoService.listHorariosDisponiveis(idClient, inicio, fim));
     }
 
     @GetMapping("/agendamento-client")
-    public ResponseEntity<List<Agendamento>> getAgendamentos(@RequestParam LocalDateTime inicio,
+    public ResponseEntity<List<AgendamentoResponseDTO>> getAgendamentos(@RequestParam LocalDateTime inicio,
                                                                 @RequestParam Long idClient) {
-        return ResponseEntity.ok(agendamentoService.listarAgendamentosByClientId(idClient, inicio));
+        List<Agendamento> agendamentos = agendamentoService.listarAgendamentosByClientId(idClient, inicio);
+        List<AgendamentoResponseDTO> agendamentoResponseDTOS = agendamentos.stream().map
+                (agendamentoMapper::EntityToResponse).toList();
+        return ResponseEntity.ok(agendamentoResponseDTOS);
     }
 
     @GetMapping("/agendamento-ocupado")
