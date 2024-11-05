@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -32,14 +33,13 @@ public class GerenciadorTokenJwt {
         return getClaimForToken(token, Claims::getExpiration);
     }
 
-    public String generateToken(final Authentication authentication) {
+    public String generateToken(final Authentication authentication, List<String> roles) {
 
-        // Para verificacoes de permissões;
-        final String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
 
         return Jwts.builder().setSubject(authentication.getName())
                 .signWith(parseSecret()).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setSubject(authentication.getName())
+                .claim("roles", roles)
                 .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1_000)).compact();
     }
 

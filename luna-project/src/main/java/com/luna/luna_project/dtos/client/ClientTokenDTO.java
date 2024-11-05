@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class ClientTokenDTO {
@@ -17,5 +19,6 @@ public class ClientTokenDTO {
     private Boolean isAdmin = false;
     private Boolean isFuncionario = false;
     private String cellphone;
+    private List<String> roles;
 
 }

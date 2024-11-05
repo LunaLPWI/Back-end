@@ -5,6 +5,8 @@ import com.luna.luna_project.models.Client;
 import lombok.*;
 import org.antlr.v4.runtime.Token;
 
+import java.util.List;
+
 
 @Builder
 @Getter
@@ -15,6 +17,7 @@ public class ClientResponseDTO {
     private String nome;
     private String email;
     private String cellphone;
+    private List<String> roles;
 }
 
 

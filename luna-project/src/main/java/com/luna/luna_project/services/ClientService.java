@@ -192,8 +192,7 @@ public class ClientService {
         Client clientAuthentication = searchClientByEmail(clientLoginDTO.getEmail());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final String token = gerenciadorTokenJwt.generateToken(authentication);
-
+        final String token = gerenciadorTokenJwt.generateToken(authentication, clientAuthentication.getRoles());
         return clientMapper.clientToClientDTO(clientAuthentication, token);
     }
 

@@ -2,6 +2,8 @@ package com.luna.luna_project.dtos.client;
 import com.luna.luna_project.dtos.AddressDTO;
 import lombok.*;
 
+import java.util.List;
+
 
 @Builder
 @Getter
@@ -17,6 +19,7 @@ public class ClientRequestDTO {
     private AddressDTO address;
     private Boolean isAdmin;
     private Boolean isFuncionario;
+    private List<String> roles;
 }
 
 
