@@ -41,16 +41,15 @@ public class ClientController {
         return ResponseEntity.ok().body(clients);
     }
 
-    @SecurityRequirement(name = "Baerer")
     @GetMapping("/search-by-cpf")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ClientResponseDTO> searchClientByCpf(@RequestParam String cpf) {
         ClientResponseDTO client = clientService.searchClientByCpf(cpf);
         return ResponseEntity.ok().body(client);
     }
 
 
-    @PostMapping
+    @PostMapping("/save-client")
     public ResponseEntity<ClientResponseDTO> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
         Client client = clientService.saveClient(clientDTO, clientDTO.getAddress());
         ClientResponseDTO clientResponseDTO = clientMapper.clientToClientDTOResponse(client);

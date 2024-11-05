@@ -75,15 +75,6 @@ public class SecurityConfiguration {
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(URLS_PERMITIDAS)
-                        .access((authentication, context) -> {
-                            // Permitir apenas requisições POST
-                            if ("POST".equalsIgnoreCase(context.getRequest().getMethod())) {
-                                return new AuthorizationDecision(true);
-                            } else {
-                                return new AuthorizationDecision(false);
-                            }
-                        })
-                        .anyRequest()
                         .authenticated()
                 )
                 .exceptionHandling(handling -> handling
