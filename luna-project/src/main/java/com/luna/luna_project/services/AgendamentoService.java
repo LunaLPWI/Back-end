@@ -154,4 +154,16 @@ public class AgendamentoService {
         }
         agendamentoRepository.deleteById(id);
     }
+
+
+
+    public Agendamento updateAgendamento(Agendamento agendamento){
+        Optional <Agendamento> agendamentoOptional =  agendamentoRepository.findById(agendamento.getId());
+        if(agendamentoOptional.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Não existe agendamento com o id:%d".formatted(agendamento.getId()));
+        };
+        agendamentoRepository.save(agendamento);
+        return agendamentoOptional.get();
+    }
 }

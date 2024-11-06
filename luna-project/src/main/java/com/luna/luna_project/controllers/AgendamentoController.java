@@ -2,6 +2,7 @@ package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.csv.agendamento.AgendamentoCSV;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoRequestDTO;
+import com.luna.luna_project.dtos.agendamentos.AgendamentoRequestUpdateDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseAdminDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseDTO;
 import com.luna.luna_project.mapper.AgendamentoMapper;
@@ -75,4 +76,14 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamentos.stream()
                 .map(agendamentoMapper::EntityToResponseAdmin).toList());
     }
+
+    @PatchMapping
+    public ResponseEntity<AgendamentoResponseDTO> updateById(@RequestBody @Valid AgendamentoRequestUpdateDTO agendamentoRequestUpdateDTO) {
+        Agendamento agendamento = agendamentoMapper.RequestUpdateToEntity(agendamentoRequestUpdateDTO);
+        agendamentoService.updateAgendamento(agendamento);
+
+        return ResponseEntity.ok(agendamentoMapper.EntityToResponse(agendamento));
+    }
+
+
 }

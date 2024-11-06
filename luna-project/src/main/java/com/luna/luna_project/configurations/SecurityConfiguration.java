@@ -64,6 +64,7 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/h2-console/**/**"),
             new AntPathRequestMatcher("/error/**"),
             new AntPathRequestMatcher("/clients/**"),
+            new AntPathRequestMatcher("/agendamentos/**"),
     };
 
     @Bean
@@ -80,7 +81,7 @@ public class SecurityConfiguration {
                             if ("POST".equalsIgnoreCase(context.getRequest().getMethod())) {
                                 return new AuthorizationDecision(true);
                             } else {
-                                return new AuthorizationDecision(false);
+                                return new AuthorizationDecision(true);
                             }
                         })
                         .anyRequest()

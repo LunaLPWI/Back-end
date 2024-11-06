@@ -1,6 +1,7 @@
 package com.luna.luna_project.mapper;
 
 import com.luna.luna_project.dtos.agendamentos.AgendamentoRequestDTO;
+import com.luna.luna_project.dtos.agendamentos.AgendamentoRequestUpdateDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseAdminDTO;
 import com.luna.luna_project.dtos.agendamentos.AgendamentoResponseDTO;
 import com.luna.luna_project.models.Agendamento;
@@ -23,6 +24,15 @@ public class AgendamentoMapper {
 
     public Agendamento RequestToEntity(AgendamentoRequestDTO agendamentoRequestDTO) {
         return Agendamento.builder()
+                .client(clientService.searchClientById(agendamentoRequestDTO.getIdClient()))
+                .funcionario(clientService.searchClientById(agendamentoRequestDTO.getIdFunc()))
+                .dataHoraInicio(agendamentoRequestDTO.getDataHoraInicio())
+                .itens(agendamentoRequestDTO.getItens())
+                .build();
+    }
+    public Agendamento RequestUpdateToEntity(AgendamentoRequestUpdateDTO agendamentoRequestDTO) {
+        return Agendamento.builder()
+                .id(agendamentoRequestDTO.getId())
                 .client(clientService.searchClientById(agendamentoRequestDTO.getIdClient()))
                 .funcionario(clientService.searchClientById(agendamentoRequestDTO.getIdFunc()))
                 .dataHoraInicio(agendamentoRequestDTO.getDataHoraInicio())
