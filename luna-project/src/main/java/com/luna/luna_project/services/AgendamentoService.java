@@ -50,7 +50,7 @@ public class AgendamentoService {
         return horariosOcupados;
     }
 
-    public List<LocalDateTime> listHorariosDisponiveis(Long idFunc,Long clientId, LocalDateTime dataHoraInicio,
+    public Set<LocalDateTime> listHorariosDisponiveis(Long idFunc,Long clientId, LocalDateTime dataHoraInicio,
                                                        LocalDateTime dataHoraFim) {
 //        if (existsById(clientId)){
 //            throw new ResponseStatusException
@@ -63,62 +63,43 @@ public class AgendamentoService {
 
         List<Agendamento> agendamentos = agendamentoRepository.
                 findAgendamentoByClient_IdAndClient_IdAndDataHoraInicioBetween(clientId,idFunc, dataHoraInicio, dataHoraFim);
-        Set<LocalDateTime> horariosOcupados = new HashSet<>();
-        List<LocalDateTime> horariosDisponiveis = new ArrayList<>();
+        Set<LocalDateTime> horariosLivres = new HashSet<>();
 
+        getHorarios(horariosLivres, dataHoraInicio, dataHoraFim);
 
-        for (int i = 0; i < agendamentos.size()-1; i++) {
-            if (Duration.between(agendamentos.get(i).calcularDataFim(),
-                    agendamentos.get(i + 1).getDataHoraInicio()).toMinutes() >= 45
-
-            ){
-                horariosDisponiveis.add(agendamentos.get(i + 1).getDataHoraInicio());
-                calcularHorarios(horariosDisponiveis, agendamentos.get(i).calcularDataFim(),
-                        agendamentos.get(i + 1).getDataHoraInicio());
-            }
-
+        for(Agendamento agendamento : agendamentos) {
+            horariosLivres.stream().filter(
+                    horario -> horario.isBefore(agendamento.getDataHoraInicio()) && horariosLivres.remove(horario)
+            );
         }
-        if(agendamentos.size()>1) {
-            if (Duration.between(dataHoraInicio,
-                    agendamentos.get(0).getDataHoraInicio()).toMinutes() >= 45) {
 
-                horariosDisponiveis.add(dataHoraInicio);
-                calcularHorarios(horariosDisponiveis, dataHoraInicio, agendamentos.get(0).getDataHoraInicio());
-            }
-            if (Duration.between(agendamentos.get(agendamentos.size() - 1).calcularDataFim(),
-                    dataHoraFim).toMinutes() >= 45) {
 
-                horariosDisponiveis.add(agendamentos.get(agendamentos.size() - 1).calcularDataFim());
-                calcularHorarios(horariosDisponiveis, agendamentos.get(agendamentos.size() - 1).calcularDataFim(),
-                        dataHoraFim);
-            }
-        }
-        calcularHorarios(horariosDisponiveis, dataHoraInicio, dataHoraFim);
 
-        if (horariosDisponiveis.isEmpty()) {
+
+
+
+        if (horariosLivres.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT,"Não há horários disponíveis");
         }
 
-        return horariosDisponiveis;
+        return horariosLivres;
     }
+//    public void calcularHorarios(Set<LocalDateTime> list,LocalDateTime inicio, LocalDateTime fim) {
+//        if(inicio.isAfter(fim)){
+//            list.r
+//        }
+//    }
 
-    public void calcularHorarios(List<LocalDateTime> list,LocalDateTime inicio, LocalDateTime fim) {
-        if(!inicio.isEqual(fim)) {
+
+    public void getHorarios(Set<LocalDateTime> list,LocalDateTime inicio, LocalDateTime fim) {
             if (inicio.isBefore(fim)) {
                 if (inicio.plusMinutes(45).isAfter(fim)) {
                     return;
                 }
                 list.add(inicio);
                 inicio = inicio.plusMinutes(45);
-                calcularHorarios(list, inicio, fim);
+                getHorarios(list, inicio, fim);
             }
-            if (inicio.minusMinutes(45).isBefore(fim)) {
-                return;
-            }
-            list.add(inicio);
-            inicio =inicio.minusMinutes(45);
-            calcularHorarios(list, inicio, fim);
-        }
     }
 
     public List<Agendamento> listarAgendamentosbyFuncId(Long funcId, LocalDateTime dataHoraInicio,
