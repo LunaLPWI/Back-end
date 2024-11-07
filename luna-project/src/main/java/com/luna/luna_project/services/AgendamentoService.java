@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -51,41 +52,73 @@ public class AgendamentoService {
 
     public List<LocalDateTime> listHorariosDisponiveis(Long idFunc,Long clientId, LocalDateTime dataHoraInicio,
                                                        LocalDateTime dataHoraFim) {
-
-        if (existsById(clientId)){
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND,"Não há clientes com este id cadastrado");
-        }
-        if (existsById(idFunc)){
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND,"Não há funcionários com este id cadastrado");
-        }
+//        if (existsById(clientId)){
+//            throw new ResponseStatusException
+//                    (HttpStatus.NOT_FOUND,"Não há clientes com este id cadastrado");
+//        }
+//        if (existsById(idFunc)){
+//            throw new ResponseStatusException
+//                    (HttpStatus.NOT_FOUND,"Não há funcionários com este id cadastrado");
+//        }
 
         List<Agendamento> agendamentos = agendamentoRepository.
                 findAgendamentoByClient_IdAndClient_IdAndDataHoraInicioBetween(clientId,idFunc, dataHoraInicio, dataHoraFim);
         Set<LocalDateTime> horariosOcupados = new HashSet<>();
-
-        for (Agendamento agendamento : agendamentos) {
-            LocalDateTime inicio = agendamento.getDataHoraInicio();
-            LocalDateTime fim = agendamento.calcularDataFim();
-
-            for (LocalDateTime horario = inicio; horario.isBefore(fim); horario = horario.plusMinutes(30)) {
-                horariosOcupados.add(horario);
-            }
-        }
-
         List<LocalDateTime> horariosDisponiveis = new ArrayList<>();
-        for (LocalDateTime horario = dataHoraInicio; horario.isBefore(dataHoraFim); horario = horario.plusMinutes(30)) {
-            if (!horariosOcupados.contains(horario)) {
-                horariosDisponiveis.add(horario);
+
+
+        for (int i = 0; i < agendamentos.size()-1; i++) {
+            if (Duration.between(agendamentos.get(i).calcularDataFim(),
+                    agendamentos.get(i + 1).getDataHoraInicio()).toMinutes() >= 45
+
+            ){
+                horariosDisponiveis.add(agendamentos.get(i + 1).getDataHoraInicio());
+                calcularHorarios(horariosDisponiveis, agendamentos.get(i).calcularDataFim(),
+                        agendamentos.get(i + 1).getDataHoraInicio());
+            }
+
+        }
+        if(agendamentos.size()>1) {
+            if (Duration.between(dataHoraInicio,
+                    agendamentos.get(0).getDataHoraInicio()).toMinutes() >= 45) {
+
+                horariosDisponiveis.add(dataHoraInicio);
+                calcularHorarios(horariosDisponiveis, dataHoraInicio, agendamentos.get(0).getDataHoraInicio());
+            }
+            if (Duration.between(agendamentos.get(agendamentos.size() - 1).calcularDataFim(),
+                    dataHoraFim).toMinutes() >= 45) {
+
+                horariosDisponiveis.add(agendamentos.get(agendamentos.size() - 1).calcularDataFim());
+                calcularHorarios(horariosDisponiveis, agendamentos.get(agendamentos.size() - 1).calcularDataFim(),
+                        dataHoraFim);
             }
         }
+        calcularHorarios(horariosDisponiveis, dataHoraInicio, dataHoraFim);
 
         if (horariosDisponiveis.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT,"Não há horários disponíveis");
         }
 
         return horariosDisponiveis;
+    }
+
+    public void calcularHorarios(List<LocalDateTime> list,LocalDateTime inicio, LocalDateTime fim) {
+        if(!inicio.isEqual(fim)) {
+            if (inicio.isBefore(fim)) {
+                if (inicio.plusMinutes(45).isAfter(fim)) {
+                    return;
+                }
+                list.add(inicio);
+                inicio = inicio.plusMinutes(45);
+                calcularHorarios(list, inicio, fim);
+            }
+            if (inicio.minusMinutes(45).isBefore(fim)) {
+                return;
+            }
+            list.add(inicio);
+            inicio =inicio.minusMinutes(45);
+            calcularHorarios(list, inicio, fim);
+        }
     }
 
     public List<Agendamento> listarAgendamentosbyFuncId(Long funcId, LocalDateTime dataHoraInicio,
