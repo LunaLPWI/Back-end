@@ -65,6 +65,8 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/error/**"),
             new AntPathRequestMatcher("/clients/**"),
             new AntPathRequestMatcher("/agendamentos/**"),
+            new AntPathRequestMatcher("/agendamentos/agendamento-vagos/**"),
+
     };
 
     @Bean

@@ -49,15 +49,20 @@ public class AgendamentoService {
         return horariosOcupados;
     }
 
-    public List<LocalDateTime> listHorariosDisponiveis(Long clientId, LocalDateTime dataHoraInicio,
+    public List<LocalDateTime> listHorariosDisponiveis(Long idFunc,Long clientId, LocalDateTime dataHoraInicio,
                                                        LocalDateTime dataHoraFim) {
 
         if (existsById(clientId)){
             throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND,"Não há usuários com este id cadastrado");
+                    (HttpStatus.NOT_FOUND,"Não há clientes com este id cadastrado");
         }
+        if (existsById(idFunc)){
+            throw new ResponseStatusException
+                    (HttpStatus.NOT_FOUND,"Não há funcionários com este id cadastrado");
+        }
+
         List<Agendamento> agendamentos = agendamentoRepository.
-                findAgendamentoByClient_IdAndDataHoraInicioBetween(clientId, dataHoraInicio, dataHoraFim);
+                findAgendamentoByClient_IdAndClient_IdAndDataHoraInicioBetween(clientId,idFunc, dataHoraInicio, dataHoraFim);
         Set<LocalDateTime> horariosOcupados = new HashSet<>();
 
         for (Agendamento agendamento : agendamentos) {
@@ -121,11 +126,6 @@ public class AgendamentoService {
         }
         List<Agendamento> agendamentos = listarAgendamentosbyFuncId(agendamento.getFuncionario().getId(),
                 agendamento.getDataHoraInicio(),agendamento.calcularDataFim());
-
-        if (existsById(agendamento.getClient().getId())){
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND,"Não há usuários com este id cadastrado");
-        }
 
         for(Agendamento agendamento1 : agendamentos){
             boolean inicioAnterior= agendamento.getDataHoraInicio().isBefore(agendamento1.getDataHoraInicio());

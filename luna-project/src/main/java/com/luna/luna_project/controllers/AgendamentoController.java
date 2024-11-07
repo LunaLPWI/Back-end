@@ -43,9 +43,9 @@ public class AgendamentoController {
     @GetMapping("/agendamento-vagos")
     public ResponseEntity<List<LocalDateTime>> getHorariosVagos(@RequestParam LocalDateTime inicio,
                                                                 @RequestParam LocalDateTime fim,
+                                                                @RequestParam Long idFunc,
                                                                 @RequestParam Long idClient) {
-
-        return ResponseEntity.ok(agendamentoService.listHorariosDisponiveis(idClient, inicio, fim));
+        return ResponseEntity.ok(agendamentoService.listHorariosDisponiveis(idFunc,idClient, inicio, fim));
     }
 
     @GetMapping("/agendamento-client")
