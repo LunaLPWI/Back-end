@@ -50,64 +50,50 @@ public class AgendamentoService {
         return horariosOcupados;
     }
 
-    public Set<LocalDateTime> listHorariosDisponiveis(Long idFunc,Long clientId, LocalDateTime dataHoraInicio,
-                                                       LocalDateTime dataHoraFim) {
-//        if (existsById(clientId)){
-//            throw new ResponseStatusException
-//                    (HttpStatus.NOT_FOUND,"Não há clientes com este id cadastrado");
-//        }
-//        if (existsById(idFunc)){
-//            throw new ResponseStatusException
-//                    (HttpStatus.NOT_FOUND,"Não há funcionários com este id cadastrado");
-//        }
+    public List<LocalDateTime> listHorariosDisponiveis(Long idFunc, Long clientId, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim) {
+        // Verifica se o cliente e o funcionário existem
 
-        List<Agendamento> agendamentos = agendamentoRepository.
-                findAgendamentoByClient_IdAndClient_IdAndDataHoraInicioBetween(clientId,idFunc, dataHoraInicio, dataHoraFim);
-        Set<LocalDateTime> horariosLivres = new HashSet<>();
 
-        getHorarios(horariosLivres, dataHoraInicio, dataHoraFim);
+        // Obtém os agendamentos do cliente e do funcionário dentro do período especificado
+        List<Agendamento> agendamentosFunc = agendamentoRepository
+                .findAgendamentoByFuncionario_IdAndDataHoraInicioBetween(idFunc, dataHoraInicio, dataHoraFim);
 
-        for(Agendamento agendamento : agendamentos) {
-            horariosLivres.stream().filter(
-                    horario -> horario.isBefore(agendamento.getDataHoraInicio()) && horariosLivres.remove(horario)
+        List<Agendamento> agendamentosClient = agendamentoRepository
+                .findAgendamentoByClient_IdAndDataHoraInicioBetween(clientId, dataHoraInicio, dataHoraFim);
+
+        Set<Agendamento> agendamentos = new HashSet<>();
+
+        agendamentos.addAll(agendamentosFunc);
+        agendamentos.addAll(agendamentosClient);
+        agendamentos.stream().sorted(Comparator.comparing(Agendamento::getDataHoraInicio));
+
+        // Gera todos os horários possíveis dentro do período
+
+        List<LocalDateTime> horariosDisponiveis = new ArrayList<>();
+        for (LocalDateTime horario = dataHoraInicio; horario.plusMinutes(45).isBefore(dataHoraFim); horario = horario.plusMinutes(45)) {
+            horariosDisponiveis.add(horario);
+        }
+
+        for (Agendamento agendamento : agendamentos) {
+            horariosDisponiveis.removeIf(horario ->
+                    (horario.isBefore(agendamento.calcularDataFim()) && horario.plusMinutes(45).isAfter(agendamento.getDataHoraInicio()))
             );
         }
 
-
-
-
-
-
-        if (horariosLivres.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT,"Não há horários disponíveis");
+        // Verifica se há horários disponíveis
+        if (horariosDisponiveis.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há horários disponíveis entre " + dataHoraInicio + " e " + dataHoraFim);
         }
 
-        return horariosLivres;
+        return horariosDisponiveis;
     }
-//    public void calcularHorarios(Set<LocalDateTime> list,LocalDateTime inicio, LocalDateTime fim) {
-//        if(inicio.isAfter(fim)){
-//            list.r
-//        }
-//    }
 
 
-    public void getHorarios(Set<LocalDateTime> list,LocalDateTime inicio, LocalDateTime fim) {
-            if (inicio.isBefore(fim)) {
-                if (inicio.plusMinutes(45).isAfter(fim)) {
-                    return;
-                }
-                list.add(inicio);
-                inicio = inicio.plusMinutes(45);
-                getHorarios(list, inicio, fim);
-            }
-    }
+
 
     public List<Agendamento> listarAgendamentosbyFuncId(Long funcId, LocalDateTime dataHoraInicio,
                                                         LocalDateTime dataHoraFim) {
-        if (existsById(funcId)){
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND,"Não há usuários com este id cadastrado");
-        }
+
 
         return agendamentoRepository.findAgendamentoByFuncionario_IdAndDataHoraInicioBetween(funcId,
                 dataHoraInicio, dataHoraFim);
@@ -115,10 +101,6 @@ public class AgendamentoService {
 
     public List<Agendamento> listarAgendamentosByClientId(Long clientId, LocalDateTime dateTimeInicio){
 
-        if (existsById(clientId)){
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND,"Não há usuários com este id cadastrado");
-        }
         List<Agendamento> agendamentos =  agendamentoRepository.findAgendamentoByClient_IdAndDataHoraInicioAfter
                 (clientId,dateTimeInicio);
         if(agendamentos.isEmpty()){
@@ -130,34 +112,6 @@ public class AgendamentoService {
 
     public Agendamento agendamentoSave(Agendamento agendamento) {
         agendamento.setId(null);
-        if (existsById(agendamento.getClient().getId())){
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND,"Não há cliente com este id cadastrado");
-        }
-        if (existsById(agendamento.getFuncionario().getId())){
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND,"Não há Funcionário com este id cadastrado");
-        }
-        List<Agendamento> agendamentos = listarAgendamentosbyFuncId(agendamento.getFuncionario().getId(),
-                agendamento.getDataHoraInicio(),agendamento.calcularDataFim());
-
-        for(Agendamento agendamento1 : agendamentos){
-            boolean inicioAnterior= agendamento.getDataHoraInicio().isBefore(agendamento1.getDataHoraInicio());
-            boolean finalPosterior = agendamento.calcularDataFim().isAfter(agendamento1.calcularDataFim());
-
-            boolean inicioMeio = inicioAnterior &&
-                    agendamento.calcularDataFim().isBefore(agendamento1.calcularDataFim());
-            boolean fimMeio = finalPosterior &&
-                    agendamento.getDataHoraInicio().isBefore(agendamento1.calcularDataFim());
-            boolean entre = agendamento.getDataHoraInicio().isAfter(agendamento1.getDataHoraInicio())
-                    && agendamento.calcularDataFim().isBefore(agendamento1.calcularDataFim());
-            boolean engloba = inicioAnterior && finalPosterior;
-
-            if(inicioMeio||fimMeio||engloba||entre){
-                throw new ResponseStatusException(HttpStatus.CONFLICT,
-                        "Já existe um agendamento neste intervalo de tempo");
-            }
-        }
         return agendamentoRepository.save(agendamento);
     }
 

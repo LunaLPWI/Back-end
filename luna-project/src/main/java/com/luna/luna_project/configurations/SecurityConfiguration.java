@@ -77,17 +77,14 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(URLS_PERMITIDAS)
-                        .access((authentication, context) -> {
-                            // Permitir apenas requisições POST
-                            if ("POST".equalsIgnoreCase(context.getRequest().getMethod())) {
-                                return new AuthorizationDecision(true);
-                            } else {
-                                return new AuthorizationDecision(true);
-                            }
-                        })
-                        .anyRequest()
-                        .authenticated()
+                        // Permite requisições POST para /clients sem autenticação
+                        .requestMatchers(HttpMethod.POST, "/clients", "/clients/login").permitAll()
+
+                        // Outros endpoints que precisam de autenticação
+                        .requestMatchers("/clients/**").authenticated()
+
+                        // Qualquer outra requisição requer autenticação
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(authenticationEntryPoint))
@@ -98,6 +95,8 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
+
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {

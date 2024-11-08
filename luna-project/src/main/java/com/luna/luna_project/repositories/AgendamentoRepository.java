@@ -10,9 +10,6 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
 
     List<Agendamento> findAgendamentoByClient_IdAndDataHoraInicioBetween(Long clientId, LocalDateTime dataHoraInicio,
             LocalDateTime dataHoraFim);
-    List<Agendamento> findAgendamentoByClient_IdAndClient_IdAndDataHoraInicioBetween(Long clientId,Long funcId,
-                                                                                     LocalDateTime dataHoraInicio,
-                                                                         LocalDateTime dataHoraFim);
 
     List<Agendamento> findAgendamentoByFuncionario_IdAndDataHoraInicioBetween(Long funcId, LocalDateTime dataHoraInicio,
                                                                          LocalDateTime dataHoraFim);

@@ -41,7 +41,7 @@ public class AgendamentoController {
     }
 
     @GetMapping("/agendamento-vagos")
-    public ResponseEntity<Set<LocalDateTime>> getHorariosVagos(@RequestParam LocalDateTime inicio,
+    public ResponseEntity<List<LocalDateTime>> getHorariosVagos(@RequestParam LocalDateTime inicio,
                                                                 @RequestParam LocalDateTime fim,
                                                                 @RequestParam Long idFunc,
                                                                 @RequestParam Long idClient) {

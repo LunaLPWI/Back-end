@@ -18,6 +18,8 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Client findByNome(String nome);
 
+    boolean existsById(Long id);
+
 
     Optional <Client> findByEmailAndPassword(String email, String senha);
 }
