@@ -6,7 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PlanAndChargeRequestDTO {
-    private PlanDTO planDTO;
-    private ChargeRequestDTO chargeRequestDTO;
+    private OneStepDTO oneStepDTO;
 }
 

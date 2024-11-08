@@ -1,4 +1,5 @@
 package com.luna.luna_project.services;
+import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.PlanAndChargeRequestDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
@@ -18,8 +19,8 @@ public class PlanService {
     @Autowired
     private PlanMapper planMapper;
 
-    public Plan savePlan(@Valid PlanAndChargeRequestDTO request){
-        PlanDTO planDTO = request.getPlanDTO();
+    public Plan savePlan(@Valid OneStepDTO request){
+        PlanDTO planDTO = request.getPlan();
         Plan planDTOSaved = PlanEFI.createPlan(planDTO);
         if (planDTOSaved == null) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);

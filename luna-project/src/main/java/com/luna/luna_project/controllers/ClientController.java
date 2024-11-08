@@ -45,7 +45,7 @@ public class ClientController {
         if (clientService.existsCpf(clientDTO.cpf())) {
             return ResponseEntity.status(409).build(); // Conflict - CPF já existente
         }
-        ClientDTO client = clientService.saveClient(clientDTO, clientDTO.address());
+        ClientDTO client = clientService.saveClient(clientDTO);
         return ResponseEntity.ok().body(client);
     }
 

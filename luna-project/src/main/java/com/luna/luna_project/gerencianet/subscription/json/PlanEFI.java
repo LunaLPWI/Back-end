@@ -3,15 +3,21 @@ package com.luna.luna_project.gerencianet.subscription.json;
 import br.com.efi.efisdk.EfiPay;
 import br.com.efi.efisdk.exceptions.EfiPayException;
 import com.luna.luna_project.dtos.ChargeRequestDTO;
+import com.luna.luna_project.dtos.ClientDTO;
+import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.gerencianet.Credentials;
+import com.luna.luna_project.mapper.OneStepCardMapper;
+import com.luna.luna_project.mapper.OneStepLinkMapper;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.mapper.SubscriptionMapper;
-import com.luna.luna_project.models.Charge;
+import com.luna.luna_project.models.OneStepCardSubscription;
+import com.luna.luna_project.models.OneStepLink;
 import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.models.Subscription;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,51 +82,120 @@ public class PlanEFI {
 			Map<String, Object> data = (Map<String, Object>) response.get("data");
 			return SubscriptionMapper.INSTANCE.mapToSub(data);
 		} catch (Exception e) {
-			// Log the exception
 			e.printStackTrace();
-			return new Subscription(); // Return an empty Subscription instead of null
+			return new Subscription();
 		}
 	}
 
 
-	public static Subscription createChargeWithPlanId(String planId, ChargeRequestDTO chargeRequestDTO) {
+	public static OneStepCardSubscription createOneStep(Plan plan,
+														String token,
+														ChargeRequestDTO chargeRequestDTO,
+														ClientDTO clientDTO) {
 		Credentials credentials = new Credentials();
-
-		HashMap<String, Object> options = new HashMap<>();
+		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put("client_id", credentials.getClientId());
 		options.put("client_secret", credentials.getClientSecret());
 		options.put("sandbox", credentials.isSandbox());
 
-		HashMap<String, String> params = new HashMap<>();
-		params.put("id", planId); // Usa o planId dinâmico
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("id", plan.getPlan_id());
 
-		List<Object> items = new ArrayList<>();
-
-		Map<String, Object> item1 = new HashMap<>();
+		List<Object> items = new ArrayList<Object>();
+		Map<String, Object> item1 = new HashMap<String, Object>();
 		item1.put("name", chargeRequestDTO.getName());
 		item1.put("amount", chargeRequestDTO.getAmount());
 		item1.put("value", chargeRequestDTO.getValue());
 		items.add(item1);
 
-		Map<String, Object> body = new HashMap<>();
+		Map<String, Object> customer = new HashMap<String, Object>();
+		customer.put("name", clientDTO.name());
+		customer.put("cpf", clientDTO.cpf());
+		customer.put("phone_number", clientDTO.phoneNumber());
+		customer.put("email", clientDTO.email());
+		customer.put("birth", clientDTO.birthDay());
+
+		Map<String, Object> billingAddress = new HashMap<String, Object>();
+		billingAddress.put("street", clientDTO.address().getLogradouro());
+		billingAddress.put("number", clientDTO.address().getNumber());
+		billingAddress.put("neighborhood", clientDTO.address().getBairro());
+		billingAddress.put("zipcode", "03206010");
+		billingAddress.put("city", clientDTO.address().getLocalidade());
+		billingAddress.put("state", clientDTO.address().getUf());
+
+		Map<String, Object> creditCard = new HashMap<String, Object>();
+		creditCard.put("installments", null);
+		creditCard.put("billing_address", billingAddress);
+		creditCard.put("payment_token", token);
+		creditCard.put("customer", customer);
+		Map<String, Object> payment = new HashMap<String, Object>();
+		payment.put("credit_card", creditCard);
+		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("items", items);
+		body.put("payment", payment);
 
 		try {
 			EfiPay efi = new EfiPay(options);
-			Map<String, Object> response = efi.call("createSubscription", params, body);
-
+			Map<String, Object> response = efi.call("createOneStepSubscription", params, body);
 			Map<String, Object> data = (Map<String, Object>) response.get("data");
-			return SubscriptionMapper.INSTANCE.mapToSub(data);
+			return OneStepCardMapper.INSTANCE.mapToOneStepCardSub(data);
 		} catch (Exception e) {
-			// Log the exception
 			e.printStackTrace();
-			return new Subscription(); // Retorna um Subscription vazio ao invés de null
+			return new OneStepCardSubscription();
 		}
 	}
 
 
+	public static OneStepLink createOneStepLink(ChargeRequestDTO chargeRequestDTO){
 
+		Credentials credentials = new Credentials();
+		HashMap<String, Object> options = new HashMap<String, Object>();
+		options.put("client_id", credentials.getClientId());
+		options.put("client_secret", credentials.getClientSecret());
+		options.put("sandbox", credentials.isSandbox());
 
+		/* ************************************************* */
 
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("id", "12626");
 
+		List<Object> items = new ArrayList<Object>();
+		Map<String, Object> item1 = new HashMap<String, Object>();
+		item1.put("name", chargeRequestDTO.getName());
+		item1.put("amount", chargeRequestDTO.getAmount());
+		item1.put("value", chargeRequestDTO.getValue());
+		items.add(item1);
+
+		Map<String, Object> seetings = new HashMap<String, Object>();
+		seetings.put("billet_discount", 1);
+		seetings.put("card_discount", 1);
+		seetings.put("message", "link test");
+
+		LocalDate nextMonth = LocalDate.now().plusMonths(1);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		String expireAt = nextMonth.format(formatter);
+
+		seetings.put("expire_at", expireAt);
+		seetings.put("request_delivery_address", false);
+		seetings.put("payment_method", "all");
+
+		Map<String, Object> metadata = new HashMap<String, Object>();
+		metadata.put("notification_url", "http://domain.com/notification");
+
+		Map<String, Object> body = new HashMap<String, Object>();
+		body.put("items", items);
+		body.put("settings", seetings);
+		body.put("metadata", metadata);
+
+		try {
+			EfiPay efi = new EfiPay(options);
+			Map<String, Object> response = efi.call("createOneStepSubscriptionLink", params, body);
+			Map<String, Object> data = (Map<String, Object>) response.get("data");
+
+			return OneStepLinkMapper.INSTANCE.mapToOneStepLink(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new OneStepLink();
+		}
+	}
 }

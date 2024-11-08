@@ -33,18 +33,20 @@ public class ViaCepService {
         response.getBody();
     }
 
-    public Address saveAddress(AddressDTO addressDTO){
-        AddressDTO addressSave = searchAddressByCep(addressDTO.getCep());
-
+    public Address saveAddress(AddressDTO addressDTO) {
         if (addressDTO.getCep() == null) {
             throw new InvalidCepException("CEP não existe ou está inválido.");
         }
-        Address addressConvert = addressMapper.addressDTOtoAddress(addressSave);
+        AddressDTO addressFromCep = searchAddressByCep(addressDTO.getCep());
+
+        Address addressConvert = addressMapper.addressDTOtoAddress(addressFromCep);
+
+        addressConvert.setNumber(addressDTO.getNumber());
         addressConvert.setComplemento(addressDTO.getComplemento());
 
-        addressRepository.save(addressConvert);
-        return addressConvert;
+        return addressRepository.save(addressConvert);
     }
+
 
     public boolean isCepValid(String cep) {
         try {
