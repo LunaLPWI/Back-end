@@ -181,20 +181,27 @@ public class ClientService {
 
 
     public ClientTokenDTO authenticate(ClientLoginDTO clientLoginDTO) {
-        if (searchClientByEmail(clientLoginDTO.getEmail()) == null) {
+        // Verifica se o cliente existe no banco
+        Client client = searchClientByEmail(clientLoginDTO.getEmail());
+        if (client == null) {
             throw new ResponseStatusException(404, "Email do usuário não cadastrado", null);
         }
+
+        // Cria o token de autenticação com o email e senha
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
                 clientLoginDTO.getEmail(), clientLoginDTO.getPassword());
 
+        // Realiza a autenticação
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
-        Client clientAuthentication = searchClientByEmail(clientLoginDTO.getEmail());
+        // Após a autenticação bem-sucedida, atualiza o contexto de segurança
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // Gera o token JWT baseado na autenticação
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
-        return clientMapper.clientToClientDTO(clientAuthentication, token);
+        // Retorna o DTO com as informações do cliente e o token JWT
+        return clientMapper.clientToClientDTO(client, token);
     }
 
 

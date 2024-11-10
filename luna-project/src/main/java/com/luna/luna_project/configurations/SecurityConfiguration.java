@@ -66,6 +66,9 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/clients/**"),
             new AntPathRequestMatcher("/agendamentos/**"),
             new AntPathRequestMatcher("/agendamentos/agendamento-vagos/**"),
+            new AntPathRequestMatcher("/products/**"),
+            new AntPathRequestMatcher("/products/change-quantity/**"),
+            new AntPathRequestMatcher("/products/change-price/**"),
 
     };
 
@@ -81,7 +84,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/clients", "/clients/login").permitAll()
 
                         // Outros endpoints que precisam de autenticação
-                        .requestMatchers("/clients/**").authenticated()
+                        .requestMatchers("/products","/products/change-quantity").authenticated()
 
                         // Qualquer outra requisição requer autenticação
                         .anyRequest().authenticated()
