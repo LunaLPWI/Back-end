@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,7 +32,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
     @Autowired
@@ -69,7 +70,6 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/products/**"),
             new AntPathRequestMatcher("/products/change-quantity/**"),
             new AntPathRequestMatcher("/products/change-price/**"),
-
     };
 
     @Bean
@@ -80,13 +80,8 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        // Permite requisições POST para /clients sem autenticação
                         .requestMatchers(HttpMethod.POST, "/clients", "/clients/login").permitAll()
-
-                        // Outros endpoints que precisam de autenticação
                         .requestMatchers("/products","/products/change-quantity").authenticated()
-
-                        // Qualquer outra requisição requer autenticação
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> handling

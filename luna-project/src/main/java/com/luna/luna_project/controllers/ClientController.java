@@ -1,6 +1,5 @@
 package com.luna.luna_project.controllers;
 
-import com.luna.luna_project.GerenciadorTokenJwt;
 import com.luna.luna_project.dtos.client.ClientLoginDTO;
 import com.luna.luna_project.dtos.client.ClientRequestDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
@@ -9,12 +8,11 @@ import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.repositories.ClientMapper;
 import com.luna.luna_project.services.ClientService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +28,7 @@ public class ClientController {
 //    @Autowired
 //    private GerenciadorTokenJwt gerenciadorTokenJwt;
 
-    @SecurityRequirement(name = "Baerer")
+    @Secured("ROLE_USER")
     @GetMapping
     public ResponseEntity<List<ClientResponseDTO>> searchClients() {
         List<ClientResponseDTO> clients = clientService.searchClients();

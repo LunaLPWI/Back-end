@@ -2,6 +2,10 @@ package com.luna.luna_project.dtos.client;
 import com.luna.luna_project.dtos.AddressDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public record ClientDTO(
         Long id,
@@ -19,6 +23,7 @@ public record ClientDTO(
         AddressDTO address,
         Boolean isAdmin,
         Boolean isFuncionario,
+        Set<String> roles,
         String cellphone
 ) {
 }

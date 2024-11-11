@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Date;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,11 +35,15 @@ public class GerenciadorTokenJwt {
 
     public String generateToken(final Authentication authentication) {
         return Jwts.builder()
-                .setSubject(authentication.getName())               // Nome de usuário ou email
-                .signWith(parseSecret())                             // Assinatura com a chave secreta
-                .setIssuedAt(new Date(System.currentTimeMillis()))   // Data de emissão
-                .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1_000)) // Expiração
-                .compact();                                         // Cria o token compactado
+                .setSubject(authentication.getName())
+                .claim("role",  authentication.getAuthorities()
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()))
+                .signWith(parseSecret())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1_000))
+                .compact();
     }
 
     public <T> T getClaimForToken(String token, Function<Claims, T> claimsResolver) {

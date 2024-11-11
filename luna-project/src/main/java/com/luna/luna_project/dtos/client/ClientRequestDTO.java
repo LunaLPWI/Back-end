@@ -1,6 +1,10 @@
 package com.luna.luna_project.dtos.client;
 import com.luna.luna_project.dtos.AddressDTO;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Builder
@@ -17,6 +21,7 @@ public class ClientRequestDTO {
     private AddressDTO address;
     private Boolean isAdmin;
     private Boolean isFuncionario;
+    private Set<String> roles;
 }
 
 
