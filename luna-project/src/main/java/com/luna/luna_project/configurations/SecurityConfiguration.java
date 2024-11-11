@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -26,6 +27,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -70,6 +72,8 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/products/**"),
             new AntPathRequestMatcher("/products/change-quantity/**"),
             new AntPathRequestMatcher("/products/change-price/**"),
+            new AntPathRequestMatcher("/plans/create-one-step**"),
+            new AntPathRequestMatcher("/clients/**")
     };
 
     @Bean
@@ -93,6 +97,8 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
+
 
 
 

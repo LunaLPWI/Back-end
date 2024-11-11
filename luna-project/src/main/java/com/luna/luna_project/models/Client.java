@@ -17,25 +17,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "client")
 public class Client implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
-    @CPF
+    @Column(name = "nome")
+    private String name;
     private String cpf;
-    @Email
     private String email;
-    @NotNull
-    @Pattern(regexp = "^(\\d{10}|\\d{11})$", message = "Número de telefone deve ter 10 ou 11 dígitos")
-    private String cellphone;
     private String password;
+    private LocalDate birthDay;
+    private String phoneNumber;
     @ManyToOne
     @JoinColumn(name = "address_id_address", nullable = false)
     private Address address;

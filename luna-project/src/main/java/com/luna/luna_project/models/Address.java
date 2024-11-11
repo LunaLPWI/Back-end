@@ -1,20 +1,25 @@
 package com.luna.luna_project.models;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 @Entity
-@Getter
-@Setter
-@Table(name = "address")
+@Table(name = "address_seq")
+@Data
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String cep;
     private String logradouro;
+    private Integer number;
     private String complemento;
     private String bairro;
-    private String cidade;
+    private String localidade;
     private String uf;
-    private int number;
+    private String ibge;
+    private String gia;
+    private String ddd;
+    private String siafi;
+    private String cidade;
 }

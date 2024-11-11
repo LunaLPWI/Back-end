@@ -1,7 +1,5 @@
 package com.luna.luna_project.services;
 
-
-import com.luna.luna_project.dtos.client.ClientDetailsDTO;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,6 @@ public class AuthenticationService implements UserDetailsService {
 
     @Autowired
     private ClientRepository clientRepository;
-
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
