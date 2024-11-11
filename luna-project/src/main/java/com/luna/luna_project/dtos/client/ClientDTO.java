@@ -21,8 +21,6 @@ public record ClientDTO(
         @Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}$", message = "O CPF não está no formato correto.")
         String cpf,
         AddressDTO address,
-        Boolean isAdmin,
-        Boolean isFuncionario,
         Set<String> roles,
         String cellphone
 ) {

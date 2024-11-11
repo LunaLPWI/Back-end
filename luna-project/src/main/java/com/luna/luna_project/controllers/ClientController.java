@@ -28,7 +28,7 @@ public class ClientController {
 //    @Autowired
 //    private GerenciadorTokenJwt gerenciadorTokenJwt;
 
-    @Secured("ROLE_USER")
+    @Secured("ROLE_FUNCIONARIO")
     @GetMapping
     public ResponseEntity<List<ClientResponseDTO>> searchClients() {
         List<ClientResponseDTO> clients = clientService.searchClients();
@@ -38,7 +38,7 @@ public class ClientController {
         return ResponseEntity.ok().body(clients);
     }
 
-    @SecurityRequirement(name = "Baerer")
+    @Secured("ROLE_FUNCIONARIO")
     @GetMapping("/search-by-cpf")
     public ResponseEntity<ClientResponseDTO> searchClientByCpf(@RequestParam String cpf) {
         ClientResponseDTO client = clientService.searchClientByCpf(cpf);
@@ -52,8 +52,7 @@ public class ClientController {
         ClientResponseDTO clientResponseDTO = clientMapper.clientToClientDTOResponse(client);
         return ResponseEntity.ok().body(clientResponseDTO);
     }
-
-    @SecurityRequirement(name = "Baerer")
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/delete-by-cpf")
     public ResponseEntity<String> deleteClientByCpf(@RequestParam String cpf) {
         try {
@@ -63,7 +62,7 @@ public class ClientController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @SecurityRequirement(name = "Baerer")
+    @Secured("ROLE_FUNCIONARIO")
     @GetMapping("/search-by-name")
     public ResponseEntity<ClientRequestDTO> searchClientById(@RequestParam String nome) {
         Client client = clientService.searchByUsername(nome);
@@ -74,7 +73,7 @@ public class ClientController {
         return ResponseEntity.ok().body(clientDTO);
     }
 
-    @SecurityRequirement(name = "Baerer")
+    @Secured("ROLE_FUNCIONARIO")
     @GetMapping("/{id}")
     public ResponseEntity<ClientRequestDTO> searchClientById(@PathVariable Long id) {
         Client client = clientService.searchClientById(id);
@@ -84,7 +83,7 @@ public class ClientController {
         }
         return ResponseEntity.ok().body(clientDTO);
     }
-    @SecurityRequirement(name = "Baerer")
+    @Secured("ROLE_FUNCIONARIO")
     @GetMapping("/sorted")
     public List<ClientResponseDTO> getSortedClients() {
         return clientService.sortClientsByName();

@@ -19,8 +19,6 @@ public class ClientRequestDTO {
     private String cellphone;
     private String password;
     private AddressDTO address;
-    private Boolean isAdmin;
-    private Boolean isFuncionario;
     private Set<String> roles;
 }
 

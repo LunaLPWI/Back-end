@@ -10,6 +10,7 @@ import com.luna.luna_project.models.Agendamento;
 import com.luna.luna_project.services.AgendamentoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -26,7 +27,7 @@ public class AgendamentoController {
         this.agendamentoService = agendamentoService;
         this.agendamentoMapper = agendamentoMapper; // Atribuição do mapper
     }
-
+    @Secured("ROLE_FUNCIONARIO")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable long id) {
         agendamentoService.deleteById(id);
@@ -57,6 +58,7 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamentoResponseDTOS);
     }
 
+
     @GetMapping("/agendamento-ocupado")
     public ResponseEntity<Set<LocalDateTime>> getHorariosCheios(@RequestParam LocalDateTime inicio,
                                                                 @RequestParam LocalDateTime fim,
@@ -65,7 +67,7 @@ public class AgendamentoController {
     }
 
 
-
+    @Secured("ROLE_FUNCIONARIO")
     @GetMapping("/agendamento-ocupado-admin")
     public ResponseEntity<List<AgendamentoResponseAdminDTO>> getAgendamentosClientsAdmin(@RequestParam LocalDateTime inicio,
                                                                                          @RequestParam LocalDateTime fim,
@@ -76,7 +78,7 @@ public class AgendamentoController {
         return ResponseEntity.ok(agendamentos.stream()
                 .map(agendamentoMapper::EntityToResponseAdmin).toList());
     }
-
+    @Secured("ROLE_ADMIN")
     @PatchMapping
     public ResponseEntity<AgendamentoResponseDTO> updateById(@RequestBody @Valid AgendamentoRequestUpdateDTO agendamentoRequestUpdateDTO) {
         Agendamento agendamento = agendamentoMapper.RequestUpdateToEntity(agendamentoRequestUpdateDTO);

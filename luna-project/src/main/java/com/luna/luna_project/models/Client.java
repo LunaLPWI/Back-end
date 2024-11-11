@@ -39,8 +39,6 @@ public class Client implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "address_id_address", nullable = false)
     private Address address;
-    private Boolean isAdmin = false;
-    private Boolean isFuncionario = false;
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
 
