@@ -59,6 +59,7 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/plans/create-charge**"),
             new AntPathRequestMatcher("/plans/create-plan**"),
             new AntPathRequestMatcher("/plans/create-plan-and-charge**"),
+            new AntPathRequestMatcher("/plans/create-one-step**"),
             new AntPathRequestMatcher("/clients/**"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/h2-console/**/**"),

@@ -20,4 +20,6 @@ public class Plan {
     @Column(name = "created_at")
     private LocalDateTime created_at;
     private String plan_id;
+    @ManyToOne
+    private OneStepCardSubscription oneStepPlan;
 }

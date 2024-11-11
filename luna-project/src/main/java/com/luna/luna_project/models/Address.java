@@ -12,6 +12,7 @@ public class Address {
     private Long id;
     private String cep;
     private String logradouro;
+    private Integer number;
     private String complemento;
     private String bairro;
     private String localidade;

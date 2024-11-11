@@ -43,17 +43,20 @@ public class ClientService {
 
 
 
-    public ClientDTO saveClient(ClientDTO clientDTO, AddressDTO addressDTO) {
+    public ClientDTO saveClient(ClientDTO clientDTO) {
+
+        AddressDTO addressDTO = clientDTO.address();
         if (existsCpf(clientDTO.cpf())) {
             throw new RuntimeException("CPF já existe.");
         }
-        if (!viaCepService.isCepValid(clientDTO.address().getCep())) {
+        if (!viaCepService.isCepValid(addressDTO.getCep())) {
             throw new InvalidCepException("CEP não existe ou está inválido.");
         }
         Address address = viaCepService.saveAddress(addressDTO);
         Client client = clientMapper.clientDTOtoClient(clientDTO);
 
         client.setAddress(address);
+
 
         String encryptedPassword  = passwordEncoder.encode(client.getPassword());
         client.setPassword(encryptedPassword);
