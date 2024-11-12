@@ -8,8 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,13 +27,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
     @Autowired
@@ -52,18 +56,24 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/v3/api-docs/**"),
             new AntPathRequestMatcher("/actuator/*"),
             new AntPathRequestMatcher("/clients/login/**"),
-            new AntPathRequestMatcher("/clients/save-client/**"),
+            new AntPathRequestMatcher("/clients/**"),
             new AntPathRequestMatcher("/adms/admin/login/**"),
             new AntPathRequestMatcher("/adms/**"),
             new AntPathRequestMatcher("/plans/**"),
             new AntPathRequestMatcher("/plans/create-charge**"),
             new AntPathRequestMatcher("/plans/create-plan**"),
             new AntPathRequestMatcher("/plans/create-plan-and-charge**"),
-            new AntPathRequestMatcher("/plans/create-one-step**"),
-            new AntPathRequestMatcher("/clients/**"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/h2-console/**/**"),
-            new AntPathRequestMatcher("/error/**")
+            new AntPathRequestMatcher("/error/**"),
+            new AntPathRequestMatcher("/clients/**"),
+            new AntPathRequestMatcher("/agendamentos/**"),
+            new AntPathRequestMatcher("/agendamentos/agendamento-vagos/**"),
+            new AntPathRequestMatcher("/products/**"),
+            new AntPathRequestMatcher("/products/change-quantity/**"),
+            new AntPathRequestMatcher("/products/change-price/**"),
+            new AntPathRequestMatcher("/plans/create-one-step**"),
+            new AntPathRequestMatcher("/clients/**")
     };
 
     @Bean
@@ -73,10 +83,10 @@ public class SecurityConfiguration {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
-                .authorizeHttpRequests(authorize -> authorize.requestMatchers(URLS_PERMITIDAS)
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/clients", "/clients/login").permitAll()
+                        .requestMatchers("/products","/products/change-quantity").authenticated()
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(authenticationEntryPoint))
@@ -87,6 +97,10 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
+
+
+
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {

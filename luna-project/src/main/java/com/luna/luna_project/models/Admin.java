@@ -1,6 +1,6 @@
 package com.luna.luna_project.models;
 
-public class Admin extends Employee{
+public class Administrator extends Employee{
     private String name;
 
 

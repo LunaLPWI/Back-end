@@ -31,14 +31,16 @@ public class GerenciadorTokenJwt {
     }
 
     public String generateToken(final Authentication authentication) {
-
-        // Para verificacoes de permissões;
-        final String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
-        return Jwts.builder().setSubject(authentication.getName())
-                .signWith(parseSecret()).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1_000)).compact();
+        return Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("role",  authentication.getAuthorities()
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()))
+                .signWith(parseSecret())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidity * 1_000))
+                .compact();
     }
 
     public <T> T getClaimForToken(String token, Function<Claims, T> claimsResolver) {

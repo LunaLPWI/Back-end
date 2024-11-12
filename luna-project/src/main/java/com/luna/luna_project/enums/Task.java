@@ -9,11 +9,21 @@ import lombok.ToString;
 @Getter
 @ToString
 public enum Task {
-    EYEBROW(30, "Design de sobrancelha", 15),
-    HAIR(50, "Corte de cabelo", 30),
-    BEARD(25, "Aparar barba", 20);
+    CORTE(50.0, "Corte de cabelo", 30),
+    BARBA(40.0, "Aparar barba", 30),
+    BOTOX(65.0,"botox",30),
+    HIDRATACAO(40.0,"Hidratação no cabelo",30),
+    PEZINHOCABELOBARBA(30.0, "Pezinho cabelo e barba",30),
+    PEZINHO(15.0,"Pezinho do cabelo",30),
+    PLATINADOCORTE(120.0,"Platinar e cortar o cabelo",30),
+    RASPARCABECA(27.0,"Raspar a cabeça", 30),
+    SOBRANCELHA(20.0,"Fazer a sobrancelha", 30),
+    RELAXAMENTO(20.0,"Relaxamento no cabelo",30);
 
-    private final Integer value;
+
+    private final Double value;
     private final String description;
     private final Integer duration;
+
+
 }

@@ -22,7 +22,7 @@ public record ClientDTO(
                 message = "O número de telefone deve estar no formato DDD9XXXXXXXX ou DDDXXXXXXXX, onde o DDD é válido e o número possui 10 ou 11 dígitos no total."
         )
         String phoneNumber,
-                @NotBlank(message = "O campo CPF não deve estar em branco.")
+        @NotBlank(message = "O campo CPF não deve estar em branco.")
         @Pattern(regexp = "^\\d{11}$", message = "O CPF deve conter exatamente 11 dígitos.")
         String cpf,
         @NotNull(message = "O campo birthDay não deve estar vazio.")

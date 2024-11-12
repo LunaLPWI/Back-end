@@ -10,12 +10,9 @@ public class AddressDTO {
     @NotNull(message = "O número do endereço é obrigatório.")
     private Integer number;
     private String complemento;
-    private String localidade;
+    private String cidade;
     private String bairro;
     private String uf;
-    private String ibge;
-    private String gia;
-    private String ddd;
-    private String siafi;
+    private int number;
 }
 
