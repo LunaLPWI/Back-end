@@ -3,6 +3,7 @@ package com.luna.luna_project.repositories;
 import com.luna.luna_project.models.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
@@ -16,9 +17,11 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Optional<Client>  findByEmail(String email);
 
-    Client findByNome(String nome);
+    Client findByName(String name);
 
     boolean existsById(Long id);
+
+    List<Client> findByRolesContaining(String role);
 
 
     Optional <Client> findByEmailAndPassword(String email, String senha);

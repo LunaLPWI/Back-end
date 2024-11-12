@@ -1,20 +1,14 @@
 package com.luna.luna_project.gerencianet.subscription.json;
 
 import br.com.efi.efisdk.EfiPay;
-import br.com.efi.efisdk.exceptions.EfiPayException;
 import com.luna.luna_project.dtos.ChargeRequestDTO;
-import com.luna.luna_project.dtos.ClientDTO;
-import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.gerencianet.Credentials;
 import com.luna.luna_project.mapper.OneStepCardMapper;
 import com.luna.luna_project.mapper.OneStepLinkMapper;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.mapper.SubscriptionMapper;
-import com.luna.luna_project.models.OneStepCardSubscription;
-import com.luna.luna_project.models.OneStepLink;
-import com.luna.luna_project.models.Plan;
-import com.luna.luna_project.models.Subscription;
+import com.luna.luna_project.models.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -91,7 +85,7 @@ public class PlanEFI {
 	public static OneStepCardSubscription createOneStep(Plan plan,
 														String token,
 														ChargeRequestDTO chargeRequestDTO,
-														ClientDTO clientDTO) {
+														Client client) {
 		Credentials credentials = new Credentials();
 		HashMap<String, Object> options = new HashMap<String, Object>();
 		options.put("client_id", credentials.getClientId());
@@ -109,19 +103,19 @@ public class PlanEFI {
 		items.add(item1);
 
 		Map<String, Object> customer = new HashMap<String, Object>();
-		customer.put("name", clientDTO.name());
-		customer.put("cpf", clientDTO.cpf());
-		customer.put("phone_number", clientDTO.phoneNumber());
-		customer.put("email", clientDTO.email());
-		customer.put("birth", clientDTO.birthDay());
+		customer.put("name", client.getName());
+		customer.put("cpf", client.getCpf());
+		customer.put("phone_number", client.getPhoneNumber());
+		customer.put("email", client.getEmail());
+		customer.put("birth", client.getBirthDay());
 
 		Map<String, Object> billingAddress = new HashMap<String, Object>();
-		billingAddress.put("street", clientDTO.address().getLogradouro());
-		billingAddress.put("number", clientDTO.address().getNumber());
-		billingAddress.put("neighborhood", clientDTO.address().getBairro());
+		billingAddress.put("street", client.getAddress().getLogradouro());
+		billingAddress.put("number", client.getAddress().getNumber());
+		billingAddress.put("neighborhood", client.getAddress().getBairro());
 		billingAddress.put("zipcode", "03206010");
-		billingAddress.put("city", clientDTO.address().getLocalidade());
-		billingAddress.put("state", clientDTO.address().getUf());
+		billingAddress.put("city", client.getAddress().getCidade());
+		billingAddress.put("state", client.getAddress().getUf());
 
 		Map<String, Object> creditCard = new HashMap<String, Object>();
 		creditCard.put("installments", null);

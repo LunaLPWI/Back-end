@@ -7,17 +7,19 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
 @Setter
 public class ClientTokenDTO {
     private Long id;
-    private String nome;
+    private String name;
     private String email;
     private String token;
     private Address address;
-    private String cellphone;
+    private LocalDate birthDay;
+    private String phoneNumber;
     private Set<String> roles;
 
 }

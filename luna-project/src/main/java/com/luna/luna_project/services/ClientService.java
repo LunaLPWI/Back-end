@@ -8,7 +8,7 @@ import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.dtos.client.ClientTokenDTO;
 import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Client;
-import com.luna.luna_project.repositories.ClientMapper;
+import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.repositories.ClientRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +68,10 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
+    public List<Client> searchEmployees(String role) {
+        return clientRepository.findByRolesContaining(role);
+    }
+
 
     public static Client pesquisaBinaria(Client[] lista, String nomeAlvo, int esquerda, int direita) {
         if (esquerda > direita) {
@@ -76,9 +80,9 @@ public class ClientService {
 
         int meio = esquerda + (direita - esquerda) / 2;
 
-        if (lista[meio].getNome().equals(nomeAlvo)) {
+        if (lista[meio].getName().equals(nomeAlvo)) {
             return lista[meio];
-        } else if (lista[meio].getNome().compareTo(nomeAlvo) < 0) {
+        } else if (lista[meio].getName().compareTo(nomeAlvo) < 0) {
             return pesquisaBinaria(lista, nomeAlvo, meio + 1, direita);
         } else {
             return pesquisaBinaria(lista, nomeAlvo, esquerda, meio - 1);
@@ -94,12 +98,12 @@ public class ClientService {
         return clientRepository.existsByEmail(email);
     }
 
-    public ClientResponseDTO searchClientByCpf(String cpf) {
+    public Client searchClientByCpf(String cpf) {
         Optional<Client> clientOptional = clientRepository.findByCpf(cpf);
         if (clientOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
         }
-        return clientMapper.clientToClientDTOResponse(clientOptional.get());
+        return clientOptional.get();
     }
 
     public Client searchClientByEmail(String email) {
@@ -157,7 +161,7 @@ public class ClientService {
         int n = clients.size();
         for (int i = 0; i < n - 1; i++) {
             for (int j = 1; j < n - i; j++) {
-                if (clients.get(j - 1).getNome().compareTo(clients.get(j).getNome()) > 0) {
+                if (clients.get(j - 1).getName().compareTo(clients.get(j).getName()) > 0) {
                     ClientResponseDTO temp = clients.get(j);
                     clients.set(j, clients.get(j - 1));
                     clients.set(j - 1, temp);
@@ -169,7 +173,7 @@ public class ClientService {
     public Client searchByUsername(String nome) {
         List<Client> clientList = clientRepository.findAll();
         Client[] clientVetor = clientList.toArray(new Client[0]);
-        Arrays.sort(clientVetor, Comparator.comparing(Client::getNome));
+        Arrays.sort(clientVetor, Comparator.comparing(Client::getName));
 
         Client client = pesquisaBinaria(clientVetor, nome, 0, clientVetor.length - 1);
         if (client == null) {

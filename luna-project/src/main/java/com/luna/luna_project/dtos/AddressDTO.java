@@ -13,6 +13,5 @@ public class AddressDTO {
     private String cidade;
     private String bairro;
     private String uf;
-    private int number;
 }
 

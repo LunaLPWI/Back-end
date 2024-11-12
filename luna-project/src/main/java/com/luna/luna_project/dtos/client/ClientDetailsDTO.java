@@ -12,13 +12,13 @@ import java.util.stream.Collectors;
 
 public class ClientDetailsDTO implements UserDetails {
 
-    private final String nome;
+    private final String name;
     private final String email;
     private final String password;
     private final Set<GrantedAuthority> authorities;
 
     public ClientDetailsDTO(Client client) {
-        this.nome = client.getNome();
+        this.name = client.getName();
         this.email = client.getEmail();
         this.password = client.getPassword();
 
@@ -28,7 +28,7 @@ public class ClientDetailsDTO implements UserDetails {
     }
 
     public String getNome() {
-        return nome;
+        return name;
     }
 
     @Override

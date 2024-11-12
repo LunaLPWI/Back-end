@@ -6,6 +6,7 @@ import lombok.*;
 import org.antlr.v4.runtime.Token;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,9 +17,10 @@ import java.util.Set;
 @Data
 public class ClientResponseDTO {
     private Long id;
-    private String nome;
+    private String name;
     private String email;
-    private String cellphone;
+    private String phoneNumber;
+    private LocalDate birthDay;
     private Set<String> roles;
 }
 

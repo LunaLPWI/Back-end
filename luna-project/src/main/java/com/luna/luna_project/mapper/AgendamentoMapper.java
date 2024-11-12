@@ -55,7 +55,7 @@ public class AgendamentoMapper {
                 .id(agendamento.getId())
                 .dataHoraFim(agendamento.calcularDataFim())
                 .dataHoraInicio(agendamento.getDataHoraInicio())
-                .nomeClient(agendamento.getClient().getNome())
+                .nomeClient(agendamento.getClient().getName())
                 .build();
     }
 }

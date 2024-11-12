@@ -6,7 +6,7 @@ import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.dtos.client.ClientTokenDTO;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.models.Client;
-import com.luna.luna_project.repositories.ClientMapper;
+import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.services.ClientService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -38,11 +38,22 @@ public class ClientController {
         return ResponseEntity.ok().body(clients);
     }
 
+    @GetMapping("/search-employee")
+    public ResponseEntity<List<ClientResponseDTO>> searchFuncionarios(@RequestParam String role) {
+        List<Client> employesEntity = clientService.searchEmployees(role);
+        if (employesEntity.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        List<ClientResponseDTO> employes = employesEntity.stream()
+                .map(clientMapper::clientToClientDTOResponse).toList();
+        return ResponseEntity.ok().body(employes);
+    }
+
     @Secured("ROLE_FUNCIONARIO")
     @GetMapping("/search-by-cpf")
     public ResponseEntity<ClientResponseDTO> searchClientByCpf(@RequestParam String cpf) {
-        ClientResponseDTO client = clientService.searchClientByCpf(cpf);
-        return ResponseEntity.ok().body(client);
+        Client client = clientService.searchClientByCpf(cpf);
+        return ResponseEntity.ok().body(clientMapper.clientToClientDTOResponse(client));
     }
 
 

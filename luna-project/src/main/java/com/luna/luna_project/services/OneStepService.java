@@ -2,13 +2,11 @@ package com.luna.luna_project.services;
 
 
 import com.luna.luna_project.dtos.*;
+import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
 import com.luna.luna_project.mapper.OneStepCardMapper;
 import com.luna.luna_project.mapper.OneStepLinkMapper;
-import com.luna.luna_project.models.OneStepCardSubscription;
-import com.luna.luna_project.models.OneStepLink;
-import com.luna.luna_project.models.Plan;
-import com.luna.luna_project.models.Subscription;
+import com.luna.luna_project.models.*;
 import com.luna.luna_project.repositories.OneStepCardRepository;
 import com.luna.luna_project.repositories.OneStepLinkRepository;
 import jakarta.validation.Valid;
@@ -34,7 +32,7 @@ public class OneStepService {
     private OneStepLinkRepository oneStepLinkRepository;
 
     public OneStepDTO saveOneStep(@Valid OneStepDTO request, String paymentToken, String cpf) {
-        ClientDTO client = clientService.searchClientByCpf(cpf);
+        Client client = clientService.searchClientByCpf(cpf);
 
         Plan planSaved = planService.savePlan(request);
 
