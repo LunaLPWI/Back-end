@@ -1,4 +1,4 @@
-package com.luna.luna_project.dtos.charges;
+package com.luna.luna_project.dtos;
 
 
 import jakarta.validation.constraints.NotBlank;

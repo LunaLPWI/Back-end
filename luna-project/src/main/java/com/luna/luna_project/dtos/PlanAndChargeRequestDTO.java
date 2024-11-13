@@ -1,6 +1,5 @@
-package com.luna.luna_project.dtos.plans;
+package com.luna.luna_project.dtos;
 
-import com.luna.luna_project.dtos.OneStepDTO;
 import lombok.Getter;
 import lombok.Setter;
 

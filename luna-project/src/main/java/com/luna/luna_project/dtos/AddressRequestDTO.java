@@ -1,4 +1,4 @@
-package com.luna.luna_project.dtos.addresses;
+package com.luna.luna_project.dtos;
 
 
 import jakarta.validation.constraints.NotBlank;

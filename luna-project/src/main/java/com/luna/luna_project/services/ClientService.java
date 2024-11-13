@@ -1,8 +1,8 @@
 package com.luna.luna_project.services;
 
 import com.luna.luna_project.configurations.jwt.GerenciadorTokenJwt;
+import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
-import com.luna.luna_project.dtos.addresses.AddressDTO;
 import com.luna.luna_project.dtos.client.ClientLoginDTO;
 import com.luna.luna_project.dtos.client.ClientRequestDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
@@ -14,6 +14,7 @@ import com.luna.luna_project.repositories.ClientRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

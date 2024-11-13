@@ -1,7 +1,7 @@
 package com.luna.luna_project.mapper;
 
 
-import com.luna.luna_project.dtos.plans.PlanDTO;
+import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.models.Plan;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

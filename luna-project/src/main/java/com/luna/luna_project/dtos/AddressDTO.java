@@ -1,4 +1,4 @@
-package com.luna.luna_project.dtos.addresses;
+package com.luna.luna_project.dtos;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

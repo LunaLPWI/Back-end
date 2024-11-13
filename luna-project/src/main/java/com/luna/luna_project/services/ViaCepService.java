@@ -1,5 +1,5 @@
 package com.luna.luna_project.services;
-import com.luna.luna_project.dtos.addresses.AddressDTO;
+import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.exceptions.InvalidCepException;
 import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.models.Address;

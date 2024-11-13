@@ -1,5 +1,5 @@
 package com.luna.luna_project.services;
-import com.luna.luna_project.dtos.charges.ChargeRequestDTO;
+import com.luna.luna_project.dtos.ChargeRequestDTO;
 import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.SubscriptionDTO;
 import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;

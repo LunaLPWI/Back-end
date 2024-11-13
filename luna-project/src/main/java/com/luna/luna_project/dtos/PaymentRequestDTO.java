@@ -1,4 +1,4 @@
-package com.luna.luna_project.dtos.plans;
+package com.luna.luna_project.dtos;
 
 
 public class PaymentRequestDTO {

@@ -1,7 +1,6 @@
 package com.luna.luna_project.dtos;
 
 
-import com.luna.luna_project.dtos.charges.ChargeRequestDTO;
 import lombok.Data;
 
 @Data

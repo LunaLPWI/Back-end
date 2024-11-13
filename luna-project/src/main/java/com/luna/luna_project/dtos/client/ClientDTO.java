@@ -1,12 +1,14 @@
 package com.luna.luna_project.dtos.client;
-import com.luna.luna_project.dtos.addresses.AddressDTO;
+import com.luna.luna_project.dtos.AddressDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 public record ClientDTO(
