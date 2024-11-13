@@ -27,7 +27,7 @@ public class SchedulingController {
         this.schedulingService = schedulingService;
         this.schedulingMapper = schedulingMapper; // Atribuição do mapper
     }
-    @Secured("ROLE_FUNCIONARIO")
+    @Secured("ROLE_EMPLOYEE")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable long id) {
         schedulingService.deleteById(id);
@@ -41,7 +41,7 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
 
-    @GetMapping("/agendamento-vagos")
+    @GetMapping("/vacant-schedules")
     public ResponseEntity<List<LocalDateTime>> getVacantSchedules(@RequestParam LocalDateTime start,
                                                                   @RequestParam LocalDateTime end,
                                                                   @RequestParam Long employeeId,
@@ -49,7 +49,7 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingService.listAvailable(employeeId,clientId, start, end));
     }
 
-    @GetMapping("/agendamento-client")
+    @GetMapping("/client-schedules")
     public ResponseEntity<List<SchedulingResponseDTO>> getScheduling(@RequestParam LocalDateTime start,
                                                                      @RequestParam Long clientId) {
         List<Scheduling> schedulings = schedulingService.listSchedulingByClientId(clientId, start);
@@ -59,7 +59,7 @@ public class SchedulingController {
     }
 
 
-    @GetMapping("/agendamento-ocupado")
+    @GetMapping("/busy-schedules")
     public ResponseEntity<Set<LocalDateTime>> getFullSchedules(@RequestParam LocalDateTime start,
                                                                @RequestParam LocalDateTime end,
                                                                @RequestParam Long clientId) {
@@ -67,8 +67,8 @@ public class SchedulingController {
     }
 
 
-    @Secured("ROLE_FUNCIONARIO")
-    @GetMapping("/agendamento-ocupado-admin")
+    @Secured("ROLE_EMPLOYEE")
+    @GetMapping("/busy-schedules-admin")
     public ResponseEntity<List<SchedulingResponseAdminDTO>> getSchedulingClientsAdmin(@RequestParam LocalDateTime start,
                                                                                       @RequestParam LocalDateTime end,
                                                                                       @RequestParam Long employeeId) {
