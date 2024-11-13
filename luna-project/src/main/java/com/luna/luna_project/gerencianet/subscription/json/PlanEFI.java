@@ -1,8 +1,8 @@
 package com.luna.luna_project.gerencianet.subscription.json;
 
 import br.com.efi.efisdk.EfiPay;
-import com.luna.luna_project.dtos.ChargeRequestDTO;
-import com.luna.luna_project.dtos.PlanDTO;
+import com.luna.luna_project.dtos.charges.ChargeRequestDTO;
+import com.luna.luna_project.dtos.plans.PlanDTO;
 import com.luna.luna_project.gerencianet.Credentials;
 import com.luna.luna_project.mapper.OneStepCardMapper;
 import com.luna.luna_project.mapper.OneStepLinkMapper;

@@ -1,5 +1,6 @@
 package com.luna.luna_project.controllers;
 
+import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.ClientLoginDTO;
 import com.luna.luna_project.dtos.client.ClientRequestDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
@@ -39,7 +40,7 @@ public class ClientController {
     }
 
     @GetMapping("/search-employee")
-    public ResponseEntity<List<ClientResponseDTO>> searchFuncionarios(@RequestParam String role) {
+    public ResponseEntity<List<ClientResponseDTO>> searchEmployee(@RequestParam String role) {
         List<Client> employesEntity = clientService.searchEmployees(role);
         if (employesEntity.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -116,9 +117,9 @@ public class ClientController {
     }
 
     @PatchMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestParam String email, @RequestParam String newPassword) {
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
         try {
-            clientService.resetPassword(email, newPassword);
+            clientService.resetPassword(resetPasswordDTO);
             return ResponseEntity.ok().body("Senha alterada com sucesso!");
         } catch (ValidationException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

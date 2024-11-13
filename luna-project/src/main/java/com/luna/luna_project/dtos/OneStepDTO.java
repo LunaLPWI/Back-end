@@ -1,5 +1,7 @@
 package com.luna.luna_project.dtos;
 
+import com.luna.luna_project.dtos.charges.ChargeRequestDTO;
+import com.luna.luna_project.dtos.plans.PlanDTO;
 import lombok.Data;
 
 import java.time.LocalDateTime;

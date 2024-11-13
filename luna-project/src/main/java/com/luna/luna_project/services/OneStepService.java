@@ -2,7 +2,7 @@ package com.luna.luna_project.services;
 
 
 import com.luna.luna_project.dtos.*;
-import com.luna.luna_project.dtos.client.ClientResponseDTO;
+import com.luna.luna_project.dtos.charges.ChargeRequestDTO;
 import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
 import com.luna.luna_project.mapper.OneStepCardMapper;
 import com.luna.luna_project.mapper.OneStepLinkMapper;

@@ -1,9 +1,7 @@
-package com.luna.luna_project.dtos;
+package com.luna.luna_project.dtos.plans;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 @Data

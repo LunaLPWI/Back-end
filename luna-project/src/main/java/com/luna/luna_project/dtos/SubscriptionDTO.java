@@ -1,5 +1,6 @@
 package com.luna.luna_project.dtos;
 
+import com.luna.luna_project.dtos.charges.ChargeDTO;
 import lombok.Data;
 
 import java.util.List;

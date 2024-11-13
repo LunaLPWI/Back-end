@@ -1,4 +1,4 @@
-package com.luna.luna_project.dtos;
+package com.luna.luna_project.dtos.charges;
 import lombok.Data;
 
 @Data

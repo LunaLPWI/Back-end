@@ -1,6 +1,6 @@
 package com.luna.luna_project.controllers;
 
-import com.luna.luna_project.dtos.AddressDTO;
+import com.luna.luna_project.dtos.addresses.AddressDTO;
 import com.luna.luna_project.services.ViaCepService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

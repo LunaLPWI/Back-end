@@ -1,13 +1,11 @@
 package com.luna.luna_project.services;
-import com.luna.luna_project.dtos.ChargeRequestDTO;
+import com.luna.luna_project.dtos.charges.ChargeRequestDTO;
 import com.luna.luna_project.dtos.OneStepDTO;
-import com.luna.luna_project.dtos.PlanAndChargeRequestDTO;
 import com.luna.luna_project.dtos.SubscriptionDTO;
 import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
 import com.luna.luna_project.mapper.SubscriptionMapper;
 import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.models.Subscription;
-import com.luna.luna_project.repositories.ChargeRepository;
 import com.luna.luna_project.repositories.SubscriptionRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
