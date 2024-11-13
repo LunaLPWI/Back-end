@@ -9,23 +9,24 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class AgendamentoRequestUpdateDTO {
+public class SchedulingRequestDTO {
+
     @NotNull
-    private Long id;
+    private Long clientId;
     @NotNull
-    private Long idClient;
-    @NotNull
-    private Long idFunc;
+    private Long employeeId;
     @Future
-    private LocalDateTime dataHoraInicio;
+    private LocalDateTime startDateTime;
     @NotEmpty
     @ElementCollection(targetClass = Task.class)
-    private List<Task> itens;
+    private List<Task> items;
+
 
 }

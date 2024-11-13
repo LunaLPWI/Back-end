@@ -53,7 +53,7 @@ public class ProductService {
         if(qtd<0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "quantidade de produtos não pode ser negativa");
         }
-        product.get().setQtd(qtd);
+        product.get().setAmount(qtd);
         productRepository.save(product.get());
         return product.get();
     }

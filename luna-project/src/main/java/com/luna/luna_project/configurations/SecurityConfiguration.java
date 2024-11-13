@@ -72,6 +72,10 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/products/**"),
             new AntPathRequestMatcher("/products/change-quantity/**"),
             new AntPathRequestMatcher("/products/change-price/**"),
+            new AntPathRequestMatcher("/plans/**"),
+            new AntPathRequestMatcher("/plans/create-charge**"),
+            new AntPathRequestMatcher("/plans/create-plan**"),
+            new AntPathRequestMatcher("/plans/create-plan-and-charge**"),
             new AntPathRequestMatcher("/plans/create-one-step**"),
             new AntPathRequestMatcher("/clients/**")
     };
@@ -84,7 +88,7 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/clients", "/clients/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/clients", "/clients/login", "/plans/create-plan-and-charge**").permitAll()
                         .requestMatchers("/products","/products/change-quantity").authenticated()
                         .anyRequest().authenticated()
                 )

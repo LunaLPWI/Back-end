@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 
 @Entity
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "client")
 public class Client implements UserDetails {
     @Id
@@ -47,8 +47,6 @@ public class Client implements UserDetails {
                 .map(role -> (GrantedAuthority) () -> role)
                 .collect(Collectors.toSet());
     }
-
-
 
     @Override
     public String getPassword() {

@@ -1,12 +1,8 @@
 package com.luna.luna_project.dtos.product;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -21,12 +17,12 @@ public class ProductResponseDTO {
     @NotNull
     private Long id;
     @NotBlank
-    String nome;
+    String name;
     @Min(0)
     @NotNull
-    private Integer qtd;
+    private Integer amount;
     @NotBlank
-    private String descricao;
+    private String description;
     @Min(0)
     @NotNull
     private Double price;

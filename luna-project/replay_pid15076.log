@@ -1227,7 +1227,7 @@ instanceKlass com/luna/luna_project/repositories/ClientMapper
 instanceKlass com/luna/luna_project/mapper/AgendamentoMapper
 instanceKlass com/luna/luna_project/mapper/AddressMapperImpl
 instanceKlass com/luna/luna_project/mapper/AddressMapper
-instanceKlass com/luna/luna_project/csv/agendamento/AgendamentoCSV
+instanceKlass com/luna/luna_project/csv/scheduling/AgendamentoCSV
 instanceKlass com/luna/luna_project/controllers/ViaCepController
 instanceKlass com/luna/luna_project/controllers/PaymentController
 instanceKlass com/luna/luna_project/controllers/ClientController

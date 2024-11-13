@@ -3,7 +3,6 @@ package com.luna.luna_project.models;
 import com.luna.luna_project.enums.Task;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
@@ -16,39 +15,39 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Agendamento {
+public class Scheduling {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Future
-    private LocalDateTime dataHoraInicio;
+    private LocalDateTime startDateTime;
 
     @NotEmpty
     @ElementCollection(targetClass = Task.class)
-    private List<Task> itens;
+    private List<Task> items;
 
     @ManyToOne
     private Client client;
     @ManyToOne
-    private Client funcionario;
+    private Client employee;
 
 
 
 
-    public int calcularDuracaoTotal() {
-        if (itens != null && !itens.isEmpty()) {
-            return itens.stream()
+    public int calculateTotalDuration() {
+        if (items != null && !items.isEmpty()) {
+            return items.stream()
                     .mapToInt(Task::getDuration)
                     .sum();
         }
         return 0;
     }
 
-    public LocalDateTime calcularDataFim() {
-        if (dataHoraInicio != null) {
-            int totalDuration = calcularDuracaoTotal();
-            return dataHoraInicio.plusMinutes(totalDuration);
+    public LocalDateTime calculateEndDate() {
+        if (startDateTime != null) {
+            int totalDuration = calculateTotalDuration();
+            return startDateTime.plusMinutes(totalDuration);
         } else {
             return null;
         }

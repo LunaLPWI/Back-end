@@ -1,36 +1,31 @@
 package com.luna.luna_project.dtos.agendamentos;
 
-import com.luna.luna_project.dtos.TaskDTO;
 import com.luna.luna_project.enums.Task;
 import jakarta.persistence.ElementCollection;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class AgendamentoResponseDTO {
-
-    @NotBlank
-    Long id;
+@NoArgsConstructor
+@Getter
+@Setter
+public class SchedulingRequestUpdateDTO {
+    @NotNull
+    private Long id;
+    @NotNull
+    private Long clientId;
+    @NotNull
+    private Long employeeId;
     @Future
-    private LocalDateTime dataHoraInicio;
+    private LocalDateTime startDateTime;
     @NotEmpty
     @ElementCollection(targetClass = Task.class)
-    private List<TaskDTO> itens;
-    @NotNull
-    private Long idClient;
-    @NotNull
-    private Long idFuncionario;
+    private List<Task> items;
 
 }
