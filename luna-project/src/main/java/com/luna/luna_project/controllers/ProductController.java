@@ -23,7 +23,7 @@ public class ProductController {
     @Autowired
     private ProductMapper productMapper;
 
-    @Secured("ROLE_FUNCIONARIO")
+    @Secured("ROLE_EMPLOYEE")
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> listAllProducts(){
         List<Product> products = productService.getAllProducts();

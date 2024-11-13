@@ -28,7 +28,7 @@ public class ClientController {
 //    @Autowired
 //    private GerenciadorTokenJwt gerenciadorTokenJwt;
 
-    @Secured("ROLE_FUNCIONARIO")
+    @Secured("ROLE_EMPLOYEE")
     @GetMapping
     public ResponseEntity<List<ClientResponseDTO>> searchClients() {
         List<ClientResponseDTO> clients = clientService.searchClients();
@@ -49,7 +49,7 @@ public class ClientController {
         return ResponseEntity.ok().body(employes);
     }
 
-    @Secured("ROLE_FUNCIONARIO")
+    @Secured("ROLE_EMPLOYEE")
     @GetMapping("/search-by-cpf")
     public ResponseEntity<ClientResponseDTO> searchClientByCpf(@RequestParam String cpf) {
         Client client = clientService.searchClientByCpf(cpf);
@@ -73,7 +73,7 @@ public class ClientController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @Secured("ROLE_FUNCIONARIO")
+    @Secured("ROLE_EMPLOYEE")
     @GetMapping("/search-by-name")
     public ResponseEntity<ClientRequestDTO> searchClientById(@RequestParam String nome) {
         Client client = clientService.searchByUsername(nome);
@@ -84,7 +84,7 @@ public class ClientController {
         return ResponseEntity.ok().body(clientDTO);
     }
 
-    @Secured("ROLE_FUNCIONARIO")
+    @Secured("ROLE_EMPLOYEE")
     @GetMapping("/{id}")
     public ResponseEntity<ClientRequestDTO> searchClientById(@PathVariable Long id) {
         Client client = clientService.searchClientById(id);
@@ -94,7 +94,7 @@ public class ClientController {
         }
         return ResponseEntity.ok().body(clientDTO);
     }
-    @Secured("ROLE_FUNCIONARIO")
+    @Secured("ROLE_EMPLOYEE")
     @GetMapping("/sorted")
     public List<ClientResponseDTO> getSortedClients() {
         return clientService.sortClientsByName();
