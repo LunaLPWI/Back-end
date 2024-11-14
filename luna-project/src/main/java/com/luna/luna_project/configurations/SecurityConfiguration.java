@@ -8,11 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authorization.AuthorizationDecision;
-import org.springframework.security.authorization.AuthorizationDecision;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,8 +23,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,9 +36,6 @@ public class SecurityConfiguration {
 
     @Autowired
     private AuthenticationService authenticationService;
-
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
 
     private static final AntPathRequestMatcher[] URLS_PERMITIDAS = {
             new AntPathRequestMatcher("/swagger-ui/**"),
@@ -85,15 +79,41 @@ public class SecurityConfiguration {
         http
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-                .cors(Customizer.withDefaults())
-                .csrf(CsrfConfigurer<HttpSecurity>::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(URLS_PERMITIDAS).permitAll()
                         .requestMatchers(HttpMethod.POST, "/clients", "/clients/login", "/plans/create-plan-and-charge**").permitAll()
-                        .requestMatchers("/products","/products/change-quantity").authenticated()
+                        .requestMatchers("/products", "/products/change-quantity").authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> handling
-                        .authenticationEntryPoint(authenticationEntryPoint))
+                        .accessDeniedHandler((request, response, ex) -> {
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.getWriter().write(String.format(
+                                    "{\"timestamp\": \"%s\", \"status\": 403, \"error\": \"Forbidden\", \"message\": \"%s\"}",
+                                    java.time.LocalDateTime.now(),
+                                    ex.getMessage()
+                            ));
+                        })
+                        .authenticationEntryPoint((request, response, ex) -> {
+                            response.setContentType("application/json;charset=UTF-8");
+                            if (ex instanceof BadCredentialsException) {
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                response.getWriter().write(String.format(
+                                        "{\"timestamp\": \"%s\", \"status\": 401, \"error\": \"Unauthorized\", \"message\": \"Credenciais inválidas\"}",
+                                        java.time.LocalDateTime.now()
+                                ));
+                            } else {
+                                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                                response.getWriter().write(String.format(
+                                        "{\"timestamp\": \"%s\", \"status\": 403, \"error\": \"Forbidden\", \"message\": \"%s\"}",
+                                        java.time.LocalDateTime.now(),
+                                        ex.getMessage()
+                                ));
+                            }
+                        }))
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -102,21 +122,12 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-
-
-
-
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(new AuthenticationProvider(authenticationService, passwordEncoder()));
         return authenticationManagerBuilder.build();
-    }
-
-    @Bean
-    public AuthenticationEntryPoint jwtAuthenticationEntryPointBean() {
-        return new AuthenticationEntryPoint();
     }
 
     @Bean
@@ -136,9 +147,9 @@ public class SecurityConfiguration {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuracao = new CorsConfiguration();
-        configuracao.applyPermitDefaultValues();
-        configuracao.setAllowedMethods(
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.applyPermitDefaultValues();
+        configuration.setAllowedMethods(
                 Arrays.asList(
                         HttpMethod.GET.name(),
                         HttpMethod.POST.name(),
@@ -147,13 +158,13 @@ public class SecurityConfiguration {
                         HttpMethod.DELETE.name(),
                         HttpMethod.OPTIONS.name(),
                         HttpMethod.HEAD.name(),
-                        HttpMethod.TRACE.name()));
+                        HttpMethod.TRACE.name()
+                )
+        );
+        configuration.setExposedHeaders(List.of(HttpHeaders.CONTENT_DISPOSITION));
 
-        configuracao.setExposedHeaders(List.of(HttpHeaders.CONTENT_DISPOSITION));
-
-        UrlBasedCorsConfigurationSource origem = new UrlBasedCorsConfigurationSource();
-        origem.registerCorsConfiguration("/**", configuracao);
-
-        return origem;
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
