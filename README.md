@@ -28,42 +28,45 @@ Antes de rodar o projeto, verifique se você possui os seguintes requisitos:
 
 ## 🛠️ Como Rodar o Projeto
 1. Clone o repositório:
-   ```bash
+   ````
    git clone https://github.com/seu-usuario/seu-repositorio.git
 Acesse a pasta do projeto:
-bash
-Copiar código
+
 cd seu-repositorio
 Compile o projeto usando Maven:
-bash
-Copiar código
+
 mvn clean install
 Execute a aplicação:
-bash
-Copiar código
+
+
 mvn spring-boot:run
 🌐 Rotas Principais da API
-/clientes: Endpoints para gerenciamento de clientes.
-/funcionarios: Endpoints para gerenciamento de funcionários.
-/agendamentos: Endpoints para agendamento de serviços.
-/planos: Integração com a API Gerencia Net para criação de planos.
-/enderecos: Consultas de endereços via ViaCep.
-📂 Estrutura do Projeto
-bash
-Copiar código
+- **/clientes**: Endpoints para gerenciamento de clientes.
+- **/funcionarios**: Endpoints para gerenciamento de funcionários.
+- **/agendamentos**: Endpoints para agendamento de serviços.
+- **/planos**: Integração com a API Gerencia Net para criação de planos.
+- **/enderecos**: Consultas de endereços via ViaCep.
+## 📂 Estrutura do Projeto
+
+```
 src
 ├── main
 │   ├── java
 │   │   └── com.dominio.domroque
-│   │       ├── controller
-│   │       ├── service
-│   │       ├── model
-│   │       └── repository
+│   │       ├── controller      # Controladores da aplicação (responsáveis pelos endpoints)
+│   │       ├── service         # Serviços responsáveis pela lógica de negócios
+│   │       ├── model           # Modelos de dados e entidades JPA
+│   │       └── repository      # Repositórios para acesso aos dados no banco
 │   └── resources
-│       ├── application.properties
-│       └── data.sql
+│       ├── application.properties  # Arquivo de configurações do Spring Boot
+│       └── data.sql              # Arquivo de inicialização do banco de dados (se necessário)
 └── test
     └── java
+        └── com.dominio.domroque
+            ├── controller      # Testes dos controladores
+            ├── service         # Testes dos serviços
+            └── repository      # Testes dos repositórios
+````
 🔒 Segurança
 A aplicação pode ser configurada com Spring Security para controle de autenticação e autorização.
 
@@ -80,8 +83,8 @@ Para dúvidas ou sugestões, entre em contato via e-mail: domroque@empresa.com.
 
 Obrigado por conferir o projeto! 😊✨
 
-markdown
-Copiar código
+
+
 
 ### Explicação das Seções:
 1. **Descrição**: Explica o que o projeto faz e suas integrações.
@@ -94,5 +97,3 @@ Copiar código
 8. **Segurança**: Indica que a aplicação pode ser configurada com **Spring Security**.
 9. **Contribuições**: Orientações para quem deseja contribuir com o código.
 10. **Contato**: Detalhes de contato.
-
-Esse modelo deve cobrir as necessidades para um README claro e bem estruturado!
