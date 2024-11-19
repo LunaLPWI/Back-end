@@ -3,7 +3,7 @@ package com.luna.luna_project.services;
 
 import com.luna.luna_project.dtos.product.ProductResponseDTO;
 import com.luna.luna_project.mapper.ProductMapper;
-import com.luna.luna_project.models.Product;
+import com.luna.luna_project.models.ProductStock;
 import com.luna.luna_project.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,19 +21,19 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
 
-    public ProductResponseDTO addProduct(Product product) {
+    public ProductResponseDTO addProduct(ProductStock product) {
         product.setId(null);
         productRepository.save(product);
         return productMapper.productToProductResponseDTO(product);
     }
 
-    public List<Product> getAllProducts() {
+    public List<ProductStock> getAllProducts() {
         return productRepository.findAll();
     }
 
 
-    public Product changePrice(Double price, Long productId) {
-        Optional<Product> product = productRepository.findById(productId);
+    public ProductStock changePrice(Double price, Long productId) {
+        Optional<ProductStock> product = productRepository.findById(productId);
         if (price<0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valor não pode ser negativo");
         }
@@ -45,8 +45,8 @@ public class ProductService {
         return product.get();
     }
 
-    public Product updateQtd(Integer qtd, Long productId) {
-        Optional<Product> product = productRepository.findById(productId);
+    public ProductStock updateQtd(Integer qtd, Long productId) {
+        Optional<ProductStock> product = productRepository.findById(productId);
         if (product.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found by id");
         }

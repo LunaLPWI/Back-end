@@ -1,12 +1,15 @@
 package com.luna.luna_project.models;
+import com.luna.luna_project.controllers.ProductController;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Builder
 @Data
-@Table(name = "product")
-public class Product {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "productStock")
+public class ProductStock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,4 +17,5 @@ public class Product {
     private Integer amount;
     private String description;
     private Double price;
+
 }

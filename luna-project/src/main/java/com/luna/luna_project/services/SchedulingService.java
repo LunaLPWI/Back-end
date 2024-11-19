@@ -1,7 +1,13 @@
 package com.luna.luna_project.services;
 
+import com.luna.luna_project.mapper.SchedulingMapper;
+import com.luna.luna_project.models.ProductScheduling;
+import com.luna.luna_project.models.ProductStock;
 import com.luna.luna_project.models.Scheduling;
+import com.luna.luna_project.repositories.ProductRepository;
+import com.luna.luna_project.repositories.ProductSchedulingRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -9,17 +15,22 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SchedulingService {
 
     private final SchedulingRepository schedulingRepository;
     private final ClientService clientService;
+    private final ProductSchedulingRepository productSchedulingRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public SchedulingService(SchedulingRepository schedulingRepository, ClientService clientService) {
+    public SchedulingService(SchedulingRepository schedulingRepository, ClientService clientService, ProductSchedulingRepository productSchedulingRepository, ProductRepository productRepository) {
         this.schedulingRepository = schedulingRepository;
         this.clientService = clientService;
+        this.productSchedulingRepository = productSchedulingRepository;
+        this.productRepository = productRepository;
     }
 
     public Boolean existsById(Long id) {
@@ -119,6 +130,48 @@ public class SchedulingService {
         }
         schedulingRepository.deleteById(id);
     }
+    //// ele faz um rollback no banco caso de algum erro
+    @Transactional
+    public void addProducts(Long schedulingId, List<ProductScheduling> productScheduling) {
+        Optional<Scheduling> scheduling = schedulingRepository.findById(schedulingId);
+        if (scheduling.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Não há agendamento com este id: %d"
+                    .formatted(schedulingId));
+        }
+
+        if (productScheduling.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Lista de produtos vazia");
+        }
+
+        List<Long> productIds = productScheduling.stream()
+                .map(ProductScheduling::getId)
+                .collect(Collectors.toList());
+
+        List<ProductStock> productStockList = productRepository.findAllById(productIds);
+
+        Map<Long, ProductStock> productStockMap = productStockList.stream()
+                .collect(Collectors.toMap(ProductStock::getId, productStock -> productStock));
+
+        for (ProductScheduling product : productScheduling) {
+            ProductStock productStock = productStockMap.get(product.getId());
+
+            if (productStock == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado no estoque");
+            }
+
+            if (productStock.getAmount() < product.getAmount()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Quantidade do produto %s não pode ser maior que o estoque".formatted(productStock.getName()));
+            }
+
+            productStock.setAmount(productStock.getAmount() - product.getAmount());
+        }
+
+        productRepository.saveAll(productStockList);
+
+        scheduling.get().setProducts(productScheduling);
+        schedulingRepository.save(scheduling.get());
+    }
 
 
 
@@ -130,5 +183,10 @@ public class SchedulingService {
         };
         schedulingRepository.save(scheduling);
         return schedulingOptional.get();
+    }
+
+    public void addProductsInScheduling(Long schedulingId){
+        Scheduling scheduling = schedulingRepository.findById(schedulingId).get();
+
     }
 }

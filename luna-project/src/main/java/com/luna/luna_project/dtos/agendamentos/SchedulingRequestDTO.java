@@ -27,6 +27,4 @@ public class SchedulingRequestDTO {
     @NotEmpty
     @ElementCollection(targetClass = Task.class)
     private List<Task> items;
-
-
 }

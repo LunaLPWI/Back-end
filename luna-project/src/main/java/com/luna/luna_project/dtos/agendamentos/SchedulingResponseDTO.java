@@ -32,5 +32,4 @@ public class SchedulingResponseDTO {
     private Long clientId;
     @NotNull
     private Long employeeId;
-
 }
