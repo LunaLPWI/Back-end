@@ -16,6 +16,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "scheduling")
 public class Scheduling {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
