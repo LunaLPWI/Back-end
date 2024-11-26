@@ -129,10 +129,20 @@ public class SchedulingService {
         }
         schedulingRepository.deleteById(id);
     }
-    //// ele faz um rollback no banco caso de algum erro0ol/.;ç
+    //// ele faz um rollback no banco caso de algum erro
     @Transactional
     public Scheduling addProducts(Long schedulingId, List<ProductScheduling> productScheduling) {
+
+        if (productScheduling.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "A lista passada está vazia");
+        }
         Optional<Scheduling> scheduling = schedulingRepository.findById(schedulingId);
+        if(scheduling.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Não existe agendamento com o id:%d".formatted(schedulingId));
+        }
+
         for (ProductScheduling newProduct : productScheduling) {
             Optional<ProductScheduling> existingProductOpt = scheduling.get().getProducts().stream()
                     .filter(p -> p.getId().equals(newProduct.getId()))
