@@ -6,6 +6,7 @@ import com.luna.luna_project.dtos.client.ClientRequestDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.dtos.client.ClientTokenDTO;
 import com.luna.luna_project.exceptions.ValidationException;
+import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.services.ClientService;
@@ -60,7 +61,8 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientResponseDTO> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
-        Client client = clientService.saveClient(clientDTO, clientDTO.getAddress());
+        Client client = clientService.saveClient(clientMapper.clientRequestDTOtoClient(clientDTO),
+                clientDTO.getAddress());
         ClientResponseDTO clientResponseDTO = clientMapper.clientToClientDTOResponse(client);
         return ResponseEntity.ok().body(clientResponseDTO);
     }

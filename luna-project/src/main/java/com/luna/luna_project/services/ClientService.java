@@ -47,15 +47,14 @@ public class ClientService {
 
 
 
-    public Client saveClient(ClientRequestDTO clientDTO, AddressDTO addressDTO) {
-        if (existsCpf(clientDTO.getCpf())) {
+    public Client saveClient(Client client, AddressDTO addressDTO) {
+        if (clientRepository.existsByCpf(client.getCpf())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"CPF já cadastrado");
         }
-        if (existsEmail(clientDTO.getEmail())) {
+        if (clientRepository.existsByEmail(client.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Email já cadastrado");
         }
         Address address = viaCepService.saveAddress(addressDTO);
-        Client client = clientMapper.clientRequestDTOtoClient(clientDTO);
         String encryptedPassword = passwordEncoder.encode(client.getPassword());
         client.setPassword(encryptedPassword);
         client.setAddress(address);
@@ -90,14 +89,6 @@ public class ClientService {
         }
     }
 
-    public Boolean existsCpf(String cpf) {
-        return clientRepository.existsByCpf(cpf);
-    }
-
-    public Boolean existsEmail(String email) {
-
-        return clientRepository.existsByEmail(email);
-    }
 
     public Client searchClientByCpf(String cpf) {
         Optional<Client> clientOptional = clientRepository.findByCpf(cpf);
