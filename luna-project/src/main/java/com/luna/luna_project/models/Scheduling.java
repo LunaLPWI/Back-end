@@ -21,24 +21,16 @@ public class Scheduling {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Future
     private LocalDateTime startDateTime;
-    @NotEmpty
     @ElementCollection(targetClass = Task.class)
     private List<Task> items;
     @ManyToOne
     private Client client;
     @ManyToOne
     private Client employee;
-
     @ElementCollection
     @CollectionTable(name = "scheduling_products", joinColumns = @JoinColumn(name = "scheduling_id"))
     private List<ProductScheduling> products;
-
-
-
-
-
 
     public int calculateTotalDuration() {
         if (items != null && !items.isEmpty()) {

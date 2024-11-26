@@ -21,8 +21,6 @@ public class ProductResponseDTO {
     @Min(0)
     @NotNull
     private Integer amount;
-    @NotBlank
-    private String description;
     @Min(0)
     @NotNull
     private Double price;

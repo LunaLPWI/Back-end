@@ -1,11 +1,13 @@
 package com.luna.luna_project.models;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 @Entity
 @Table(name = "address_seq")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,9 +19,5 @@ public class Address {
     private String bairro;
     private String localidade;
     private String uf;
-    private String ibge;
-    private String gia;
-    private String ddd;
-    private String siafi;
     private String cidade;
 }

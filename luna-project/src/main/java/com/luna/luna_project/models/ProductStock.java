@@ -15,7 +15,6 @@ public class ProductStock {
     private Long id;
     private String name;
     private Integer amount;
-    private String description;
     private Double price;
 
 }

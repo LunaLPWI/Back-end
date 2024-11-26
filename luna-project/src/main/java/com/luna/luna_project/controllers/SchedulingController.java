@@ -1,11 +1,10 @@
 package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.csv.agendamento.SchedulingCSV;
-import com.luna.luna_project.dtos.agendamentos.SchedulingRequestDTO;
-import com.luna.luna_project.dtos.agendamentos.SchedulingRequestUpdateDTO;
-import com.luna.luna_project.dtos.agendamentos.SchedulingResponseAdminDTO;
-import com.luna.luna_project.dtos.agendamentos.SchedulingResponseDTO;
+import com.luna.luna_project.dtos.agendamentos.*;
+import com.luna.luna_project.dtos.product.ProductSchedulingRequestDTO;
 import com.luna.luna_project.mapper.SchedulingMapper;
+import com.luna.luna_project.models.ProductScheduling;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.services.SchedulingService;
 import jakarta.validation.Valid;
@@ -78,12 +77,19 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulings.stream()
                 .map(schedulingMapper::EntityToResponseAdmin).toList());
     }
+
     @Secured("ROLE_ADMIN")
-    @PatchMapping
+    @PutMapping
     public ResponseEntity<SchedulingResponseDTO> updateById(@RequestBody @Valid SchedulingRequestUpdateDTO schedulingRequestUpdateDTO) {
         Scheduling scheduling = schedulingMapper.RequestUpdateToEntity(schedulingRequestUpdateDTO);
         schedulingService.updateScheduling(scheduling);
+        return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
+    }
 
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/add-products")
+    public ResponseEntity<SchedulingResponseDTO> addProductSchedule(@RequestBody @Valid SchedulingProductDTO schedulingProductDTO) {
+        Scheduling scheduling = schedulingService.addProducts(schedulingProductDTO.getId(), schedulingProductDTO.getProducts());
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
 
