@@ -1,8 +1,11 @@
 package com.luna.luna_project.services;
 
+import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.models.Address;
+import jakarta.validation.ValidationException;
+import org.junit.Assert;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +24,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -191,4 +196,123 @@ class ClientServiceTest {
         });
         assertEquals("409 CONFLICT \"Email já cadastrado\"", exception.getMessage());
     }
+
+    @DisplayName("Teste listar clientes")
+    @Test
+    void searchClients(){
+        Address address = Address.builder()
+                .cep("06276-154")
+                .logradouro("Praça da Paz")
+                .number(123)
+                .complemento("Casa 1")
+                .cidade("São Paulo")
+                .bairro("Vila Osasco")
+                .uf("SP")
+                .build();
+
+        // Mock Client
+
+        List<Client> clients = List.of(
+                Client.builder()
+                        .id(1L)
+                        .name("João Silva")
+                        .cpf("123.456.789-00")
+                        .email("joao.silva@email.com")
+                        .phoneNumber("11987654321")
+                        .password("senhaSegura123")
+                        .birthDay(LocalDate.of(1990, 1, 1))
+                        .address(address)
+                        .roles(new HashSet<>(Set.of("ROLE_USER", "ROLE_ADMIN")))
+                        .build(),
+                Client.builder()
+                        .id(1L)
+                        .name("Jonas Silva")
+                        .cpf("123.456.789-00")
+                        .email("joao.silva@email.com")
+                        .phoneNumber("11987654321")
+                        .password("senhaSegura123")
+                        .birthDay(LocalDate.of(1990, 1, 1))
+                        .address(address)
+                        .roles(new HashSet<>(Set.of("ROLE_USER", "ROLE_ADMIN")))
+                        .build()
+        );
+
+        Mockito.when(clientRepository.findAll()).thenReturn(clients);
+
+
+        assertEquals(clientService.searchClients(), clients);
+
+    }
+    @DisplayName("teste de procura de Employees")
+    @Test
+    public void searchEmployees() {
+        Address address = Address.builder()
+                .cep("06276-154")
+                .logradouro("Praça da Paz")
+                .number(123)
+                .complemento("Casa 1")
+                .cidade("São Paulo")
+                .bairro("Vila Osasco")
+                .uf("SP")
+                .build();
+        List<Client> clientsAdmin = List.of(
+                Client.builder()
+                        .id(1L)
+                        .name("João Silva")
+                        .cpf("123.456.789-00")
+                        .email("joao.silva@email.com")
+                        .phoneNumber("11987654321")
+                        .password("senhaSegura123")
+                        .birthDay(LocalDate.of(1990, 1, 1))
+                        .address(address)
+                        .roles(new HashSet<>(Set.of("ROLE_USER", "ROLE_ADMIN")))
+                        .build(),
+                Client.builder()
+                        .id(1L)
+                        .name("Jonas Silva")
+                        .cpf("123.456.789-00")
+                        .email("joao.silva@email.com")
+                        .phoneNumber("11987654321")
+                        .password("senhaSegura123")
+                        .birthDay(LocalDate.of(1990, 1, 1))
+                        .address(address)
+                        .roles(new HashSet<>(Set.of("ROLE_ADMIN")))
+                        .build()
+        );
+
+        List<Client> Employee = List.of(
+                Client.builder()
+                        .id(1L)
+                        .name("João Silva")
+                        .cpf("123.456.789-00")
+                        .email("joao.silva@email.com")
+                        .phoneNumber("11987654321")
+                        .password("senhaSegura123")
+                        .birthDay(LocalDate.of(1990, 1, 1))
+                        .address(address)
+                        .roles(new HashSet<>(Set.of("ROLE_EMPLOYEE", "ROLE_ADMIN")))
+                        .build(),
+                Client.builder()
+                        .id(1L)
+                        .name("Jonas Silva")
+                        .cpf("123.456.789-00")
+                        .email("joao.silva@email.com")
+                        .phoneNumber("11987654321")
+                        .password("senhaSegura123")
+                        .birthDay(LocalDate.of(1990, 1, 1))
+                        .address(address)
+                        .roles(new HashSet<>(Set.of("ROLE_ADMIN","ROLE_EMPLOYEE")))
+                        .build()
+        );
+
+        Mockito.when(clientRepository.findByRolesContaining("ROLE_ADMIN")).thenReturn(clientsAdmin);
+        assertEquals(clientService.searchEmployees("ROLE_ADMIN"), clientsAdmin);
+        Mockito.when(clientRepository.findByRolesContaining("ROLE_EMPLOYEE")).thenReturn(clientsAdmin);
+        assertEquals(clientService.searchEmployees("ROLE_EMPLOYEE"), clientsAdmin);
+    }
+
+
+
+
+
 }

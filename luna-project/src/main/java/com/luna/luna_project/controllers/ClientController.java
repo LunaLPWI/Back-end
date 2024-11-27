@@ -27,13 +27,13 @@ public class ClientController {
     private ClientService clientService;
     @Autowired
     private ClientMapper clientMapper;
-//    @Autowired
-//    private GerenciadorTokenJwt gerenciadorTokenJwt;
+
 
     @Secured("ROLE_EMPLOYEE")
     @GetMapping
     public ResponseEntity<List<ClientResponseDTO>> searchClients() {
-        List<ClientResponseDTO> clients = clientService.searchClients();
+        List<ClientResponseDTO> clients = clientService.searchClients().stream()
+                .map(clientMapper::clientToClientDTOResponse).toList();
         if (clients.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -58,13 +58,11 @@ public class ClientController {
         return ResponseEntity.ok().body(clientMapper.clientToClientDTOResponse(client));
     }
 
-
     @PostMapping
-    public ResponseEntity<ClientResponseDTO> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
+    public ResponseEntity<Client> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
         Client client = clientService.saveClient(clientMapper.clientRequestDTOtoClient(clientDTO),
                 clientDTO.getAddress());
-        ClientResponseDTO clientResponseDTO = clientMapper.clientToClientDTOResponse(client);
-        return ResponseEntity.ok().body(clientResponseDTO);
+        return ResponseEntity.ok().body(client);
     }
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/delete-by-cpf")
@@ -100,7 +98,7 @@ public class ClientController {
     @Secured("ROLE_EMPLOYEE")
     @GetMapping("/sorted")
     public List<ClientResponseDTO> getSortedClients() {
-        return clientService.sortClientsByName();
+        return clientService.sortClientsByName().stream().map(clientMapper::clientToClientDTOResponse).toList();
     }
 
     @SecurityRequirement(name = "Baerer")

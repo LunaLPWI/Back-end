@@ -62,10 +62,8 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
-    public List<ClientResponseDTO> searchClients() {
-        return clientRepository.findAll().stream()
-                .map(clientMapper::clientToClientDTOResponse)
-                .collect(Collectors.toList());
+    public List<Client> searchClients() {
+        return clientRepository.findAll();
     }
 
     public List<Client> searchEmployees(String role) {
@@ -136,8 +134,8 @@ public class ClientService {
         }
     }
 
-    public List<ClientResponseDTO> sortClientsByName() {
-        List<ClientResponseDTO> clients = searchClients();
+    public List<Client> sortClientsByName() {
+        List<Client> clients = searchClients();
         bubbleSort(clients);
         return clients;
     }
@@ -149,12 +147,12 @@ public class ClientService {
     }
 
 
-    private void bubbleSort(List<ClientResponseDTO> clients) {
+    private void bubbleSort(List<Client> clients) {
         int n = clients.size();
         for (int i = 0; i < n - 1; i++) {
             for (int j = 1; j < n - i; j++) {
                 if (clients.get(j - 1).getName().compareTo(clients.get(j).getName()) > 0) {
-                    ClientResponseDTO temp = clients.get(j);
+                    Client temp = clients.get(j);
                     clients.set(j, clients.get(j - 1));
                     clients.set(j - 1, temp);
                 }
