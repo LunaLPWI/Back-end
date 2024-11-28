@@ -3,6 +3,7 @@ package com.luna.luna_project.services;
 
 import com.luna.luna_project.dtos.*;
 import com.luna.luna_project.dtos.ChargeRequestDTO;
+import com.luna.luna_project.enums.Plans;
 import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
 import com.luna.luna_project.mapper.OneStepCardMapper;
 import com.luna.luna_project.mapper.OneStepLinkMapper;
@@ -34,9 +35,9 @@ public class OneStepService {
     public OneStepDTO saveOneStep(@Valid OneStepDTO request, String paymentToken, String cpf) {
         Client client = clientService.searchClientByCpf(cpf);
 
-        Plan planSaved = planService.savePlan(request);
+        PlanDTO planSaved = planService.savePlan(request);
 
-        ChargeRequestDTO chargeRequestDTO = request.getChargeRequest();
+        Plans chargeRequestDTO = request.getChargeRequest();
 
         chargeService.saveCharge(request, planSaved);
 
@@ -44,19 +45,19 @@ public class OneStepService {
 
         OneStepDTO oneStepMapp = oneStepCardMapper.oneSetToOneStepDTO(oneStep);
 
-        oneStepMapp.setChargeRequest(request.getChargeRequest());
-        oneStepMapp.setPlan(request.getPlan());
+        oneStepMapp.setChargeRequest(chargeRequestDTO);
+        oneStepMapp.setPlan(planSaved);
 
 
         OneStepCardSubscription oneConvert = oneStepCardMapper.oneStepDTOtoOneStep(oneStepMapp);
         OneStepCardSubscription saveOneStep = oneStepCardRepository.save(oneConvert);
 
-        return oneStepCardMapper.oneSetToOneStepDTO(saveOneStep);
+        return oneStepMapp;
     }
 
 
     public OneStepLinkDTO saveOneStepLink(@Valid OneStepDTO request){
-        OneStepLink oneStep = PlanEFI.createOneStepLink(request.getChargeRequest());
+        OneStepLink oneStep = PlanEFI.createOneStepLink(request);
 
         OneStepLinkDTO oneStepMapp = oneStepLinkMapper.oneSetToOneStepDTO(oneStep);
         OneStepLink oneConvert = oneStepLinkMapper.oneStepDTOtoOneStep(oneStepMapp);

@@ -27,7 +27,7 @@ public class PlanController {
                                                               @RequestParam String paymentToken,
                                                               @RequestParam String cpf) {
         OneStepDTO oneStepSaved = oneStepService.saveOneStep(request, paymentToken, cpf);
-        OneStepLinkDTO oneSaved = oneStepService.saveOneStepLink(request);
+        OneStepLinkDTO oneSaved = oneStepService.saveOneStepLink(oneStepSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(oneSaved);
     }
