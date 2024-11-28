@@ -2,9 +2,7 @@ package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.csv.agendamento.SchedulingCSV;
 import com.luna.luna_project.dtos.agendamentos.*;
-import com.luna.luna_project.dtos.product.ProductSchedulingRequestDTO;
 import com.luna.luna_project.mapper.SchedulingMapper;
-import com.luna.luna_project.models.ProductScheduling;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.services.SchedulingService;
 import jakarta.validation.Valid;

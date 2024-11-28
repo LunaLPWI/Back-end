@@ -15,4 +15,5 @@ public class ProductScheduling {
     private Long id;
     private String productName;
     private int amount;
+    private double price;
 }

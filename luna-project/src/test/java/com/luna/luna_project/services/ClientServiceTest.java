@@ -310,9 +310,4 @@ class ClientServiceTest {
         Mockito.when(clientRepository.findByRolesContaining("ROLE_EMPLOYEE")).thenReturn(clientsAdmin);
         assertEquals(clientService.searchEmployees("ROLE_EMPLOYEE"), clientsAdmin);
     }
-
-
-
-
-
 }

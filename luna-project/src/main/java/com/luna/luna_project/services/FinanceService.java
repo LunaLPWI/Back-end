@@ -1,6 +1,8 @@
 package com.luna.luna_project.services;
 
 import com.luna.luna_project.enums.Task;
+import com.luna.luna_project.models.ProductScheduling;
+import com.luna.luna_project.models.ProductStock;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.repositories.ProductStockRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
@@ -12,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FinanceService {
@@ -36,17 +39,18 @@ public class FinanceService {
                 LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
         LocalDateTime end =
                 LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), 0, 0, 0);
-        long mounths = ChronoUnit.MONTHS.between(startDate, endDate);
 
         List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
 
-        int mounthStart= schedulings.get(0).getStartDateTime().getMonth().1 ;
-        for (int i = 0; i < mounths; i++) {
-            LocalDateTime endloop = start.plusMonths(1);
+        int mounthStart= schedulings.get(0).getStartDateTime().getMonth().getValue();
+        int mounthend= schedulings.get(schedulings.size()-1).getStartDateTime().getMonth().getValue();
 
-            schedulings.stream().filter(scheduling -> scheduling.getStartDateTime().get)
+        for (int i = mounthStart; i <= mounthend; i++) {
+            int finalI = i;
+            List<Scheduling> schedulingMounth = schedulings.stream()
+                     .filter(scheduling -> scheduling.getStartDateTime().getMonth().getValue()== finalI).toList();
 
-            double sumMontly = .stream().
+            double sumMontly =schedulingMounth.stream().
                     flatMap(Scheduling -> Scheduling.getItems().stream()).
                     mapToDouble(Task::getValue).sum();
             revenueMontlyList.add(sumMontly);
@@ -56,21 +60,35 @@ public class FinanceService {
     }
 
     public List <Double> formRevenueScheduleProducts(LocalDate startDate, LocalDate endDate) {
+
+        LocalDateTime start =
+                LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
+        LocalDateTime end =
+                LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), 0, 0, 0);
+
+        List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
+        List<ProductStock> productStockList =  ProductStockRepository.findAll();
+
+        int mounthStart= schedulings.get(0).getStartDateTime().getMonth().getValue();
+        int mounthend= schedulings.get(schedulings.size()-1).getStartDateTime().getMonth().getValue();
+
         List <Double> revenueMontlyList = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            LocalDateTime start =
-                    LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
-
-            LocalDateTime end =
-                    LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), 23, 59, 0);
-
-            double sumMonthly = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end).stream()
+        for (int i = mounthStart; i <= mounthend; i++) {
+            int finalI = i;
+            List<ProductScheduling> productsMonth = schedulings.stream()
+                    .filter(scheduling -> scheduling.getStartDateTime().getMonthValue() == finalI)
                     .flatMap(scheduling -> scheduling.getProducts().stream())
-                    .map(product -> ProductStockRepository.findById(product.getId()))
-                    .filter(Optional::isPresent) // Garantir que o Optional contém valor
-                    .mapToDouble(optionalProductStock -> optionalProductStock.get().getPrice()) // Extrair o valor se presente
-                    .sum();
+                    .toList();
 
+            double sumMonthly = productsMonth.stream()
+                    .filter(productScheduling ->
+                            productStockList.stream()
+                            .map(ProductStock::getId).
+                                    anyMatch(id -> id.equals(productScheduling.getId()))
+                    )
+                    .mapToDouble(productStock ->
+                            productStock.getAmount() * productStock.getPrice())
+                    .sum();
             revenueMontlyList.add(sumMonthly);
         }
         return revenueMontlyList;
