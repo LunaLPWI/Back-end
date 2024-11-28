@@ -14,7 +14,7 @@ import java.util.Set;
 @Builder
 @Getter
 @Setter
-@Data
+@AllArgsConstructor
 public class ClientResponseDTO {
     private Long id;
     private String name;

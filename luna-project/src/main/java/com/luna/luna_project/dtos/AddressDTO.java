@@ -1,10 +1,10 @@
 package com.luna.luna_project.dtos;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
+@AllArgsConstructor
 @Builder
 public class AddressDTO {
     private String cep;
