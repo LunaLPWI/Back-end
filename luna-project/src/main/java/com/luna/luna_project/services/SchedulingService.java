@@ -1,7 +1,12 @@
 package com.luna.luna_project.services;
 
+import com.luna.luna_project.models.ProductScheduling;
+import com.luna.luna_project.models.ProductStock;
 import com.luna.luna_project.models.Scheduling;
+import com.luna.luna_project.repositories.ProductStockRepository;
+import com.luna.luna_project.repositories.ProductSchedulingRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -9,17 +14,22 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SchedulingService {
 
     private final SchedulingRepository schedulingRepository;
     private final ClientService clientService;
+    private final ProductSchedulingRepository productSchedulingRepository;
+    private final ProductStockRepository productStockRepository;
 
     @Autowired
-    public SchedulingService(SchedulingRepository schedulingRepository, ClientService clientService) {
+    public SchedulingService(SchedulingRepository schedulingRepository, ClientService clientService, ProductSchedulingRepository productSchedulingRepository, ProductStockRepository productStockRepository) {
         this.schedulingRepository = schedulingRepository;
         this.clientService = clientService;
+        this.productSchedulingRepository = productSchedulingRepository;
+        this.productStockRepository = productStockRepository;
     }
 
     public Boolean existsById(Long id) {
@@ -119,8 +129,34 @@ public class SchedulingService {
         }
         schedulingRepository.deleteById(id);
     }
+    //// ele faz um rollback no banco caso de algum erro
+    @Transactional
+    public Scheduling addProducts(Long schedulingId, List<ProductScheduling> productScheduling) {
 
+        if (productScheduling.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "A lista passada está vazia");
+        }
+        Optional<Scheduling> scheduling = schedulingRepository.findById(schedulingId);
+        if(scheduling.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Não existe agendamento com o id:%d".formatted(schedulingId));
+        }
 
+        for (ProductScheduling newProduct : productScheduling) {
+            Optional<ProductScheduling> existingProductOpt = scheduling.get().getProducts().stream()
+                    .filter(p -> p.getId().equals(newProduct.getId()))
+                    .findFirst();
+
+            if (existingProductOpt.isPresent()) {
+                ProductScheduling existingProduct = existingProductOpt.get();
+                existingProduct.setAmount(existingProduct.getAmount() + newProduct.getAmount());
+            } else {
+                scheduling.get().getProducts().add(newProduct);
+            }
+        }
+       return schedulingRepository.save(scheduling.get());
+    }
 
     public Scheduling updateScheduling(Scheduling scheduling){
         Optional <Scheduling> schedulingOptional =  schedulingRepository.findById(scheduling.getId());
@@ -131,4 +167,6 @@ public class SchedulingService {
         schedulingRepository.save(scheduling);
         return schedulingOptional.get();
     }
+
 }
+//  /

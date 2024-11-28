@@ -47,15 +47,14 @@ public class ClientService {
 
 
 
-    public Client saveClient(ClientRequestDTO clientDTO, AddressDTO addressDTO) {
-        if (existsCpf(clientDTO.getCpf())) {
+    public Client saveClient(Client client, AddressDTO addressDTO) {
+        if (clientRepository.existsByCpf(client.getCpf())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"CPF já cadastrado");
         }
-        if (existsEmail(clientDTO.getEmail())) {
+        if (clientRepository.existsByEmail(client.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Email já cadastrado");
         }
         Address address = viaCepService.saveAddress(addressDTO);
-        Client client = clientMapper.clientRequestDTOtoClient(clientDTO);
         String encryptedPassword = passwordEncoder.encode(client.getPassword());
         client.setPassword(encryptedPassword);
         client.setAddress(address);
@@ -63,10 +62,8 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
-    public List<ClientResponseDTO> searchClients() {
-        return clientRepository.findAll().stream()
-                .map(clientMapper::clientToClientDTOResponse)
-                .collect(Collectors.toList());
+    public List<Client> searchClients() {
+        return clientRepository.findAll();
     }
 
     public List<Client> searchEmployees(String role) {
@@ -90,14 +87,6 @@ public class ClientService {
         }
     }
 
-    public Boolean existsCpf(String cpf) {
-        return clientRepository.existsByCpf(cpf);
-    }
-
-    public Boolean existsEmail(String email) {
-
-        return clientRepository.existsByEmail(email);
-    }
 
     public Client searchClientByCpf(String cpf) {
         Optional<Client> clientOptional = clientRepository.findByCpf(cpf);
@@ -145,8 +134,8 @@ public class ClientService {
         }
     }
 
-    public List<ClientResponseDTO> sortClientsByName() {
-        List<ClientResponseDTO> clients = searchClients();
+    public List<Client> sortClientsByName() {
+        List<Client> clients = searchClients();
         bubbleSort(clients);
         return clients;
     }
@@ -158,12 +147,12 @@ public class ClientService {
     }
 
 
-    private void bubbleSort(List<ClientResponseDTO> clients) {
+    private void bubbleSort(List<Client> clients) {
         int n = clients.size();
         for (int i = 0; i < n - 1; i++) {
             for (int j = 1; j < n - i; j++) {
                 if (clients.get(j - 1).getName().compareTo(clients.get(j).getName()) > 0) {
-                    ClientResponseDTO temp = clients.get(j);
+                    Client temp = clients.get(j);
                     clients.set(j, clients.get(j - 1));
                     clients.set(j - 1, temp);
                 }

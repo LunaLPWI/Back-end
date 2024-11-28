@@ -79,7 +79,7 @@ Realize as alterações e commit: git commit -m 'Adicionando nova feature'.
 Envie para o repositório remoto: git push origin minha-feature.
 Abra um Pull Request.
 📬 Contato
-Para dúvidas ou sugestões, entre em contato via e-mail: domroque@empresa.com.
+Para dúvidas ou sugestões, entre em contato via e-mail: contato.luna@luna.com.
 
 Obrigado por conferir o projeto! 😊✨
 
