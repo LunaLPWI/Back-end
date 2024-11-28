@@ -2,6 +2,7 @@ package com.luna.luna_project.dtos.agendamentos;
 
 import com.luna.luna_project.dtos.TaskDTO;
 import com.luna.luna_project.enums.Task;
+import com.luna.luna_project.models.ProductScheduling;
 import jakarta.persistence.ElementCollection;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -32,5 +33,6 @@ public class SchedulingResponseDTO {
     private Long clientId;
     @NotNull
     private Long employeeId;
-
+    @ElementCollection(targetClass = ProductScheduling.class)
+    private List<ProductScheduling> products;
 }

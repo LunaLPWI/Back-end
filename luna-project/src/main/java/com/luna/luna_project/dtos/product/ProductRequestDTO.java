@@ -15,12 +15,10 @@ import lombok.Setter;
 public class ProductRequestDTO {
 
     @NotBlank
-    String nome;
+    String name;
     @NotNull
     @Min(0)
     private Integer amount;
-    @NotBlank
-    private String description;
     @Min(0)
     @NotNull
     private Double price;

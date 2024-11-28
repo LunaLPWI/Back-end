@@ -47,6 +47,7 @@ public class SchedulingMapper {
                 .employeeId(scheduling.getEmployee().getId())
                 .startDateTime(scheduling.getStartDateTime())
                 .items(scheduling.getItems().stream().map(taskMapper::taskToTaskDTO).toList())
+                .products(scheduling.getProducts())
                 .build();
     }
 
@@ -56,6 +57,8 @@ public class SchedulingMapper {
                 .endDateTime(scheduling.calculateEndDate())
                 .startDateTime(scheduling.getStartDateTime())
                 .clientName(scheduling.getClient().getName())
+                .products(scheduling.getProducts())
+                .items(scheduling.getItems())
                 .build();
     }
 }

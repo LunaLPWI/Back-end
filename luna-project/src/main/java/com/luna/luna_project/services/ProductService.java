@@ -3,8 +3,8 @@ package com.luna.luna_project.services;
 
 import com.luna.luna_project.dtos.product.ProductResponseDTO;
 import com.luna.luna_project.mapper.ProductMapper;
-import com.luna.luna_project.models.Product;
-import com.luna.luna_project.repositories.ProductRepository;
+import com.luna.luna_project.models.ProductStock;
+import com.luna.luna_project.repositories.ProductStockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,23 +17,23 @@ import java.util.Optional;
 public class ProductService {
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductStockRepository productStockRepository;
     @Autowired
     private ProductMapper productMapper;
 
-    public ProductResponseDTO addProduct(Product product) {
+    public ProductResponseDTO addProduct(ProductStock product) {
         product.setId(null);
-        productRepository.save(product);
+        productStockRepository.save(product);
         return productMapper.productToProductResponseDTO(product);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductStock> getAllProducts() {
+        return productStockRepository.findAll();
     }
 
 
-    public Product changePrice(Double price, Long productId) {
-        Optional<Product> product = productRepository.findById(productId);
+    public ProductStock changePrice(Double price, Long productId) {
+        Optional<ProductStock> product = productStockRepository.findById(productId);
         if (price<0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valor não pode ser negativo");
         }
@@ -41,12 +41,12 @@ public class ProductService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found by id");
         }
         product.get().setPrice(price);
-        productRepository.save(product.get());
+        productStockRepository.save(product.get());
         return product.get();
     }
 
-    public Product updateQtd(Integer qtd, Long productId) {
-        Optional<Product> product = productRepository.findById(productId);
+    public ProductStock updateQtd(Integer qtd, Long productId) {
+        Optional<ProductStock> product = productStockRepository.findById(productId);
         if (product.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found by id");
         }
@@ -54,7 +54,7 @@ public class ProductService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "quantidade de produtos não pode ser negativa");
         }
         product.get().setAmount(qtd);
-        productRepository.save(product.get());
+        productStockRepository.save(product.get());
         return product.get();
     }
 
@@ -65,7 +65,7 @@ public class ProductService {
 //        if (!productRepository.existsById(id)) {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found by id");
 //        }
-        productRepository.deleteById(id);
+        productStockRepository.deleteById(id);
     }
 
 }

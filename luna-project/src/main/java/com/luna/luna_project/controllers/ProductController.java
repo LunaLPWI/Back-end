@@ -4,7 +4,7 @@ package com.luna.luna_project.controllers;
 import com.luna.luna_project.dtos.product.ProductRequestDTO;
 import com.luna.luna_project.dtos.product.ProductResponseDTO;
 import com.luna.luna_project.mapper.ProductMapper;
-import com.luna.luna_project.models.Product;
+import com.luna.luna_project.models.ProductStock;
 import com.luna.luna_project.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class ProductController {
     @Secured("ROLE_EMPLOYEE")
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> listAllProducts() {
-        List<Product> products = productService.getAllProducts();
+        List<ProductStock> products = productService.getAllProducts();
 
         return ResponseEntity.ok(products.stream().map(
                 productMapper::productToProductResponseDTO).toList());
@@ -55,7 +55,7 @@ public class ProductController {
     @Secured("ROLE_ADMIN")
     @PostMapping
     public ResponseEntity<ProductResponseDTO> addProduct(@RequestBody @Valid ProductRequestDTO productRequestDTO) {
-        Product product = productMapper.productRequestToEntity(productRequestDTO);
+        ProductStock product = productMapper.productRequestToEntity(productRequestDTO);
         ProductResponseDTO productResponseDTO = productService.addProduct(product);
         return ResponseEntity.ok(productResponseDTO);
     }
