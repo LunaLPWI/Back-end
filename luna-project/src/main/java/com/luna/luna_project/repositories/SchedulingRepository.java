@@ -23,6 +23,17 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
     @Query("SELECT COUNT(c) FROM Client c WHERE NOT EXISTS (" +
             "SELECT s FROM Scheduling s WHERE s.client = c AND s.startDateTime = (" +
             "SELECT MAX(s2.startDateTime) FROM Scheduling s2 WHERE s2.client = c) " +
-            "AND s.startDateTime >= :date)")
-    long countClientsWithoutRecentScheduling(@Param("date") LocalDateTime date);
+            "AND s.startDateTime >= :date) " +
+            "AND :role NOT MEMBER OF c.roles")
+    long countClientsWithoutRecentSchedulingAndNoEmployeeRole(@Param("date") LocalDateTime date, @Param("role") String role);
+
+
+    @Query("SELECT SUM(p.amount) " +
+            "FROM Scheduling s " +
+            "JOIN s.products p " +
+            "WHERE s.employee.id = :employeeId " +
+            "AND s.startDateTime BETWEEN :startDate AND :endDate")
+    long sumProductAmountsByEmployeeAndDateRange(@Param("employeeId") Long employeeId,
+                                                 @Param("startDate") LocalDateTime startDate,
+                                                 @Param("endDate") LocalDateTime endDate);
 }

@@ -22,7 +22,7 @@ public class SchedulingRequestDTO {
     private Long clientId;
     @NotNull
     private Long employeeId;
-    @Future
+//    @Future
     private LocalDateTime startDateTime;
     @NotEmpty
     @ElementCollection(targetClass = Task.class)

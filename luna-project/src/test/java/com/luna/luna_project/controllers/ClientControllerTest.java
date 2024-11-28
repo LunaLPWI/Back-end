@@ -44,10 +44,16 @@ public class ClientControllerTest {
     @Test
     void shouldReturnAllClients() {
         // Dados mockados
-        List<ClientResponseDTO> mockClients = List.of(
-                new ClientResponseDTO(1L, "John Doe", "john@example.com", "123456789", LocalDate.of(1990, 5, 15), Set.of("USER"))
+        List<Client> mockClients = List.of(
+                Client.builder()
+                        .id(1L)
+                        .name("John Doe")
+                        .email("john@example.com")
+                        .phoneNumber("123456789")
+                        .birthDay(LocalDate.of(1990, 5, 15))
+                        .roles(Set.of("USER"))
+                        .build()
         );
-
         when(clientService.searchClients()).thenReturn(mockClients);
 
         // Execução do método
@@ -91,15 +97,16 @@ public class ClientControllerTest {
         ClientResponseDTO responseDTO = new ClientResponseDTO(1L, "John Doe", "john@example.com", "123456789",
                 LocalDate.of(1990, 5, 15), Set.of("USER"));
 
-        when(clientService.saveClient(any(ClientRequestDTO.class), any())).thenReturn(mockClient);
+        when(clientService.saveClient(any(Client.class), any())).thenReturn(mockClient);
         when(clientMapper.clientToClientDTOResponse(mockClient)).thenReturn(responseDTO);
+        when(clientMapper.clientRequestDTOtoClient(clientRequestDTO)).thenReturn(mock());
 
         ResponseEntity<ClientResponseDTO> response = clientController.saveClient(clientRequestDTO);
 
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertEquals(responseDTO, response.getBody());
-        verify(clientService, times(1)).saveClient(any(ClientRequestDTO.class), any());
+        verify(clientService, times(1)).saveClient(any(Client.class), any());
     }
 
     @Test

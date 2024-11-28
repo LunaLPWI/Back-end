@@ -33,7 +33,7 @@ public class FinanceService {
     }
 
     
-    public List <Double> formRevenueScheduleServices(LocalDate startDate, LocalDate endDate) {
+    public List <Double> formRevenueScheduleServicesValues(LocalDate startDate, LocalDate endDate) {
         List <Double> revenueMontlyList = new ArrayList<>();
         LocalDateTime start =
                 LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
@@ -59,7 +59,7 @@ public class FinanceService {
         return revenueMontlyList;
     }
 
-    public List <Double> formRevenueScheduleProducts(LocalDate startDate, LocalDate endDate) {
+    public List <Double> formRevenueScheduleProductsValues(LocalDate startDate, LocalDate endDate) {
 
         LocalDateTime start =
                 LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
@@ -94,12 +94,73 @@ public class FinanceService {
         return revenueMontlyList;
     }
 
+    public List <Integer> formRevenueScheduleProductsQtt(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime start =
+                LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
+        LocalDateTime end =
+                LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), 0, 0, 0);
 
-    public Long formFrequencyScheduleServices(int days){
+        List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
+        List<ProductStock> productStockList =  ProductStockRepository.findAll();
+
+        int mounthStart= schedulings.get(0).getStartDateTime().getMonth().getValue();
+        int mounthend= schedulings.get(schedulings.size()-1).getStartDateTime().getMonth().getValue();
+
+        List <Integer> revenueMontlyList = new ArrayList<>();
+        for (int i = mounthStart; i <= mounthend; i++) {
+            int finalI = i;
+            List<ProductScheduling> productsMonth = schedulings.stream()
+                    .filter(scheduling -> scheduling.getStartDateTime().getMonthValue() == finalI)
+                    .flatMap(scheduling -> scheduling.getProducts().stream())
+                    .toList();
+
+            int sumMonthly = productsMonth.stream()
+                    .filter(productScheduling -> productStockList.stream()
+                            .anyMatch(productStock -> productStock.getId().equals(productScheduling.getId())))
+                    .mapToInt(ProductScheduling::getAmount)
+                    .sum();
+            revenueMontlyList.add(sumMonthly);
+        }
+
+        return revenueMontlyList;
+    }
+
+    public List <Integer> formRevenueScheduleServicesQtt(LocalDate startDate, LocalDate endDate) {
+        List <Integer> revenueMontlyList = new ArrayList<>();
+        LocalDateTime start =
+                LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
+        LocalDateTime end =
+                LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), 0, 0, 0);
+
+        List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
+
+        int mounthStart= schedulings.get(0).getStartDateTime().getMonth().getValue();
+        int mounthend= schedulings.get(schedulings.size()-1).getStartDateTime().getMonth().getValue();
+
+        for (int i = mounthStart; i <= mounthend; i++) {
+            int finalI = i;
+            List<Scheduling> schedulingMounth = schedulings.stream()
+                    .filter(scheduling -> scheduling.getStartDateTime().getMonth().getValue()== finalI).toList();
+
+            int sumMontly =schedulingMounth.stream().
+                    flatMap(Scheduling -> Scheduling.getItems().stream()).toList().size();
+
+
+            revenueMontlyList.add(sumMontly);
+            start = start.plusMonths(1);
+        }
+        return revenueMontlyList;
+    }
+
+
+    public long getProductQttforEmployee(LocalDateTime startDate, LocalDateTime endDate, Long id) {
+      return schedulingRepository.sumProductAmountsByEmployeeAndDateRange(id,startDate, endDate);
+    }
+
+    public long formFrequencyScheduleServices(int days){
         LocalDateTime date = LocalDateTime.now();
-        date.minusMonths(days);
-        Long qttClients = schedulingRepository.countClientsWithoutRecentScheduling(date);
-        return qttClients;
+        date = date.minusDays(days);
+        return schedulingRepository.countClientsWithoutRecentSchedulingAndNoEmployeeRole(date, "ROLE_EMPLOYEE");
     }
 
 
