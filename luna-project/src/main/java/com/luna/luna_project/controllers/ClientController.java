@@ -59,10 +59,10 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<Client> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
+    public ResponseEntity<ClientResponseDTO> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
         Client client = clientService.saveClient(clientMapper.clientRequestDTOtoClient(clientDTO),
                 clientDTO.getAddress());
-        return ResponseEntity.ok().body(client);
+        return ResponseEntity.ok().body(clientMapper.clientToClientDTOResponse(client));
     }
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/delete-by-cpf")
