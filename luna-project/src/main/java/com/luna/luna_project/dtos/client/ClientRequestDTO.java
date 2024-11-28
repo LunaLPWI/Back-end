@@ -15,7 +15,7 @@ import java.util.Set;
 @Builder
 @Getter
 @Setter
-@Data
+@AllArgsConstructor
 public class ClientRequestDTO {
     private Long id;
     @NotBlank
