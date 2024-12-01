@@ -24,20 +24,22 @@ public class SchedulingController {
         this.schedulingService = schedulingService;
         this.schedulingMapper = schedulingMapper; // Atribuição do mapper
     }
+
+    //deleta com base no id
     @Secured("ROLE_EMPLOYEE")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable long id) {
         schedulingService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
+    //salva um novo agendamento, tem verificação caso sobreponha horários de agendamentos ja existentes, volta 409 caso isso aconteça
     @PostMapping
     public ResponseEntity<SchedulingResponseDTO> saveScheduling(@RequestBody @Valid SchedulingRequestDTO schedulingRequestDTO) {
 
         Scheduling scheduling = schedulingService.schedulingSave(schedulingMapper.RequestToEntity(schedulingRequestDTO));
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
-
+    //devolve os horários válidos para um novo agendamento, passando horário de inicio fim e id do cliente e funcionários
     @GetMapping("/vacant-schedules")
     public ResponseEntity<List<LocalDateTime>> getVacantSchedules(@RequestParam LocalDateTime start,
                                                                   @RequestParam LocalDateTime end,
@@ -45,7 +47,7 @@ public class SchedulingController {
                                                                   @RequestParam Long clientId) {
         return ResponseEntity.ok(schedulingService.listAvailable(employeeId,clientId, start, end));
     }
-
+    // retorna os agendamentos referente ao cliente com base no id
     @GetMapping("/client-schedules")
     public ResponseEntity<List<SchedulingResponseDTO>> getScheduling(@RequestParam LocalDateTime start,
                                                                      @RequestParam Long clientId) {

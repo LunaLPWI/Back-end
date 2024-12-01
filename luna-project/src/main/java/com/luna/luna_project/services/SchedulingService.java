@@ -2,6 +2,7 @@ package com.luna.luna_project.services;
 
 import com.luna.luna_project.models.ProductScheduling;
 import com.luna.luna_project.models.ProductStock;
+import com.luna.luna_project.models.Queue;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.repositories.ProductStockRepository;
 import com.luna.luna_project.repositories.ProductSchedulingRepository;
@@ -23,13 +24,16 @@ public class SchedulingService {
     private final ClientService clientService;
     private final ProductSchedulingRepository productSchedulingRepository;
     private final ProductStockRepository productStockRepository;
+    private final ProductService productService;
+    private Queue<Scheduling> queue = new Queue<Scheduling>();
 
     @Autowired
-    public SchedulingService(SchedulingRepository schedulingRepository, ClientService clientService, ProductSchedulingRepository productSchedulingRepository, ProductStockRepository productStockRepository) {
+    public SchedulingService(SchedulingRepository schedulingRepository, ClientService clientService, ProductSchedulingRepository productSchedulingRepository, ProductStockRepository productStockRepository, ProductService productService) {
         this.schedulingRepository = schedulingRepository;
         this.clientService = clientService;
         this.productSchedulingRepository = productSchedulingRepository;
         this.productStockRepository = productStockRepository;
+        this.productService = productService;
     }
 
     public Boolean existsById(Long id) {
@@ -51,7 +55,7 @@ public class SchedulingService {
         }
 
         if (busySchedules.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT,"Não há ocupados horários neste intervalo");
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há ocupados horários neste intervalo");
         }
 
         return busySchedules;
@@ -89,13 +93,11 @@ public class SchedulingService {
 
         // Verifica se há horários disponíveis
         if (availableHours.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há horários disponíveis entre " + startDateTime + " e " + endDateTime);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Não há horários disponíveis entre " + startDateTime + " e " + endDateTime);
         }
 
         return availableHours;
     }
-
-
 
 
     public List<Scheduling> listSchedulingByEmployeeId(Long employeeId, LocalDateTime startDateTime,
@@ -106,20 +108,46 @@ public class SchedulingService {
                 startDateTime, endDateTime);
     }
 
-    public List<Scheduling> listSchedulingByClientId(Long clientId, LocalDateTime startDateTime){
+    public List<Scheduling> listSchedulingByClientId(Long clientId, LocalDateTime startDateTime) {
 
-        List<Scheduling> schedulings =  schedulingRepository.findSchedulingByClient_IdAndStartDateTimeAfter
-                (clientId,startDateTime);
-        if(schedulings.isEmpty()){
+        List<Scheduling> schedulings = schedulingRepository.findSchedulingByClient_IdAndStartDateTimeAfter
+                (clientId, startDateTime);
+        if (schedulings.isEmpty()) {
             throw new ResponseStatusException
-                    (HttpStatus.NO_CONTENT,"Não há agendamentos para este usuários a partir deste dia e horário");
+                    (HttpStatus.CONFLICT, "Não há agendamentos para este usuários a partir deste dia e horário");
         }
         return schedulings;
     }
 
     public Scheduling schedulingSave(Scheduling scheduling) {
         scheduling.setId(null);
+        queue.insert(scheduling);
+        return registerSchedule();
+    }
+
+    public Scheduling registerSchedule() {
+        Scheduling scheduling = queue.poll();
+        if (!validatyScheduleSave(scheduling)) {
+            throw new ResponseStatusException
+                    (HttpStatus.CONFLICT, "Já existe agendamentos nesse horário");
+        }
         return schedulingRepository.save(scheduling);
+    }
+
+    public Boolean validatyScheduleSave(Scheduling scheduling) {
+        List<LocalDateTime> times =
+                listAvailable(scheduling.getEmployee().getId(),
+                        scheduling.getClient().getId(), scheduling.getStartDateTime(),
+                        scheduling.calculateEndDate());
+
+        boolean validate = false;
+
+        for (LocalDateTime time : times) {
+            if (time.isEqual(scheduling.getStartDateTime())) {
+                validate = true;
+            }
+        }
+        return validate;
     }
 
     public void deleteById(Long id) {
@@ -129,16 +157,17 @@ public class SchedulingService {
         }
         schedulingRepository.deleteById(id);
     }
+
     //// ele faz um rollback no banco caso de algum erro
     @Transactional
     public Scheduling addProducts(Long schedulingId, List<ProductScheduling> productScheduling) {
 
-        if (productScheduling.isEmpty()){
+        if (productScheduling.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "A lista passada está vazia");
         }
         Optional<Scheduling> scheduling = schedulingRepository.findById(schedulingId);
-        if(scheduling.isEmpty()) {
+        if (scheduling.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Não existe agendamento com o id:%d".formatted(schedulingId));
         }
@@ -152,18 +181,26 @@ public class SchedulingService {
                 ProductScheduling existingProduct = existingProductOpt.get();
                 existingProduct.setAmount(existingProduct.getAmount() + newProduct.getAmount());
             } else {
+                if (productStockRepository.findById(newProduct.getId()).isEmpty()) {
+                    throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED,
+                            (" o produto com o nome %s não está cadastrado no sistema" +
+                                    "(Não existe Produto com o id:%d cadastrado no sistema)")
+                                    .formatted(newProduct.getProductName(), newProduct.getId()));
+                }
+
                 scheduling.get().getProducts().add(newProduct);
             }
         }
-       return schedulingRepository.save(scheduling.get());
+        return schedulingRepository.save(scheduling.get());
     }
 
-    public Scheduling updateScheduling(Scheduling scheduling){
-        Optional <Scheduling> schedulingOptional =  schedulingRepository.findById(scheduling.getId());
-        if(schedulingOptional.isEmpty()){
+    public Scheduling updateScheduling(Scheduling scheduling) {
+        Optional<Scheduling> schedulingOptional = schedulingRepository.findById(scheduling.getId());
+        if (schedulingOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Não existe agendamento com o id:%d".formatted(scheduling.getId()));
-        };
+        }
+        ;
         schedulingRepository.save(scheduling);
         return schedulingOptional.get();
     }
