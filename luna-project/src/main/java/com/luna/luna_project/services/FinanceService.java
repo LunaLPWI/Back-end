@@ -49,17 +49,19 @@ public class FinanceService {
 
         List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
         schedulings.forEach(s -> System.out.println(s));
-
+        LocalDateTime time = start;
         for (int i = 1; i <= 12; i++) {
-            int finalI = i;
+            LocalDateTime finalTime = time;
             List<Scheduling> schedulingMounth = schedulings.stream()
-                     .filter(scheduling -> scheduling.getStartDateTime().getMonth().getValue()== finalI).toList();
+                     .filter(scheduling -> scheduling.getStartDateTime().getMonth() == finalTime.getMonth()
+                             && scheduling.getStartDateTime().getYear() == finalTime.getYear()).toList();
 
             double sumMontly =schedulingMounth.stream().
                     flatMap(Scheduling -> Scheduling.getItems().stream()).
                     mapToDouble(Task::getValue).sum();
             revenueMontlyList.add(sumMontly);
             start = start.plusMonths(1);
+            time = time.plusMonths(1);
         }
         return revenueMontlyList;
     }
@@ -74,13 +76,14 @@ public class FinanceService {
         List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
 
         List<ProductStock> productStockList =  ProductStockRepository.findAll();
-
+        LocalDateTime time = start;
 
         List <Double> revenueMontlyList = new ArrayList<>();
         for (int i = 1; i <= 12; i++) {
-            int finalI = i;
+            LocalDateTime finalTime = time;
             List<ProductScheduling> productsMonth = schedulings.stream()
-                    .filter(scheduling -> scheduling.getStartDateTime().getMonthValue() == finalI)
+                    .filter(scheduling -> scheduling.getStartDateTime().getMonth() == finalTime.getMonth()
+                            && scheduling.getStartDateTime().getYear() == finalTime.getYear())
                     .flatMap(scheduling -> scheduling.getProducts().stream())
                     .toList();
 
@@ -93,6 +96,7 @@ public class FinanceService {
                     .mapToDouble(productStock ->
                             productStock.getAmount() * productStock.getPrice())
                     .sum();
+            time = time.plusMonths(1);
             revenueMontlyList.add(sumMonthly);
         }
         return revenueMontlyList;
@@ -107,11 +111,14 @@ public class FinanceService {
         List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
         List<ProductStock> productStockList =  ProductStockRepository.findAll();
 
+        LocalDateTime time = start;
         List <Integer> revenueMontlyList = new ArrayList<>();
         for (int i = 1; i <= 12; i++) {
-            int finalI = i;
+
+            LocalDateTime finalTime = time;
             List<ProductScheduling> productsMonth = schedulings.stream()
-                    .filter(scheduling -> scheduling.getStartDateTime().getMonthValue() == finalI)
+                    .filter(scheduling -> scheduling.getStartDateTime().getMonth() == finalTime.getMonth()
+                            && scheduling.getStartDateTime().getYear() == finalTime.getYear())
                     .flatMap(scheduling -> scheduling.getProducts().stream())
                     .toList();
 
@@ -120,6 +127,7 @@ public class FinanceService {
                             .anyMatch(productStock -> productStock.getId().equals(productScheduling.getId())))
                     .mapToInt(ProductScheduling::getAmount)
                     .sum();
+            time = time.plusMonths(1);
             revenueMontlyList.add(sumMonthly);
         }
 
@@ -135,11 +143,12 @@ public class FinanceService {
 
         List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
 
-
+        LocalDateTime time = start;
         for (int i = 1; i <= 12; i++) {
-            int finalI = i;
+            LocalDateTime finalTime = time;
             List<Scheduling> schedulingMounth = schedulings.stream()
-                    .filter(scheduling -> scheduling.getStartDateTime().getMonth().getValue()== finalI).toList();
+                    .filter(scheduling -> scheduling.getStartDateTime().getMonth() == finalTime.getMonth()
+                            && scheduling.getStartDateTime().getYear() == finalTime.getYear()).toList();
 
             int sumMontly =schedulingMounth.stream().
                     flatMap(Scheduling -> Scheduling.getItems().stream()).toList().size();
@@ -147,6 +156,7 @@ public class FinanceService {
 
             revenueMontlyList.add(sumMontly);
             start = start.plusMonths(1);
+            time = time.plusMonths(1);
         }
         return revenueMontlyList;
     }
