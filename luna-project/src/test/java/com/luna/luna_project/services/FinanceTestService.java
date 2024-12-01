@@ -443,6 +443,8 @@ public class FinanceTestService {
         Mockito.when(schedulingRepository.findSchedulingByStartDateTimeBetween(Mockito.any(), Mockito.any()))
                 .thenReturn(schedulingList);
 
+
+
         List<Integer> results = List.of(2, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0);
 
         assertEquals(financeService.formRevenueScheduleServicesQtt(start,end),results);
