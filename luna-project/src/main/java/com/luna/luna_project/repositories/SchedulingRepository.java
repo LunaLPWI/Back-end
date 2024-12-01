@@ -20,20 +20,34 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
 
     List<Scheduling> findSchedulingByStartDateTimeBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
-    @Query("SELECT COUNT(c) FROM Client c WHERE NOT EXISTS (" +
-            "SELECT s FROM Scheduling s WHERE s.client = c AND s.startDateTime = (" +
-            "SELECT MAX(s2.startDateTime) FROM Scheduling s2 WHERE s2.client = c) " +
-            "AND s.startDateTime >= :date) " +
+    @Query("SELECT c FROM Client c " +
+            "WHERE EXISTS ( " +
+            "    SELECT 1 FROM Scheduling s WHERE s.client = c " +
+            "    AND s.startDateTime = ( " +
+            "        SELECT MAX(s2.startDateTime) FROM Scheduling s2 WHERE s2.client = c " +
+            "    ) " +
+            "    AND s.startDateTime BETWEEN :startDate AND :endDate " +
+            ") " +
             "AND :role NOT MEMBER OF c.roles")
-    long countClientsWithoutRecentSchedulingAndNoEmployeeRole(@Param("date") LocalDateTime date, @Param("role") String role);
-
+    List<Client> findClientsWithRecentSchedulingBetweenDatesAndWithoutRole(@Param("startDate") LocalDateTime startDate,
+                                                                           @Param("endDate") LocalDateTime endDate,
+                                                                           @Param("role") String role);
 
     @Query("SELECT SUM(p.amount) " +
             "FROM Scheduling s " +
             "JOIN s.products p " +
             "WHERE s.employee.id = :employeeId " +
             "AND s.startDateTime BETWEEN :startDate AND :endDate")
-    long sumProductAmountsByEmployeeAndDateRange(@Param("employeeId") Long employeeId,
+    Long sumProductAmountsByEmployeeAndDateRange(@Param("employeeId") Long employeeId,
+                                                 @Param("startDate") LocalDateTime startDate,
+                                                 @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT count(p) " +
+            "FROM Scheduling s " +
+            "JOIN s.items p " +
+            "WHERE s.employee.id = :employeeId " +
+            "AND s.startDateTime BETWEEN :startDate AND :endDate")
+    Long sumServicesByEmployeeAndDateRange(@Param("employeeId") Long employeeId,
                                                  @Param("startDate") LocalDateTime startDate,
                                                  @Param("endDate") LocalDateTime endDate);
 }

@@ -114,7 +114,7 @@ public class FinanceTestService {
         Mockito.when(schedulingRepository.findSchedulingByStartDateTimeBetween(Mockito.any(), Mockito.any()))
                 .thenReturn(schedulingList);
 
-        List<Double> results = List.of(90.0,50.0,90.0,90.0);
+        List<Double> results = List.of(90.0, 50.0, 90.0, 90.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
         assertEquals(financeService.formRevenueScheduleServicesValues(start,end),results);
     }
@@ -237,7 +237,7 @@ public class FinanceTestService {
                 .thenReturn(schedulingList);
         Mockito.when(productStockRepository.findAll()).thenReturn(productStockList);
 
-        List<Double> results = List.of(40.0,40.0,40.0,40.0);
+        List<Double> results = List.of(40.0, 40.0, 40.0, 40.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         assertEquals(financeService.formRevenueScheduleProductsValues(start,end),results);
     }
     @Test
@@ -356,7 +356,7 @@ public class FinanceTestService {
                 .thenReturn(schedulingList);
         Mockito.when(productStockRepository.findAll()).thenReturn(productStockList);
 
-        List<Integer> results = List.of(4,4,4,4);
+        List<Integer> results = List.of(4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0);
         assertEquals(financeService.formRevenueScheduleProductsQtt(start,end),results);
     }
 
@@ -443,20 +443,13 @@ public class FinanceTestService {
         Mockito.when(schedulingRepository.findSchedulingByStartDateTimeBetween(Mockito.any(), Mockito.any()))
                 .thenReturn(schedulingList);
 
-        List<Integer> results = List.of(2,1,2,2);
+        List<Integer> results = List.of(2, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0);
 
         assertEquals(financeService.formRevenueScheduleServicesQtt(start,end),results);
     }
 
-//
-//    @Test
-//    public void formFrequencyScheduleServicesTest(){
-//
-//        LocalDateTime date = LocalDateTime.of(2077,1,1,0,0,0);
-//        Mockito.when(schedulingRepository.countClientsWithoutRecentScheduling(date)).thenReturn(2L);
-//
-//        assertEquals(financeService.formFrequencyScheduleServices(10),2);
-//    }
+
+
 
 
 

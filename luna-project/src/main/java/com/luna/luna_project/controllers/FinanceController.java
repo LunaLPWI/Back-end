@@ -1,5 +1,6 @@
 package com.luna.luna_project.controllers;
 
+import com.luna.luna_project.dtos.FrenquencyDTO;
 import com.luna.luna_project.services.FinanceService;
 import com.luna.luna_project.services.SchedulingService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,19 +34,24 @@ public class FinanceController {
         return financeService.formRevenueScheduleProductsValues(startDate,endDate);
     }
     @GetMapping("/revenue/frequence")
-    public long frequence(@RequestParam int days){
-        return financeService.formFrequencyScheduleServices(days);
+    public FrenquencyDTO frequence(){
+        return financeService.formFrequencyScheduleServices();
     }
 
     @GetMapping("/quantity/services")
-    public long qttQuantityServices(@RequestParam LocalDateTime startDate,
-                                    @RequestParam LocalDateTime endDate, @RequestParam Long id){
-        return financeService.getProductQttforEmployee(startDate, endDate, id);
+    public long qttQuantityServices(@RequestParam LocalDate startDate,
+                                    @RequestParam LocalDate endDate, @RequestParam Long id){
+        LocalDateTime start = LocalDateTime.of(startDate.getYear(),startDate.getMonth(),startDate.getDayOfMonth(),0,0,0);
+        LocalDateTime end = LocalDateTime.of(endDate.getYear(),endDate.getMonth(),endDate.getDayOfMonth(),23,59,0);
+        return financeService.getServiceQttforEmployee(start, end, id);
     }
 
     @GetMapping("/quantity/products")
-    public long qttQuantityProducts(@RequestParam LocalDateTime startDate,
-                                    @RequestParam LocalDateTime endDate, @RequestParam Long id){
-        return financeService.getProductQttforEmployee(startDate, endDate, id);
+    public long qttQuantityProducts(@RequestParam LocalDate startDate,
+                                    @RequestParam LocalDate  endDate, @RequestParam Long id){
+
+        LocalDateTime start = LocalDateTime.of(startDate.getYear(),startDate.getMonth(),startDate.getDayOfMonth(),0,0,0);
+        LocalDateTime end = LocalDateTime.of(endDate.getYear(),endDate.getMonth(),endDate.getDayOfMonth(),23,59,0);
+        return financeService.getProductQttforEmployee(start, end, id);
     }
 }

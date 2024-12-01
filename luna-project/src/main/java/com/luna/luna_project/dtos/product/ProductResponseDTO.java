@@ -24,4 +24,5 @@ public class ProductResponseDTO {
     @Min(0)
     @NotNull
     private Double price;
+    private String mark;
 }

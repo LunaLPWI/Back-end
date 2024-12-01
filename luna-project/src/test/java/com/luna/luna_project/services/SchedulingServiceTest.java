@@ -21,6 +21,8 @@ class SchedulingServiceTest {
 
     @Mock
     private  SchedulingRepository schedulingRepository;
+    @Mock
+    private  ProductStockRepository productStockRepository;
 
     @InjectMocks
     private SchedulingService schedulingService;
@@ -147,16 +149,40 @@ class SchedulingServiceTest {
                         .id(1L)
                         .productName("Produto A")
                         .amount(10)
+                        .price(10.0)
                         .build(),
                 ProductScheduling.builder()
                         .id(2L)
                         .productName("Produto A")
                         .amount(10)
+                        .price(10.0)
                         .build(),
                 ProductScheduling.builder()
                         .id(3L)
                         .productName("Produto C")
                         .amount(5)
+                        .price(10.0)
+                        .build()
+        );
+
+        List<ProductStock> productStocks = List.of(
+                ProductStock.builder()
+                        .id(1L)
+                        .name("Produto A")
+                        .amount(10)
+                        .price(10.0)
+                        .build(),
+                ProductStock.builder()
+                        .id(2L)
+                        .name("Produto A")
+                        .amount(10)
+                        .price(10.0)
+                        .build(),
+                ProductStock.builder()
+                        .id(3L)
+                        .name("Produto C")
+                        .amount(5)
+                        .price(10.0)
                         .build()
         );
 
@@ -172,6 +198,9 @@ class SchedulingServiceTest {
 
         Mockito.when(schedulingRepository.save(scheduling)).thenReturn(scheduling);
         Mockito.when(schedulingRepository.findById(1L)).thenReturn(Optional.ofNullable(scheduling));
+        Mockito.when(productStockRepository.findById(1L)).thenReturn(Optional.ofNullable(productStocks.get(0)));
+        Mockito.when(productStockRepository.findById(2L)).thenReturn(Optional.ofNullable(productStocks.get(1)));
+        Mockito.when(productStockRepository.findById(3L)).thenReturn(Optional.ofNullable(productStocks.get(2)));
 
         Scheduling schedulingTest =  schedulingService.addProducts(scheduling.getId(), productSchedulingList);
 
