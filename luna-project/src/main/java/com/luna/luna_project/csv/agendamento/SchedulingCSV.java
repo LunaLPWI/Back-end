@@ -23,14 +23,19 @@ public class SchedulingCSV {
     }
 
     public void write(Long employeeId, LocalDateTime start, LocalDateTime end) {
-        try (OutputStream outputStream = new FileOutputStream("agendamento.csv");
+
+        File pastaArquivos = new File("arquivos");
+        if (!pastaArquivos.exists()) {
+            pastaArquivos.mkdir();
+        }
+        File arquivoAgendamento = new File(pastaArquivos, "FinanceArchive.csv");
+
+        try (OutputStream outputStream = new FileOutputStream(arquivoAgendamento);
              BufferedWriter escritor = new BufferedWriter(
                      new OutputStreamWriter(outputStream, StandardCharsets.UTF_8))) {
 
-            // Cabeçalho
             escritor.write("id;startDateTime;endDateTime;clientName\n");
 
-            // Obter a lista de agendamentos
             List<Scheduling> agendamentosEntity = schedulingService.listSchedulingByEmployeeId(employeeId, start, end);
             List<SchedulingResponseAdminDTO> agendamentos = agendamentosEntity.stream()
                     .map(schedulingMapper::EntityToResponseAdmin).toList();

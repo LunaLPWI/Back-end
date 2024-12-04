@@ -1,16 +1,21 @@
 package com.luna.luna_project.controllers;
 
+import com.luna.luna_project.csv.agendamento.SchedulingCSV;
 import com.luna.luna_project.dtos.FrenquencyDTO;
 import com.luna.luna_project.services.FinanceService;
 import com.luna.luna_project.services.SchedulingService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/finance")
@@ -19,10 +24,12 @@ import java.util.List;
 public class FinanceController {
 
     private final FinanceService financeService;
+    private final SchedulingCSV schedulingCSV;
 
 
-    public FinanceController(SchedulingService schedulingService, FinanceService financeService) {
+    public FinanceController(SchedulingService schedulingService, FinanceService financeService, SchedulingCSV schedulingCSV) {
         this.financeService = financeService;
+        this.schedulingCSV = schedulingCSV;
     }
     /////!!!!!!!!!!!ATENÇÃO!!!!!!!!!!!!!
 
@@ -87,5 +94,33 @@ public class FinanceController {
     @GetMapping("/revenue/frequence")
     public FrenquencyDTO frequence(){
         return financeService.formFrequencyScheduleServices();
+    }
+
+
+    private Path diretorioBase = Paths.get("src/arquivos");
+
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> download(){
+//        schedulingCSV.write();
+
+        File file = this.diretorioBase.resolve("FinanceArchive.csv").toFile();
+        try {
+            InputStream fileInputStream = new FileInputStream(file);
+
+            return ResponseEntity.status(200)
+                    .header("Content-Disposition",
+                            "attachment; filename=" + "FinanceArchive.csv")
+                    .body(fileInputStream.readAllBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(422, "Diretório não encontrado", null);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(422, "Não foi possível converter para byte[]", null);
+        }
+    }
+
+    private String formatarNomeArquivo(String nomeOriginal) {
+        return String.format("%s_%s", UUID.randomUUID(), nomeOriginal);
     }
 }
