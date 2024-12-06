@@ -35,7 +35,9 @@ public class OneStepService {
     public OneStepDTO saveOneStep(@Valid OneStepDTO request, String paymentToken, String cpf) {
         Client client = clientService.searchClientByCpf(cpf);
 
-        PlanDTO planSaved = planService.savePlan(request);
+        PlanDTO planSaved = planService.savePlan(request, client.getId());
+
+        System.out.println(client.getId());
 
         Plans chargeRequestDTO = request.getChargeRequest();
 
@@ -48,9 +50,8 @@ public class OneStepService {
         oneStepMapp.setChargeRequest(chargeRequestDTO);
         oneStepMapp.setPlan(planSaved);
 
-
         OneStepCardSubscription oneConvert = oneStepCardMapper.oneStepDTOtoOneStep(oneStepMapp);
-        OneStepCardSubscription saveOneStep = oneStepCardRepository.save(oneConvert);
+        oneStepCardRepository.save(oneConvert);
 
         return oneStepMapp;
     }

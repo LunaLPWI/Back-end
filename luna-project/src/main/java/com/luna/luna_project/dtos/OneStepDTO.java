@@ -15,4 +15,5 @@ public class OneStepDTO {
     private LocalDateTime first_execution;
     private PlanDTO plan;
     private String status;
+    private Long idClient;
 }

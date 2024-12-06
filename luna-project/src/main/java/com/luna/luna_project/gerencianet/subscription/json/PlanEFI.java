@@ -21,7 +21,7 @@ import java.util.Map;
 public class PlanEFI {
 
 
-    public static Plan createPlan(PlanDTO planDTO) {
+    public static Plan createPlan(PlanDTO planDTO, Plans plans) {
         Credentials credentials = new Credentials();
 
         HashMap<String, Object> options = new HashMap<>();
@@ -30,7 +30,7 @@ public class PlanEFI {
         options.put("sandbox", credentials.isSandbox());
 
         Map<String, Object> body = new HashMap<>();
-        body.put("name", planDTO.getName());
+        body.put("name", plans);
         body.put("interval", 1);
         body.put("repeats", null);
 
