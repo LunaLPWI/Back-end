@@ -17,5 +17,7 @@ public class ProductStock {
     private Integer amount;
     private Double price;
     private String mark;
+    private String category;
+
 
 }
