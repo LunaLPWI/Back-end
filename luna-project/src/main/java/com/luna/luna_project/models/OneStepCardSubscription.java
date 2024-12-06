@@ -32,4 +32,5 @@ public class OneStepCardSubscription {
     private  List<Plan> plans;
 
     private String status;
+
 }

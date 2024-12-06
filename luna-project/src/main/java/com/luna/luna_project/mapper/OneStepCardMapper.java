@@ -26,19 +26,17 @@ public interface OneStepCardMapper {
         OneStepCardSubscription subscription = new OneStepCardSubscription();
 
         if (data != null) {
-            // Handle subscription_id
+
             Object subscriptionIdObj = data.get("subscription_id");
             if (subscriptionIdObj != null) {
                 subscription.setSubscription_id(String.valueOf(subscriptionIdObj));
             }
 
-            // Handle total
             Object totalObj = data.get("total");
             if (totalObj instanceof Number) {
                 subscription.setTotal(((Number) totalObj).intValue());
             }
 
-            // Handle charges as a list
             Object chargesObj = data.get("charges");
             if (chargesObj instanceof List) {
                 List<Map<String, Object>> chargesList = (List<Map<String, Object>>) chargesObj;
@@ -47,13 +45,11 @@ public interface OneStepCardMapper {
                 for (Map<String, Object> chargeData : chargesList) {
                     Charge charge = new Charge();
 
-                    // Handle charge_id
                     Object chargeIdObj = chargeData.get("id");
                     if (chargeIdObj != null) {
                         charge.setCharge_id(String.valueOf(chargeIdObj));
                     }
 
-                    // Safely handle parcel and total within charge
                     Object parcelObj = chargeData.get("parcel");
                     if (parcelObj instanceof Number) {
                         charge.setParcel(((Number) parcelObj).intValue());
@@ -64,29 +60,24 @@ public interface OneStepCardMapper {
                         charge.setTotal(((Number) chargeTotalObj).intValue());
                     }
 
-                    // Handle status
                     charge.setStatus((String) chargeData.get("status"));
 
                     charges.add(charge);
                 }
 
-                // Set the list of charges in subscription
                 subscription.setCharges(charges);
             }
 
-            // Handle payment type
             subscription.setPayment((String) data.get("payment"));
 
-            // Handle first_execution with custom formatter (dd/MM/yyyy format)
             String firstExecutionStr = (String) data.get("first_execution");
             if (firstExecutionStr != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 LocalDate date = LocalDate.parse(firstExecutionStr, formatter);
-                subscription.setFirst_execution(date.atStartOfDay()); // Define como LocalDateTime no início do dia
+                subscription.setFirst_execution(date.atStartOfDay());
             }
 
 
-            // Handle plan details as a list
             Object plansObj = data.get("plans");
             if (plansObj instanceof List) {
                 List<Map<String, Object>> plansList = (List<Map<String, Object>>) plansObj;
@@ -113,11 +104,9 @@ public interface OneStepCardMapper {
                     plans.add(plan);
                 }
 
-                // Set the list of plans in subscription
                 subscription.setPlans(plans);
             }
 
-            // Handle status
             subscription.setStatus((String) data.get("status"));
         }
 
