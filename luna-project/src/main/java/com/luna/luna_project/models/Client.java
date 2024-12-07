@@ -1,4 +1,5 @@
 package com.luna.luna_project.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -39,6 +40,9 @@ public class Client implements UserDetails {
     private Address address;
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
+//    @JsonIgnore
+//    @Column(length = 50 * 1024 * 1024) // 50 Mega Bytes
+//    private byte[] image;
 
 
     @Override

@@ -59,4 +59,11 @@ public class ProductController {
         ProductResponseDTO productResponseDTO = productService.addProduct(product);
         return ResponseEntity.ok(productResponseDTO);
     }
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/undo")
+    public ResponseEntity<ProductResponseDTO> undo() {
+        ProductResponseDTO productResponseDTO = productMapper.productToProductResponseDTO(productService.undoProduct());
+        return ResponseEntity.ok(productResponseDTO);
+    }
 }

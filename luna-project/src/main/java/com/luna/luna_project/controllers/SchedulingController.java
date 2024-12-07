@@ -57,7 +57,6 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingResponseDTOS);
     }
 
-
     @GetMapping("/busy-schedules")
     public ResponseEntity<Set<LocalDateTime>> getFullSchedules(@RequestParam LocalDateTime start,
                                                                @RequestParam LocalDateTime end,
@@ -65,15 +64,13 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingService.listBusySchedules(clientId, start, end));
     }
 
-
     @Secured("ROLE_EMPLOYEE")
     @GetMapping("/busy-schedules-admin")
     public ResponseEntity<List<SchedulingResponseAdminDTO>> getSchedulingClientsAdmin(@RequestParam LocalDateTime start,
                                                                                       @RequestParam LocalDateTime end,
                                                                                       @RequestParam Long employeeId) {
         List<Scheduling> schedulings = schedulingService.listSchedulingByEmployeeId(employeeId, start, end);
-        SchedulingCSV schedulingCSV = new SchedulingCSV(schedulingService, schedulingMapper);
-        schedulingCSV.write(employeeId,start,end);
+
         return ResponseEntity.ok(schedulings.stream()
                 .map(schedulingMapper::EntityToResponseAdmin).toList());
     }
@@ -90,6 +87,13 @@ public class SchedulingController {
     @PutMapping("/add-products")
     public ResponseEntity<SchedulingResponseDTO> addProductSchedule(@RequestBody @Valid SchedulingProductDTO schedulingProductDTO) {
         Scheduling scheduling = schedulingService.addProducts(schedulingProductDTO.getId(), schedulingProductDTO.getProducts());
+        return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/remove-products")
+    public ResponseEntity<SchedulingResponseDTO> addProductSchedule(@RequestParam Long schedulingId,@RequestParam  Long ProductSchduleId) {
+        Scheduling scheduling = schedulingService.removeProduct(schedulingId,ProductSchduleId);
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
 

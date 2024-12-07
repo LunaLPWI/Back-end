@@ -130,7 +130,6 @@ public class FinanceService {
             time = time.plusMonths(1);
             revenueMontlyList.add(sumMonthly);
         }
-
         return revenueMontlyList;
     }
 
@@ -161,7 +160,6 @@ public class FinanceService {
         return revenueMontlyList;
     }
 
-
     public Long getProductQttforEmployee(LocalDateTime startDate, LocalDateTime endDate, Long id) {
         Long num = schedulingRepository.sumProductAmountsByEmployeeAndDateRange(id,startDate, endDate);
 
@@ -170,6 +168,7 @@ public class FinanceService {
         }
         return num;
     }
+
     public Long getServiceQttforEmployee(LocalDateTime startDate, LocalDateTime endDate, Long id) {
         Long num = schedulingRepository.sumServicesByEmployeeAndDateRange(id,startDate, endDate);
         if(num == null){

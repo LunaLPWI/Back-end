@@ -4,6 +4,7 @@ import com.luna.luna_project.models.ProductScheduling;
 import com.luna.luna_project.models.ProductStock;
 import com.luna.luna_project.models.Queue;
 import com.luna.luna_project.models.Scheduling;
+import com.luna.luna_project.models.Stack;
 import com.luna.luna_project.repositories.ProductStockRepository;
 import com.luna.luna_project.repositories.ProductSchedulingRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
@@ -15,7 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class SchedulingService {
@@ -151,10 +151,12 @@ public class SchedulingService {
     }
 
     public void deleteById(Long id) {
-        if (!schedulingRepository.existsById(id)) {
+       Optional<Scheduling> scheduling =  schedulingRepository.findById(id);
+        if (scheduling.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "CPF já cadastrado Agendamento de id: %d não encontrado".formatted(id));
         }
+
         schedulingRepository.deleteById(id);
     }
 
@@ -167,6 +169,8 @@ public class SchedulingService {
                     "A lista passada está vazia");
         }
         Optional<Scheduling> scheduling = schedulingRepository.findById(schedulingId);
+
+
         if (scheduling.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Não existe agendamento com o id:%d".formatted(schedulingId));
@@ -187,12 +191,43 @@ public class SchedulingService {
                                     "(Não existe Produto com o id:%d cadastrado no sistema)")
                                     .formatted(newProduct.getProductName(), newProduct.getId()));
                 }
-
                 scheduling.get().getProducts().add(newProduct);
             }
         }
         return schedulingRepository.save(scheduling.get());
     }
+
+
+    @Transactional
+    public Scheduling removeProduct(Long schedulingId, Long productScheduleId) {
+
+        Optional<Scheduling> schedulingOptional = schedulingRepository.findById(schedulingId);
+
+        if (schedulingOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Não existe agendamento com o id:%d".formatted(schedulingId));
+        }
+        Scheduling scheduling = schedulingOptional.get();
+
+        if (scheduling.getProducts().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Não há produtos na lista");
+        }
+
+        List<ProductScheduling> productSchedulingList = scheduling.getProducts();
+        boolean removed = productSchedulingList.removeIf(product -> product.getId().equals(productScheduleId));
+
+        if (!removed) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Produto com o id:%d não encontrado".formatted(productScheduleId));
+        }
+
+        scheduling.setProducts(productSchedulingList);
+
+        return schedulingRepository.save(scheduling);
+    }
+
+
 
     public Scheduling updateScheduling(Scheduling scheduling) {
         Optional<Scheduling> schedulingOptional = schedulingRepository.findById(scheduling.getId());
@@ -200,10 +235,8 @@ public class SchedulingService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Não existe agendamento com o id:%d".formatted(scheduling.getId()));
         }
-        ;
         schedulingRepository.save(scheduling);
         return schedulingOptional.get();
     }
-
 }
-//  /
+
