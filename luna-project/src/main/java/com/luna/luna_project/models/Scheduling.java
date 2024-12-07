@@ -38,11 +38,14 @@ public class Scheduling {
     public void setDefaultStatusScheduling() {
         if (statusScheduling == null) {
             statusScheduling = StatusScheduling.PENDING;
+            if (startDateTime.isBefore(LocalDateTime.now())) {
+                statusScheduling = StatusScheduling.DELAYED;
+            }
         }
     }
 
     public StatusScheduling checkAndUpdateStatus() {
-        if (statusScheduling == StatusScheduling.PENDING && startDateTime != null) {
+        if (statusScheduling == StatusScheduling.PENDING) {
             if (startDateTime.isBefore(LocalDateTime.now())) {
                 statusScheduling = StatusScheduling.DELAYED;
                 return statusScheduling;

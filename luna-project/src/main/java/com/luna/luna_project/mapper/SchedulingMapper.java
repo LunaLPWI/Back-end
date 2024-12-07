@@ -48,6 +48,7 @@ public class SchedulingMapper {
                 .startDateTime(scheduling.getStartDateTime())
                 .items(scheduling.getItems().stream().map(taskMapper::taskToTaskDTO).toList())
                 .products(scheduling.getProducts())
+                .statusScheduling(scheduling.getStatusScheduling())
                 .build();
     }
 
@@ -59,6 +60,7 @@ public class SchedulingMapper {
                 .clientName(scheduling.getClient().getName())
                 .products(scheduling.getProducts())
                 .items(scheduling.getItems())
+                .statusScheduling(scheduling.getStatusScheduling())
                 .build();
     }
 }

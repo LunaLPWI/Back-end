@@ -2,6 +2,7 @@ package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.csv.agendamento.SchedulingCSV;
 import com.luna.luna_project.dtos.agendamentos.*;
+import com.luna.luna_project.enums.StatusScheduling;
 import com.luna.luna_project.mapper.SchedulingMapper;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.services.SchedulingService;
@@ -96,6 +97,21 @@ public class SchedulingController {
         Scheduling scheduling = schedulingService.removeProduct(schedulingId,ProductSchduleId);
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
+
+
+    /// Para mudar os status deve passar o id do agendamento e o enum deseja sendo as opções:
+    ///
+    ///     PENDING, (pendente)
+    ///     CONCLUDED, (Concluído)
+    ///     DELAYED  (Atrasado)
+    ///
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/change-status")
+    public ResponseEntity<SchedulingResponseDTO> changeStatus(@RequestParam Long schedulingId,@RequestParam StatusScheduling statusScheduling) {
+        Scheduling scheduling = schedulingService.changeStatus(schedulingId,statusScheduling);
+        return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
+    }
+
 
 
 }

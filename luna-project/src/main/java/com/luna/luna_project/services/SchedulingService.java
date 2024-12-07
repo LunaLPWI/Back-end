@@ -1,5 +1,6 @@
 package com.luna.luna_project.services;
 
+import com.luna.luna_project.enums.StatusScheduling;
 import com.luna.luna_project.models.ProductScheduling;
 import com.luna.luna_project.models.ProductStock;
 import com.luna.luna_project.models.Queue;
@@ -225,6 +226,18 @@ public class SchedulingService {
         scheduling.setProducts(productSchedulingList);
 
         return schedulingRepository.save(scheduling);
+    }
+
+    public Scheduling changeStatus(Long schedulingId, StatusScheduling statusScheduling){
+        Optional<Scheduling> scheduling = schedulingRepository.findById(schedulingId);
+
+        if (scheduling.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Não existe agendamento com o id:%d".formatted(schedulingId));
+        }
+        scheduling.get().setStatusScheduling(statusScheduling);
+
+        return schedulingRepository.save(scheduling.get());
     }
 
 
