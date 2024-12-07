@@ -2,24 +2,19 @@ package com.luna.luna_project.services;
 
 import com.luna.luna_project.dtos.FrenquencyDTO;
 import com.luna.luna_project.enums.Task;
-import com.luna.luna_project.models.Client;
-import com.luna.luna_project.models.ProductScheduling;
-import com.luna.luna_project.models.ProductStock;
-import com.luna.luna_project.models.Scheduling;
+import com.luna.luna_project.models.*;
+import com.luna.luna_project.repositories.PlanRepository;
 import com.luna.luna_project.repositories.ProductStockRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class FinanceService {
@@ -30,13 +25,15 @@ public class FinanceService {
     private final FrenquencyDTO frenquencyDTO;
 
     private final SchedulingRepository schedulingRepository;
+    private final PlanRepository planRepository;
 
-    public FinanceService(com.luna.luna_project.services.SchedulingService schedulingService, com.luna.luna_project.services.ProductService productService, com.luna.luna_project.repositories.ProductStockRepository productStockRepository, FrenquencyDTO frenquencyDTO, SchedulingRepository schedulingRepository) {
+    public FinanceService(com.luna.luna_project.services.SchedulingService schedulingService, com.luna.luna_project.services.ProductService productService, com.luna.luna_project.repositories.ProductStockRepository productStockRepository, FrenquencyDTO frenquencyDTO, SchedulingRepository schedulingRepository, PlanRepository planRepository) {
         SchedulingService = schedulingService;
         ProductService = productService;
         ProductStockRepository = productStockRepository;
         this.frenquencyDTO = frenquencyDTO;
         this.schedulingRepository = schedulingRepository;
+        this.planRepository = planRepository;
     }
 
     
@@ -102,33 +99,26 @@ public class FinanceService {
         return revenueMontlyList;
     }
 
-    public List <Integer> formRevenueScheduleProductsQtt(LocalDate startDate, LocalDate endDate) {
+    public List <Integer> formRevenuePlanQtt(LocalDate startDate, LocalDate endDate) {
         LocalDateTime start =
                 LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
         LocalDateTime end =
                 LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), 0, 0, 0);
 
-        List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
-        List<ProductStock> productStockList =  ProductStockRepository.findAll();
+        List <Plan> plans = planRepository.findPlanByCreatedAtBetween(start, end);
 
         LocalDateTime time = start;
         List <Integer> revenueMontlyList = new ArrayList<>();
         for (int i = 1; i <= 12; i++) {
 
             LocalDateTime finalTime = time;
-            List<ProductScheduling> productsMonth = schedulings.stream()
-                    .filter(scheduling -> scheduling.getStartDateTime().getMonth() == finalTime.getMonth()
-                            && scheduling.getStartDateTime().getYear() == finalTime.getYear())
-                    .flatMap(scheduling -> scheduling.getProducts().stream())
-                    .toList();
+            List<Plan> productsMonth = plans.stream()
+                    .filter(plan -> plan.getCreated_at().getMonth() == finalTime.getMonth()
+                            && plan.getCreated_at().getYear() == finalTime.getYear()).toList();
 
-            int sumMonthly = productsMonth.stream()
-                    .filter(productScheduling -> productStockList.stream()
-                            .anyMatch(productStock -> productStock.getId().equals(productScheduling.getId())))
-                    .mapToInt(ProductScheduling::getAmount)
-                    .sum();
+
             time = time.plusMonths(1);
-            revenueMontlyList.add(sumMonthly);
+            revenueMontlyList.add(productsMonth.size());
         }
         return revenueMontlyList;
     }
@@ -180,34 +170,23 @@ public class FinanceService {
     public FrenquencyDTO formFrequencyScheduleServices() {
         LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime endDate = startDate.minusDays(15);
-        List<Long> numbers = new ArrayList<>();
+
 
         // Frequentes: 16/11/2024 - 01/12/2024
         List<Client> frequentes = schedulingRepository.findClientsWithRecentSchedulingBetweenDatesAndWithoutRole(endDate,startDate,"ROLE_EMPLOYEE");
-        numbers.add((long)frequentes.size());
-        System.out.println("Frequentes: " + frequentes); // Log para depuração
-
-        // Médios: 02/11/2024 - 16/11/2024
-        startDate = endDate;
+        startDate = endDate.minusDays(15);
         endDate = startDate.minusDays(15);
-        List<Client> medios = schedulingRepository.findClientsWithRecentSchedulingBetweenDatesAndWithoutRole(endDate,startDate, "ROLE_EMPLOYEE");
-        numbers.add((long)medios.size());
+        List<Client> medios = schedulingRepository.findClientsWithRecentSchedulingBetweenDatesAndWithoutRole(endDate,startDate,"ROLE_EMPLOYEE");
         System.out.println("Médios: " + medios); // Log para depuração
-
-        // Ocasionais: 02/08/2024 - 02/11/2024
-        startDate = endDate;
-        endDate = startDate.minusDays(90);
+        startDate = endDate.minusDays(15);
+        endDate = startDate.minusDays(120);
         List<Client> ocasionais = schedulingRepository.findClientsWithRecentSchedulingBetweenDatesAndWithoutRole(endDate,startDate,"ROLE_EMPLOYEE");
-        numbers.add((long)ocasionais.size());
         System.out.println("Ocasionais: " + ocasionais); // Log para depuração
 
-        // Verifica se os números correspondem aos agendamentos esperados
-        numbers.forEach(s -> System.out.println("Resultado de Agendamento: " + s));
-
-        // Configura os valores de retorno do DTO
-        frenquencyDTO.setFrequentes(frequentes.size());
-        frenquencyDTO.setMedios(medios.size());
         frenquencyDTO.setOcasionais(ocasionais.size());
+        frenquencyDTO.setMedios(medios.size());
+        frenquencyDTO.setFrequentes(frequentes.size());
+
 
         return frenquencyDTO;
     }

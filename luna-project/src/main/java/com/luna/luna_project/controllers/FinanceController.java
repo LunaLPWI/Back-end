@@ -59,9 +59,9 @@ public class FinanceController {
         return financeService.formRevenueScheduleServicesQtt(startDate,endDate);
     }
     //mesma coisa do anterior porem para quantidade de produtos vendidos
-    @GetMapping("/quantity/products")
+    @GetMapping("/quantity/plans")
     public List<Integer> revenueProductsLineQTT(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
-        return financeService.formRevenueScheduleProductsQtt(startDate,endDate);
+        return financeService.formRevenuePlanQtt(startDate,endDate);
     }
 
 
