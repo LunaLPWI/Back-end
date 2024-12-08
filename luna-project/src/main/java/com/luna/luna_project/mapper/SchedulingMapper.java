@@ -1,9 +1,6 @@
 package com.luna.luna_project.mapper;
 
-import com.luna.luna_project.dtos.agendamentos.SchedulingRequestDTO;
-import com.luna.luna_project.dtos.agendamentos.SchedulingRequestUpdateDTO;
-import com.luna.luna_project.dtos.agendamentos.SchedulingResponseAdminDTO;
-import com.luna.luna_project.dtos.agendamentos.SchedulingResponseDTO;
+import com.luna.luna_project.dtos.agendamentos.*;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.repositories.TaskMapper;
 import com.luna.luna_project.services.ClientService;
@@ -61,6 +58,14 @@ public class SchedulingMapper {
                 .products(scheduling.getProducts())
                 .items(scheduling.getItems())
                 .statusScheduling(scheduling.getStatusScheduling())
+                .build();
+    }
+    public SchedulingClientDTO EntityToClientSchedulling(Scheduling scheduling) {
+        return SchedulingClientDTO.builder()
+                .id(scheduling.getId())
+                .startDateTime(scheduling.getStartDateTime())
+                .nameEmployee(scheduling.getEmployee().getName())
+                .items(scheduling.getItems().stream().map(taskMapper::taskToTaskDTO).toList())
                 .build();
     }
 }

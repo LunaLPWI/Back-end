@@ -50,11 +50,11 @@ public class SchedulingController {
     }
     // retorna os agendamentos referente ao cliente com base no id
     @GetMapping("/client-schedules")
-    public ResponseEntity<List<SchedulingResponseDTO>> getScheduling(@RequestParam LocalDateTime start,
+    public ResponseEntity<List<SchedulingClientDTO>> getScheduling(@RequestParam LocalDateTime start,
                                                                      @RequestParam Long clientId) {
         List<Scheduling> schedulings = schedulingService.listSchedulingByClientId(clientId, start);
-        List<SchedulingResponseDTO> schedulingResponseDTOS = schedulings.stream().map
-                (schedulingMapper::EntityToResponse).toList();
+        List<SchedulingClientDTO> schedulingResponseDTOS = schedulings.stream().map
+                (schedulingMapper::EntityToClientSchedulling).toList();
         return ResponseEntity.ok(schedulingResponseDTOS);
     }
 

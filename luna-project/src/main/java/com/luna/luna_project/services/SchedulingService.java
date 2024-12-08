@@ -115,7 +115,7 @@ public class SchedulingService {
                 (clientId, startDateTime);
         if (schedulings.isEmpty()) {
             throw new ResponseStatusException
-                    (HttpStatus.CONFLICT, "Não há agendamentos para este usuários a partir deste dia e horário");
+                    (HttpStatus.NOT_FOUND, "Não há agendamentos para este usuários a partir deste dia e horário");
         }
         return schedulings;
     }
