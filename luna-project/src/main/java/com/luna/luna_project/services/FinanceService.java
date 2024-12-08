@@ -154,7 +154,7 @@ public class FinanceService {
         Long num = schedulingRepository.sumProductAmountsByEmployeeAndDateRange(id,startDate, endDate);
 
         if(num == null){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há produtos veinculados a esse funcionário");
+            num = 0L;
         }
         return num;
     }
