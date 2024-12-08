@@ -162,7 +162,7 @@ public class FinanceService {
     public Long getServiceQttforEmployee(LocalDateTime startDate, LocalDateTime endDate, Long id) {
         Long num = schedulingRepository.sumServicesByEmployeeAndDateRange(id,startDate, endDate);
         if(num == null){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há serviços veinculados a esse funcionário");
+            num = 0L;
         }
         return num;
     }
