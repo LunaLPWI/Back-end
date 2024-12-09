@@ -1,10 +1,7 @@
 package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.dtos.ResetPasswordDTO;
-import com.luna.luna_project.dtos.client.ClientLoginDTO;
-import com.luna.luna_project.dtos.client.ClientRequestDTO;
-import com.luna.luna_project.dtos.client.ClientResponseDTO;
-import com.luna.luna_project.dtos.client.ClientTokenDTO;
+import com.luna.luna_project.dtos.client.*;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.models.Client;
@@ -127,18 +124,10 @@ public class ClientController {
         }
     }
 
-//    @PostMapping
-//    public String uploadImage(@RequestParam("image") MultipartFile image) {
-//        try {
-//            String fileName = image.getOriginalFilename();
-//
-//
-//            return "Imagem enviada com sucesso!";
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return "Erro ao enviar a imagem";
-//        }
-//    }
+    @GetMapping("/clients-overview")
+    public ResponseEntity<List<ClientOverviewDTO>> clientsOverview(){
+        return ResponseEntity.ok().body(clientService.clientOverview());
+    }
 
 
 

@@ -16,7 +16,8 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String subscription_id;
+    @Column(name = "subscription_id")
+    private String subscriptionId;
 
     private String custom_id;
 
@@ -28,4 +29,5 @@ public class Subscription {
     @Column(name = "id_client")
     private Long idClient;
 }
+
 

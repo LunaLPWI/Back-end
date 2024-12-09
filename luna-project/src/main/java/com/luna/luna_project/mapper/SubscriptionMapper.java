@@ -29,9 +29,9 @@ public interface SubscriptionMapper {
             // Safely handle the subscription_id
             Object subscriptionIdObj = data.get("subscription_id");
             if (subscriptionIdObj instanceof String) {
-                subscription.setSubscription_id((String) subscriptionIdObj);
+                subscription.setSubscriptionId((String) subscriptionIdObj);
             } else if (subscriptionIdObj instanceof Number) {
-                subscription.setSubscription_id(String.valueOf(subscriptionIdObj));
+                subscription.setSubscriptionId(String.valueOf(subscriptionIdObj));
             }
 
             // Safely handle the custom_id
@@ -82,3 +82,4 @@ public interface SubscriptionMapper {
         return subscription;
     }
 }
+

@@ -2,11 +2,10 @@ package com.luna.luna_project.services;
 
 import com.luna.luna_project.configurations.jwt.GerenciadorTokenJwt;
 import com.luna.luna_project.dtos.AddressDTO;
+import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
-import com.luna.luna_project.dtos.client.ClientLoginDTO;
-import com.luna.luna_project.dtos.client.ClientRequestDTO;
-import com.luna.luna_project.dtos.client.ClientResponseDTO;
-import com.luna.luna_project.dtos.client.ClientTokenDTO;
+import com.luna.luna_project.dtos.client.*;
+import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
@@ -44,8 +43,8 @@ public class ClientService {
     private GerenciadorTokenJwt gerenciadorTokenJwt;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-
+    @Autowired
+    private PlanMapper planMapper;
 
     public Client saveClient(Client client, AddressDTO addressDTO) {
         if (clientRepository.existsByCpf(client.getCpf())) {
@@ -205,5 +204,22 @@ public class ClientService {
         clientRepository.save(client);
     }
 
+    public Client findById(Long id){
+        return clientRepository.findById(id).orElseThrow(null);
+    }
 
+    public List<ClientOverviewDTO> clientOverview() {
+        List<Client> clients = clientRepository.findAll();
+
+        return clients.stream().map(client -> {
+            PlanDTO planDTO = client.getPlan() != null ? planMapper.planToPlanDTO(client.getPlan()) : null;
+            return new ClientOverviewDTO(
+                    client.getName(),
+                    planDTO,
+                    client.getPhoneNumber()
+            );
+        }).collect(Collectors.toList());
+    }
 }
+
+

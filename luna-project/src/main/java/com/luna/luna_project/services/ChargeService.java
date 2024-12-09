@@ -21,7 +21,7 @@ public class ChargeService {
 
         Subscription subscription = new Subscription();
 
-        subscription.setSubscription_id(request.getSubscription_id().toString());
+        subscription.setSubscriptionId(request.getSubscription_id().toString());
         subscription.setCreated_at(request.getCreated_at());
         subscription.setStatus(request.getStatus());
         subscription.setIdClient(idClient);
