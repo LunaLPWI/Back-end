@@ -1,12 +1,7 @@
 package com.luna.luna_project.services;
 
-import com.luna.luna_project.dtos.OneStepDTO;
-import com.luna.luna_project.dtos.PlanDTO;
-import com.luna.luna_project.dtos.SubscriptionDTO;
-import com.luna.luna_project.enums.Plans;
-import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
 import com.luna.luna_project.mapper.SubscriptionMapper;
-import com.luna.luna_project.models.Plan;
+import com.luna.luna_project.models.OneStepLink;
 import com.luna.luna_project.models.Subscription;
 import com.luna.luna_project.repositories.SubscriptionRepository;
 import jakarta.validation.Valid;
@@ -22,17 +17,16 @@ public class ChargeService {
     @Autowired
     private SubscriptionMapper subscriptionMapper;
 
-    public SubscriptionDTO saveCharge(@Valid OneStepDTO request, PlanDTO plan) {
-        Plans chargeRequestDTO = request.getChargeRequest();
+    public void saveCharge(@Valid OneStepLink request, Long idClient) {
 
-        Subscription subscription = PlanEFI.createCharge(chargeRequestDTO, plan);
+        Subscription subscription = new Subscription();
 
-        if (subscription == null) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        subscription.setSubscription_id(request.getSubscription_id().toString());
+        subscription.setCreated_at(request.getCreated_at());
+        subscription.setStatus(request.getStatus());
+        subscription.setIdClient(idClient);
 
-        Subscription savedSub = subscriptionRepository.save(subscription);
-        return subscriptionMapper.subscriptionToSubscriptionDTO(savedSub);
+        subscriptionRepository.save(subscription);
     }
 
 }

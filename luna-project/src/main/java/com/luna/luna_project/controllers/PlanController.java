@@ -1,5 +1,6 @@
 package com.luna.luna_project.controllers;
 
+import com.luna.luna_project.dtos.CpfDTO;
 import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.OneStepLinkDTO;
 import com.luna.luna_project.enums.Plans;
@@ -40,6 +41,12 @@ public class PlanController {
         Long count = planService.searchClientsByPlan(name);
         return ResponseEntity.ok().body(count);
     }
+
+    @DeleteMapping
+    public ResponseEntity<String> cancelPlan(@RequestBody CpfDTO cpfDTO) {
+        return ResponseEntity.ok().body(planService.cancelPlan(cpfDTO));
+    }
+
 
 
 }

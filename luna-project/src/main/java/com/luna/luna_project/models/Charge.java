@@ -17,8 +17,6 @@ public class Charge {
     private String  charge_id;
     private String status;
     @ManyToOne
-    private Subscription subscription;
-    @ManyToOne
     private OneStepCardSubscription oneStep;
     @ManyToOne
     private OneStepLink oneStepLink;

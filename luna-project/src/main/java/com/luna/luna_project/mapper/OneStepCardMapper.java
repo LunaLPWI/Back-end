@@ -37,36 +37,6 @@ public interface OneStepCardMapper {
                 subscription.setTotal(((Number) totalObj).intValue());
             }
 
-            Object chargesObj = data.get("charges");
-            if (chargesObj instanceof List) {
-                List<Map<String, Object>> chargesList = (List<Map<String, Object>>) chargesObj;
-                List<Charge> charges = new ArrayList<>();
-
-                for (Map<String, Object> chargeData : chargesList) {
-                    Charge charge = new Charge();
-
-                    Object chargeIdObj = chargeData.get("id");
-                    if (chargeIdObj != null) {
-                        charge.setCharge_id(String.valueOf(chargeIdObj));
-                    }
-
-                    Object parcelObj = chargeData.get("parcel");
-                    if (parcelObj instanceof Number) {
-                        charge.setParcel(((Number) parcelObj).intValue());
-                    }
-
-                    Object chargeTotalObj = chargeData.get("total");
-                    if (chargeTotalObj instanceof Number) {
-                        charge.setTotal(((Number) chargeTotalObj).intValue());
-                    }
-
-                    charge.setStatus((String) chargeData.get("status"));
-
-                    charges.add(charge);
-                }
-
-                subscription.setCharges(charges);
-            }
 
             subscription.setPayment((String) data.get("payment"));
 

@@ -1,6 +1,7 @@
 package com.luna.luna_project.gerencianet.subscription.json;
 
 import br.com.efi.efisdk.EfiPay;
+import br.com.efi.efisdk.exceptions.EfiPayException;
 import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.enums.Plans;
@@ -190,4 +191,30 @@ public class PlanEFI {
             return new OneStepLink();
         }
     }
+
+
+    public static String cancelSubscription(String id) {
+        Credentials credentials = new Credentials();
+
+        HashMap<String, Object> options = new HashMap<>();
+        options.put("client_id", credentials.getClientId());
+        options.put("client_secret", credentials.getClientSecret());
+        options.put("sandbox", credentials.isSandbox());
+
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("id", id);
+
+        try {
+            EfiPay efi = new EfiPay(options);
+            Map<String, Object> response = efi.call("cancelSubscription", params, new HashMap<>());
+            return response.toString();
+        } catch (EfiPayException e) {
+            return String.format("Error: Code: %s, Error: %s, Description: %s",
+                    e.getCode(), e.getError(), e.getErrorDescription());
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
 }

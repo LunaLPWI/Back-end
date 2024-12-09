@@ -45,7 +45,7 @@ public interface SubscriptionMapper {
             // Handle created_at with custom formatter
             String createdAtStr = (String) data.get("created_at");
             if (createdAtStr != null) {
-                subscription.setCreated_at(LocalDateTime.parse(createdAtStr, formatter));
+                subscription.setCreated_at(createdAtStr);
             }
 
             // Handle status
@@ -77,7 +77,6 @@ public interface SubscriptionMapper {
                     charges.add(charge);
                 }
             }
-            subscription.setCharges(charges);
         }
 
         return subscription;
