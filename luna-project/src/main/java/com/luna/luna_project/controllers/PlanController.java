@@ -47,6 +47,11 @@ public class PlanController {
         return ResponseEntity.ok().body(planService.cancelPlan(cpfDTO));
     }
 
+    @GetMapping("/count-by-plans")
+    public ResponseEntity<Long> countPlans(){
+        return ResponseEntity.ok().body(planService.countPlan());
+    }
+
 
 
 }

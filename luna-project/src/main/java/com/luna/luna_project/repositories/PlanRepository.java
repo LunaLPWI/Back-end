@@ -13,6 +13,7 @@ import java.util.List;
 
 public interface PlanRepository extends JpaRepository<Plan, Long> {
     Long countByName(String name);
+
     @Query("SELECT p FROM Plan p WHERE p.created_at BETWEEN :startDateTime AND :endDateTime")
     List<Plan> findPlanByCreatedAtBetween(
             @Param("startDateTime") LocalDateTime startDateTime,
@@ -20,4 +21,6 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     );
 
     Boolean existsByIdClient(Long id);
+
+    void deleteByIdClient(Long idClient);
 }

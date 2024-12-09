@@ -1,20 +1,16 @@
 package com.luna.luna_project.models;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import lombok.*;
-import org.hibernate.validator.constraints.br.CPF;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,9 +36,9 @@ public class Client implements UserDetails {
     private Address address;
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
-//    @JsonIgnore
-//    @Column(length = 50 * 1024 * 1024) // 50 Mega Bytes
-//    private byte[] image;
+    @ManyToOne
+    @JoinColumn(name = "plan_id_plan", nullable = true)
+    private Plan plan;
 
 
     @Override

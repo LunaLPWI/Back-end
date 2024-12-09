@@ -9,6 +9,7 @@ import com.luna.luna_project.models.Client;
 import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.repositories.PlanRepository;
 import com.luna.luna_project.repositories.SubscriptionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class PlanService {
 
 
     public PlanDTO savePlan(OneStepDTO request, Long idClient) {
+        Client client = clientService.findById(idClient);
         PlanDTO planDTO = request.getPlan();
 
         Boolean planBol = planRepository.existsByIdClient(idClient);
@@ -46,6 +48,8 @@ public class PlanService {
         planMapp.setIdClient(idClient);
 
         Plan plan = planRepository.save(planMapp);
+        client.setPlan(plan);
+
 
         return planMapper.planToPlanDTO(plan);
     }
@@ -54,17 +58,31 @@ public class PlanService {
         return planRepository.countByName(name);
     }
 
-
+    @Transactional
     public String cancelPlan(CpfDTO cpfDto) {
         Client client = clientService.searchClientByCpf(cpfDto.getCpf());
-
         Long idClient = client.getId();
 
-        String planId = subscriptionRepository.findSubscriptionIdByIdClient(idClient)
+        String subscriptionId = subscriptionRepository.findSubscriptionIdByIdClient(idClient)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há nenhum cliente com esse id com plano"));
 
-        return PlanEFI.cancelSubscription(planId);
+        String cancelSu = PlanEFI.cancelSubscription(subscriptionId);
+
+        client.setPlan(null);
+
+        subscriptionRepository.deleteBySubscriptionId(subscriptionId);
+        planRepository.deleteByIdClient(idClient);
+
+        return cancelSu;
     }
 
 
+    public Long countPlan() {
+        long id = subscriptionRepository.count();
+
+        if (id == 0){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há nenhum id");
+        }
+        return id;
+    }
 }
