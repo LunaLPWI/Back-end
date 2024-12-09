@@ -7,8 +7,17 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+
 public interface PlanRepository extends JpaRepository<Plan, Long> {
     Long countByName(String name);
+    @Query("SELECT p FROM Plan p WHERE p.created_at BETWEEN :startDateTime AND :endDateTime")
+    List<Plan> findPlanByCreatedAtBetween(
+            @Param("startDateTime") LocalDateTime startDateTime,
+            @Param("endDateTime") LocalDateTime endDateTime
+    );
 
     Boolean existsByIdClient(Long id);
 }

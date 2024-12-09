@@ -23,4 +23,5 @@ public class ProductRequestDTO {
     @NotNull
     private Double price;
     private String mark;
+    private String category;
 }

@@ -25,9 +25,12 @@ public class SchedulingCSV {
     public void write(Long employeeId, LocalDateTime start, LocalDateTime end) {
 
         File pastaArquivos = new File("arquivos");
+
+        // Cria o diretório caso não exista
         if (!pastaArquivos.exists()) {
-            pastaArquivos.mkdir();
+            pastaArquivos.mkdir(); // Cria apenas a pasta 'arquivos'
         }
+
         File arquivoAgendamento = new File(pastaArquivos, "FinanceArchive.csv");
 
         try (OutputStream outputStream = new FileOutputStream(arquivoAgendamento);
@@ -36,10 +39,10 @@ public class SchedulingCSV {
 
             escritor.write("id;startDateTime;endDateTime;clientName\n");
 
+            // Recupera os agendamentos e escreve no arquivo
             List<Scheduling> agendamentosEntity = schedulingService.listSchedulingByEmployeeId(employeeId, start, end);
             List<SchedulingResponseAdminDTO> agendamentos = agendamentosEntity.stream()
                     .map(schedulingMapper::EntityToResponseAdmin).toList();
-
 
             for (SchedulingResponseAdminDTO agendamento : agendamentos) {
                 escritor.write(agendamento.toString());
@@ -52,5 +55,4 @@ public class SchedulingCSV {
             throw new RuntimeException(e);
         }
     }
-
 }

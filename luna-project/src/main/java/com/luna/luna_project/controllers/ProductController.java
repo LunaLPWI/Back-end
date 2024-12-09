@@ -22,7 +22,7 @@ public class ProductController {
     @Autowired
     private ProductMapper productMapper;
 
-    @Secured("ROLE_EMPLOYEE")
+    @Secured("ROLE_ADMIN")
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> listAllProducts() {
         List<ProductStock> products = productService.getAllProducts();
@@ -57,6 +57,13 @@ public class ProductController {
     public ResponseEntity<ProductResponseDTO> addProduct(@RequestBody @Valid ProductRequestDTO productRequestDTO) {
         ProductStock product = productMapper.productRequestToEntity(productRequestDTO);
         ProductResponseDTO productResponseDTO = productService.addProduct(product);
+        return ResponseEntity.ok(productResponseDTO);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/undo")
+    public ResponseEntity<ProductResponseDTO> undo() {
+        ProductResponseDTO productResponseDTO = productMapper.productToProductResponseDTO(productService.undoProduct());
         return ResponseEntity.ok(productResponseDTO);
     }
 }

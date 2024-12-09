@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -125,5 +126,20 @@ public class ClientController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+//    @PostMapping
+//    public String uploadImage(@RequestParam("image") MultipartFile image) {
+//        try {
+//            String fileName = image.getOriginalFilename();
+//
+//
+//            return "Imagem enviada com sucesso!";
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "Erro ao enviar a imagem";
+//        }
+//    }
+
+
 
 }

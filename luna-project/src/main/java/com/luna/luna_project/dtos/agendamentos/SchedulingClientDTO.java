@@ -9,32 +9,20 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class SchedulingResponseDTO {
-
-    @NotBlank
+@NoArgsConstructor
+@Getter
+@Setter
+public class SchedulingClientDTO {
     Long id;
-    @Future
     private LocalDateTime startDateTime;
-    @NotEmpty
-    @ElementCollection(targetClass = Task.class)
     private List<TaskDTO> items;
-    @NotNull
-    private Long clientId;
-    @NotNull
-    private Long employeeId;
-    @ElementCollection(targetClass = ProductScheduling.class)
-    private List<ProductScheduling> products;
-    private StatusScheduling statusScheduling;
+    private String nameEmployee;
+
 }

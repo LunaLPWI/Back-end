@@ -2,6 +2,7 @@ package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.csv.agendamento.SchedulingCSV;
 import com.luna.luna_project.dtos.agendamentos.*;
+import com.luna.luna_project.enums.StatusScheduling;
 import com.luna.luna_project.mapper.SchedulingMapper;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.services.SchedulingService;
@@ -49,14 +50,13 @@ public class SchedulingController {
     }
     // retorna os agendamentos referente ao cliente com base no id
     @GetMapping("/client-schedules")
-    public ResponseEntity<List<SchedulingResponseDTO>> getScheduling(@RequestParam LocalDateTime start,
+    public ResponseEntity<List<SchedulingClientDTO>> getScheduling(@RequestParam LocalDateTime start,
                                                                      @RequestParam Long clientId) {
         List<Scheduling> schedulings = schedulingService.listSchedulingByClientId(clientId, start);
-        List<SchedulingResponseDTO> schedulingResponseDTOS = schedulings.stream().map
-                (schedulingMapper::EntityToResponse).toList();
+        List<SchedulingClientDTO> schedulingResponseDTOS = schedulings.stream().map
+                (schedulingMapper::EntityToClientSchedulling).toList();
         return ResponseEntity.ok(schedulingResponseDTOS);
     }
-
 
     @GetMapping("/busy-schedules")
     public ResponseEntity<Set<LocalDateTime>> getFullSchedules(@RequestParam LocalDateTime start,
@@ -65,15 +65,13 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingService.listBusySchedules(clientId, start, end));
     }
 
-
     @Secured("ROLE_EMPLOYEE")
     @GetMapping("/busy-schedules-admin")
     public ResponseEntity<List<SchedulingResponseAdminDTO>> getSchedulingClientsAdmin(@RequestParam LocalDateTime start,
                                                                                       @RequestParam LocalDateTime end,
                                                                                       @RequestParam Long employeeId) {
         List<Scheduling> schedulings = schedulingService.listSchedulingByEmployeeId(employeeId, start, end);
-        SchedulingCSV schedulingCSV = new SchedulingCSV(schedulingService, schedulingMapper);
-        schedulingCSV.write(employeeId,start,end);
+
         return ResponseEntity.ok(schedulings.stream()
                 .map(schedulingMapper::EntityToResponseAdmin).toList());
     }
@@ -92,6 +90,28 @@ public class SchedulingController {
         Scheduling scheduling = schedulingService.addProducts(schedulingProductDTO.getId(), schedulingProductDTO.getProducts());
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/remove-products")
+    public ResponseEntity<SchedulingResponseDTO> addProductSchedule(@RequestParam Long schedulingId,@RequestParam  Long ProductSchduleId) {
+        Scheduling scheduling = schedulingService.removeProduct(schedulingId,ProductSchduleId);
+        return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
+    }
+
+
+    /// Para mudar os status deve passar o id do agendamento e o enum deseja sendo as opções:
+    ///
+    ///     PENDING, (pendente)
+    ///     CONCLUDED, (Concluído)
+    ///     DELAYED  (Atrasado)
+    ///
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/change-status")
+    public ResponseEntity<SchedulingResponseDTO> changeStatus(@RequestParam Long schedulingId,@RequestParam StatusScheduling statusScheduling) {
+        Scheduling scheduling = schedulingService.changeStatus(schedulingId,statusScheduling);
+        return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
+    }
+
 
 
 }

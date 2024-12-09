@@ -4,6 +4,8 @@ package com.luna.luna_project.services;
 import com.luna.luna_project.dtos.product.ProductResponseDTO;
 import com.luna.luna_project.mapper.ProductMapper;
 import com.luna.luna_project.models.ProductStock;
+import com.luna.luna_project.models.Scheduling;
+import com.luna.luna_project.models.Stack;
 import com.luna.luna_project.repositories.ProductStockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,8 @@ public class ProductService {
     private ProductStockRepository productStockRepository;
     @Autowired
     private ProductMapper productMapper;
+
+    private Stack<ProductStock> stack = new Stack<ProductStock>();
 
     public ProductResponseDTO addProduct(ProductStock product) {
         product.setId(null);
@@ -60,12 +64,23 @@ public class ProductService {
 
 
     public void deleteProductByid(Long id) {
+       Optional<ProductStock> productStock =  productStockRepository.findById(id);
+       if (productStock.isEmpty()){
+           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found by id");
+       }
+       productStockRepository.deleteById(id);
+       productStock.get().setId(null);
+       stack.push(productStock.get());
+    }
 
 
-//        if (!productRepository.existsById(id)) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found by id");
-//        }
-        productStockRepository.deleteById(id);
+    public ProductStock undoProduct() {
+        if (stack.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Não há nenhum agendamento a ser restaurado");
+        }
+        ProductStock productStock = stack.pop();
+        return productStockRepository.save(productStock);
     }
 
 }
