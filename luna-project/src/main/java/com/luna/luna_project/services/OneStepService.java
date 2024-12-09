@@ -12,7 +12,9 @@ import com.luna.luna_project.repositories.OneStepCardRepository;
 import com.luna.luna_project.repositories.OneStepLinkRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class OneStepService {
@@ -36,20 +38,17 @@ public class OneStepService {
         Client client = clientService.searchClientByCpf(cpf);
 
         PlanDTO planSaved = planService.savePlan(request, client.getId());
-
-        System.out.println(client.getId());
-
+        if (planSaved == null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "O cliente já tem um plano.");
+        }
         Plans chargeRequestDTO = request.getChargeRequest();
 
-        chargeService.saveCharge(request, planSaved);
+        OneStepDTO oneStepMapp = new OneStepDTO();
 
-        OneStepCardSubscription oneStep = PlanEFI.createOneStep(planSaved, paymentToken, chargeRequestDTO, client);
-
-        OneStepDTO oneStepMapp = oneStepCardMapper.oneSetToOneStepDTO(oneStep);
-
+        oneStepMapp.setPlan(planSaved);
         oneStepMapp.setChargeRequest(chargeRequestDTO);
         oneStepMapp.setPlan(planSaved);
-
+        oneStepMapp.setIdClient(client.getId());
         OneStepCardSubscription oneConvert = oneStepCardMapper.oneStepDTOtoOneStep(oneStepMapp);
         oneStepCardRepository.save(oneConvert);
 
@@ -58,11 +57,14 @@ public class OneStepService {
 
 
     public OneStepLinkDTO saveOneStepLink(@Valid OneStepDTO request){
+        Long idClient = request.getIdClient();
+
         OneStepLink oneStep = PlanEFI.createOneStepLink(request);
 
         OneStepLinkDTO oneStepMapp = oneStepLinkMapper.oneSetToOneStepDTO(oneStep);
         OneStepLink oneConvert = oneStepLinkMapper.oneStepDTOtoOneStep(oneStepMapp);
 
+        chargeService.saveCharge(oneStep, idClient);
         OneStepLink saveOneStep = oneStepLinkRepository.save(oneConvert);
 
         return oneStepLinkMapper.oneSetToOneStepDTO(saveOneStep);

@@ -18,14 +18,14 @@ public class Subscription {
 
     private String subscription_id;
 
-    @OneToMany(mappedBy = "subscription", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Charge> charges;
-
     private String custom_id;
 
     @Column(name = "created_at")
-    private LocalDateTime created_at;
+    private String created_at;
 
     private String status;
+
+    @Column(name = "id_client")
+    private Long idClient;
 }
 

@@ -20,9 +20,6 @@ public class OneStepCardSubscription {
 
     private Integer total;
 
-    @OneToMany(mappedBy = "oneStep", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Charge> charges;
-
     private String payment;
 
     @Column(name = "first_execution")
