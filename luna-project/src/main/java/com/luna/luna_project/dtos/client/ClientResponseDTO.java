@@ -19,6 +19,7 @@ public class ClientResponseDTO {
     private Long id;
     private String name;
     private String email;
+    private String cpf;
     private String phoneNumber;
     private LocalDate birthDay;
     private Set<String> roles;
