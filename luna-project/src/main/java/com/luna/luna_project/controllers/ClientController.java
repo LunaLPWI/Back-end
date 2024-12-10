@@ -1,5 +1,6 @@
 package com.luna.luna_project.controllers;
 
+import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
 import com.luna.luna_project.exceptions.ValidationException;
@@ -129,6 +130,10 @@ public class ClientController {
         return ResponseEntity.ok().body(clientService.clientOverview());
     }
 
+    @GetMapping("/plan-by-client")
+    public ResponseEntity<PlanDTO> searchByPlanClient(@RequestParam String cpf){
+        return ResponseEntity.ok().body(clientService.searchByPlanClient(cpf));
+    }
 
 
 }

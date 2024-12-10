@@ -9,6 +9,7 @@ import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
+import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.repositories.ClientRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,6 +221,19 @@ public class ClientService {
             );
         }).collect(Collectors.toList());
     }
+
+    public PlanDTO searchByPlanClient(String cpf) {
+        Client client = searchClientByCpf(cpf);
+
+        Plan plan = client.getPlan();
+
+        if (plan == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Plano não associado ao cliente com CPF: " + cpf);
+        }
+
+        return planMapper.planToPlanDTO(plan);
+    }
+
 }
 
 
