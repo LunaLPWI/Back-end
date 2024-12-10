@@ -13,6 +13,7 @@ import java.util.Set;
 public class ClientTokenDTO {
     private Long id;
     private String name;
+    private String cpf;
     private String email;
     private String token;
     private Address address;
