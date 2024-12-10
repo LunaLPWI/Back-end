@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
-
 @Service
 public class PlanService {
     @Autowired
@@ -39,7 +37,7 @@ public class PlanService {
             return null;
         }
 
-        Plan planDTOSaved = PlanEFI.createPlan(planDTO, request.getChargeRequest());
+        Plan planDTOSaved = PlanEFI.createPlan(planDTO, request.getPlanName());
         if (planDTOSaved == null) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }

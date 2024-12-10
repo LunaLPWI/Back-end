@@ -157,9 +157,9 @@ public class PlanEFI {
 
         List<Object> items = new ArrayList<Object>();
         Map<String, Object> item1 = new HashMap<String, Object>();
-        item1.put("name", request.getChargeRequest().getName());
+        item1.put("name", request.getPlanName().getName());
         item1.put("amount", 1);
-        item1.put("value", request.getChargeRequest().getValue());
+        item1.put("value", request.getPlanName().getValue());
         items.add(item1);
 
         Map<String, Object> seetings = new HashMap<String, Object>();

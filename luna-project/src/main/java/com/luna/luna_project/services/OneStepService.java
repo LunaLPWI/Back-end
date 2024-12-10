@@ -2,7 +2,6 @@ package com.luna.luna_project.services;
 
 
 import com.luna.luna_project.dtos.*;
-import com.luna.luna_project.dtos.ChargeRequestDTO;
 import com.luna.luna_project.enums.Plans;
 import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
 import com.luna.luna_project.mapper.OneStepCardMapper;
@@ -41,12 +40,12 @@ public class OneStepService {
         if (planSaved == null){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "O cliente já tem um plano.");
         }
-        Plans chargeRequestDTO = request.getChargeRequest();
+        Plans chargeRequestDTO = request.getPlanName();
 
         OneStepDTO oneStepMapp = new OneStepDTO();
 
         oneStepMapp.setPlan(planSaved);
-        oneStepMapp.setChargeRequest(chargeRequestDTO);
+        oneStepMapp.setPlanName(chargeRequestDTO);
         oneStepMapp.setPlan(planSaved);
         oneStepMapp.setIdClient(client.getId());
         OneStepCardSubscription oneConvert = oneStepCardMapper.oneStepDTOtoOneStep(oneStepMapp);

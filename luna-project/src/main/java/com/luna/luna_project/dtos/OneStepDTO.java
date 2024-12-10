@@ -10,7 +10,7 @@ public class OneStepDTO {
     private Long id;
     private String subscription_id;
     private Integer total;
-    private Plans chargeRequest;
+    private Plans planName;
     private String payment;
     private LocalDateTime first_execution;
     private PlanDTO plan;
