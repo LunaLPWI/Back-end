@@ -1,11 +1,13 @@
 package com.luna.luna_project.controllers;
 
+import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
+import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.services.ClientService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -129,6 +131,10 @@ public class ClientController {
         return ResponseEntity.ok().body(clientService.clientOverview());
     }
 
+    @GetMapping("/plan-by-client")
+    public ResponseEntity<PlanDTO> searchByPlanClient(@RequestParam String cpf){
+        return ResponseEntity.ok().body(clientService.searchByPlanClient(cpf));
+    }
 
 
 }

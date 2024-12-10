@@ -9,13 +9,11 @@ import java.util.Optional;
 public interface ClientRepository extends JpaRepository<Client, Long> {
     Boolean existsByCpf(String cpf);
 
-    Optional <Client> findByCpf(String cpf);
-
-    Client deleteByCpf(String cpf);
+    Optional<Client> findByCpf(String cpf);
 
     Boolean existsByEmail(String email);
 
-    Optional<Client>  findByEmail(String email);
+    Optional<Client> findByEmail(String email);
 
     Client findByName(String name);
 
@@ -23,6 +21,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     List<Client> findByRolesContaining(String role);
 
+    Optional<Client> findByEmailAndPassword(String email, String senha);
 
-    Optional <Client> findByEmailAndPassword(String email, String senha);
+
 }

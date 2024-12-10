@@ -4,16 +4,19 @@ import com.luna.luna_project.configurations.jwt.GerenciadorTokenJwt;
 import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
-import com.luna.luna_project.dtos.client.*;
+import com.luna.luna_project.dtos.client.ClientLoginDTO;
+import com.luna.luna_project.dtos.client.ClientOverviewDTO;
+import com.luna.luna_project.dtos.client.ClientResponseDTO;
+import com.luna.luna_project.dtos.client.ClientTokenDTO;
+import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Client;
-import com.luna.luna_project.mapper.ClientMapper;
+import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.repositories.ClientRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -48,10 +51,10 @@ public class ClientService {
 
     public Client saveClient(Client client, AddressDTO addressDTO) {
         if (clientRepository.existsByCpf(client.getCpf())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"CPF já cadastrado");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "CPF já cadastrado");
         }
         if (clientRepository.existsByEmail(client.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Email já cadastrado");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já cadastrado");
         }
         Address address = viaCepService.saveAddress(addressDTO);
         String encryptedPassword = passwordEncoder.encode(client.getPassword());
@@ -98,17 +101,17 @@ public class ClientService {
     public Client searchClientByEmail(String email) {
         Optional<Client> clientOptional = clientRepository.findByEmail(email);
 
-        if(clientOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT,"Cliente como o email:"+email+"não existe na base de dados");
+        if (clientOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Cliente como o email:" + email + "não existe na base de dados");
         }
         return clientRepository.findByEmail(email).get();
     }
 
     public ClientResponseDTO searchClientByEmailAndSenha(String email, String senha) {
-        Optional <Client> clientOptional = clientRepository.findByEmailAndPassword(email, senha);
+        Optional<Client> clientOptional = clientRepository.findByEmailAndPassword(email, senha);
 
         if (clientOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT,"Email e senha não correspondentes a nenhuma conta");
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Email e senha não correspondentes a nenhuma conta");
         }
 
         return clientMapper.clientToClientDTOResponse(clientOptional.get());
@@ -117,7 +120,7 @@ public class ClientService {
 
     public Client searchClientById(Long id) {
         Optional<Client> clientOptional = clientRepository.findById(id);
-        if(clientOptional.isEmpty()){
+        if (clientOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "não há cliente com esse id");
         }
         return clientOptional.get();
@@ -125,11 +128,11 @@ public class ClientService {
 
     @Transactional
     public void deleteClient(String cpf) {
-        Optional <Client> clientOptional = clientRepository.findByCpf(cpf);
+        Optional<Client> clientOptional = clientRepository.findByCpf(cpf);
         if (clientOptional.isPresent()) {
             clientRepository.delete(clientOptional.get());
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Cliente com CPF " + cpf + " não encontrado.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente com CPF " + cpf + " não encontrado.");
         }
     }
 
@@ -204,7 +207,7 @@ public class ClientService {
         clientRepository.save(client);
     }
 
-    public Client findById(Long id){
+    public Client findById(Long id) {
         return clientRepository.findById(id).orElseThrow(null);
     }
 
@@ -220,6 +223,18 @@ public class ClientService {
                     client.getPhoneNumber()
             );
         }).collect(Collectors.toList());
+    }
+
+    public PlanDTO searchByPlanClient(String cpf) {
+        Client client = searchClientByCpf(cpf);
+
+        Plan plan = client.getPlan();
+
+        if (plan == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Plano não associado ao cliente com CPF: " + cpf);
+        }
+
+        return planMapper.planToPlanDTO(plan);
     }
 }
 
