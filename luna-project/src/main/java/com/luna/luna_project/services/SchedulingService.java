@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SchedulingService {
@@ -50,13 +51,13 @@ public class SchedulingService {
         for (Scheduling scheduling : schedulings) {
             LocalDateTime start = scheduling.getStartDateTime();
             LocalDateTime end = scheduling.calculateEndDate();
-            for (LocalDateTime time = start; time.isBefore(end); time = time.plusMinutes(30)) {
+            for (LocalDateTime time = start; time.isBefore(end); time = time.plusMinutes(45)) {
                 busySchedules.add(time);
             }
         }
 
         if (busySchedules.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há ocupados horários neste intervalo");
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há horários para este intervalo");
         }
 
         return busySchedules;
@@ -64,7 +65,6 @@ public class SchedulingService {
 
     public List<LocalDateTime> listAvailable(Long employeeId, Long clientId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         // Verifica se o cliente e o funcionário existem
-
 
         // Obtém os agendamentos do cliente e do funcionário dentro do período especificado
         List<Scheduling> schedulingsEmployee = schedulingRepository
@@ -74,19 +74,24 @@ public class SchedulingService {
                 .findSchedulingByClient_IdAndStartDateTimeBetween(clientId, startDateTime, endDateTime);
 
         Set<Scheduling> schedulings = new HashSet<>();
-
         schedulings.addAll(schedulingsEmployee);
         schedulings.addAll(agendamentosClient);
-        schedulings.stream().sorted(Comparator.comparing(Scheduling::getStartDateTime));
+
+        // Ordena os agendamentos por hora de início
+        List<Scheduling> sortedSchedulings = schedulings.stream()
+                .sorted(Comparator.comparing(Scheduling::getStartDateTime))
+                .collect(Collectors.toList());
 
         // Gera todos os horários possíveis dentro do período
-
         List<LocalDateTime> availableHours = new ArrayList<>();
-        for (LocalDateTime time = startDateTime; time.plusMinutes(45).isBefore(endDateTime); time = time.plusMinutes(45)) {
+
+        // Ajusta a condição para garantir que o último horário de 45 minutos seja incluído
+        for (LocalDateTime time = startDateTime; !time.plusMinutes(45).isAfter(endDateTime); time = time.plusMinutes(45)) {
             availableHours.add(time);
         }
 
-        for (Scheduling scheduling : schedulings) {
+        // Remove os horários que se sobrepõem com os agendamentos existentes
+        for (Scheduling scheduling : sortedSchedulings) {
             availableHours.removeIf(time ->
                     (time.isBefore(scheduling.calculateEndDate()) && time.plusMinutes(45).isAfter(scheduling.getStartDateTime()))
             );
@@ -100,11 +105,8 @@ public class SchedulingService {
         return availableHours;
     }
 
-
     public List<Scheduling> listSchedulingByEmployeeId(Long employeeId, LocalDateTime startDateTime,
                                                        LocalDateTime endDateTime) {
-
-
         return schedulingRepository.findSchedulingByEmployee_IdAndStartDateTimeBetween(employeeId,
                 startDateTime, endDateTime);
     }
@@ -136,6 +138,15 @@ public class SchedulingService {
     }
 
     public Boolean validatyScheduleSave(Scheduling scheduling) {
+        if (schedulingRepository.existsById(scheduling.getEmployee().getId())){
+            throw new ResponseStatusException
+                    (HttpStatus.NOT_FOUND, "Não existe esse Funcionário no sistema");
+        }
+        if (schedulingRepository.existsById(scheduling.getClient().getId())){
+            throw new ResponseStatusException
+                    (HttpStatus.NOT_FOUND, "Não existe esse cliente no sistema");
+        }
+
         List<LocalDateTime> times =
                 listAvailable(scheduling.getEmployee().getId(),
                         scheduling.getClient().getId(), scheduling.getStartDateTime(),
@@ -146,18 +157,18 @@ public class SchedulingService {
         for (LocalDateTime time : times) {
             if (time.isEqual(scheduling.getStartDateTime())) {
                 validate = true;
+                return validate;
             }
         }
         return validate;
     }
 
     public void deleteById(Long id) {
-       Optional<Scheduling> scheduling =  schedulingRepository.findById(id);
+        Optional<Scheduling> scheduling =  schedulingRepository.findById(id);
         if (scheduling.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "CPF já cadastrado Agendamento de id: %d não encontrado".formatted(id));
         }
-
         schedulingRepository.deleteById(id);
     }
 
