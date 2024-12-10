@@ -215,7 +215,8 @@ public class ClientService {
             PlanDTO planDTO = client.getPlan() != null ? planMapper.planToPlanDTO(client.getPlan()) : null;
             return new ClientOverviewDTO(
                     client.getName(),
-                    planDTO,
+                    planDTO != null ? planDTO.getName() : null,
+                    planDTO != null ? planDTO.getCreated_at().plusYears(1) : null,
                     client.getPhoneNumber()
             );
         }).collect(Collectors.toList());
