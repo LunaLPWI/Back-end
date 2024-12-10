@@ -28,9 +28,8 @@ public class PlanController {
 
     @PostMapping("/create-plan-and-charge")
     public ResponseEntity<OneStepLinkDTO> createPlanAndCharge(@RequestBody OneStepDTO request,
-                                                              @RequestParam String paymentToken,
                                                               @RequestParam String cpf) {
-        OneStepDTO oneStepSaved = oneStepService.saveOneStep(request, paymentToken, cpf);
+        OneStepDTO oneStepSaved = oneStepService.saveOneStep(request, cpf);
         OneStepLinkDTO oneSaved = oneStepService.saveOneStepLink(oneStepSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(oneSaved);

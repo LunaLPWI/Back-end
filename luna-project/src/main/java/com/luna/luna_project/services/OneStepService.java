@@ -34,7 +34,7 @@ public class OneStepService {
     @Autowired
     private OneStepLinkRepository oneStepLinkRepository;
 
-    public OneStepDTO saveOneStep(@Valid OneStepDTO request, String paymentToken, String cpf) {
+    public OneStepDTO saveOneStep(@Valid OneStepDTO request, String cpf) {
         Client client = clientService.searchClientByCpf(cpf);
 
         PlanDTO planSaved = planService.savePlan(request, client.getId());
