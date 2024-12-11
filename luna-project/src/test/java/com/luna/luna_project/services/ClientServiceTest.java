@@ -1,6 +1,8 @@
 package com.luna.luna_project.services;
 
 import com.luna.luna_project.dtos.ResetPasswordDTO;
+import com.luna.luna_project.dtos.client.ClientLoginDTO;
+import com.luna.luna_project.dtos.client.ClientTokenDTO;
 import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.models.Address;
@@ -8,6 +10,9 @@ import jakarta.validation.ValidationException;
 import org.junit.Assert;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.client.ClientRequestDTO;
@@ -310,4 +315,92 @@ class ClientServiceTest {
         Mockito.when(clientRepository.findByRolesContaining("ROLE_EMPLOYEE")).thenReturn(clientsAdmin);
         assertEquals(clientService.searchEmployees("ROLE_EMPLOYEE"), clientsAdmin);
     }
+
+    @Test
+    public void testSearchByUsernameClientFound() {
+
+        Client client1 = Client.builder()
+                .id(1L)
+                .name("Carlos")
+                .cpf("123")
+                .email("carlos@email.com")
+                .password("password")
+                .phoneNumber("123456")
+                .build();
+
+        Client client2 = Client.builder()
+                .id(2L)
+                .name("Ana")
+                .cpf("456")
+                .email("ana@email.com")
+                .password("password")
+                .phoneNumber("654321")
+                .build();
+
+        Client client3 = Client.builder()
+                .id(3L)
+                .name("Bruna")
+                .cpf("789")
+                .email("bruna@email.com")
+                .password("password")
+                .phoneNumber("987654")
+                .build();
+
+        List<Client> clientList = List.of(client1, client2, client3);
+        Mockito.when(clientRepository.findAll()).thenReturn(clientList);
+
+
+        Client result = clientService.searchByUsername("Ana");
+
+
+        assertNotNull(result);
+        assertEquals("Ana", result.getName());
+    }
+
+
+    @Test
+    public void testSearchByUsernameClientNotFound() {
+        Client client1 = Client.builder()
+                .id(1L)
+                .name("Carlos")
+                .cpf("123")
+                .email("carlos@email.com")
+                .password("password")
+                .phoneNumber("123456")
+                .build();
+
+        Client client2 = Client.builder()
+                .id(2L)
+                .name("Ana")
+                .cpf("456")
+                .email("ana@email.com")
+                .password("password")
+                .phoneNumber("654321")
+                .build();
+
+        Client client3 = Client.builder()
+                .id(3L)
+                .name("Bruna")
+                .cpf("789")
+                .email("bruna@email.com")
+                .password("password")
+                .phoneNumber("987654")
+                .build();
+
+
+        List<Client> clientList = List.of(client1, client2, client3);
+        Mockito.when(clientRepository.findAll()).thenReturn(clientList);
+
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            clientService.searchByUsername("John");
+        });
+
+
+        assertTrue(exception.getStatusCode().value() == HttpStatus.NO_CONTENT.value());
+        assertEquals("Client not found", exception.getReason());
+    }
+
 }
+
+

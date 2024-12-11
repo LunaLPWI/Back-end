@@ -193,6 +193,8 @@ public class ClientService {
     }
 
 
+
+
     public void resetPassword(ResetPasswordDTO resetPasswordDTO) {
         Optional<Client> clientOptional = clientRepository.findByEmail(resetPasswordDTO.getEmail());
         if (clientOptional.isEmpty()) {
