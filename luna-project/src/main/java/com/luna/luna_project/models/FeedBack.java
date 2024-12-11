@@ -9,5 +9,5 @@ import lombok.Setter;
 public class FeedBack {
 
     private Integer assessment;
-    private String message;
+    private String message; 
 }
