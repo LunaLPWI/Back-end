@@ -138,14 +138,6 @@ public class SchedulingService {
     }
 
     public Boolean validatyScheduleSave(Scheduling scheduling) {
-        if (schedulingRepository.existsById(scheduling.getEmployee().getId())){
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND, "Não existe esse Funcionário no sistema");
-        }
-        if (schedulingRepository.existsById(scheduling.getClient().getId())){
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND, "Não existe esse cliente no sistema");
-        }
 
         List<LocalDateTime> times =
                 listAvailable(scheduling.getEmployee().getId(),
