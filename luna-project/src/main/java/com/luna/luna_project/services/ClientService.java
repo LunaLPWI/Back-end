@@ -12,6 +12,7 @@ import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.repositories.ClientRepository;
 import jakarta.validation.ValidationException;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,9 @@ public class ClientService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private PlanMapper planMapper;
+    @Lazy
+    @Autowired
+    private FinanceService financeService;
 
     public Client saveClient(Client client, AddressDTO addressDTO) {
         if (clientRepository.existsByCpf(client.getCpf())) {
@@ -220,6 +224,7 @@ public class ClientService {
                     client.getName(),
                     planDTO != null ? planDTO.getName() : null,
                     planDTO != null ? planDTO.getCreated_at().plusYears(1) : null,
+                    financeService.formFrequencyScheduleServiceById(client.getId()),
                     client.getPhoneNumber()
             );
         }).collect(Collectors.toList());

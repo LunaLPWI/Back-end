@@ -77,4 +77,9 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
     Long sumServicesByEmployeeAndDateRange(@Param("employeeId") Long employeeId,
                                                  @Param("startDate") LocalDateTime startDate,
                                                  @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT s FROM Scheduling s " +
+            "WHERE s.client.id = :clientId " +
+            "ORDER BY s.startDateTime DESC")
+    Scheduling findLastSchedulingByClientId(@Param("clientId") Long clientId);
 }

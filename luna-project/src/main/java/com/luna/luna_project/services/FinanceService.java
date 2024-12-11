@@ -6,6 +6,7 @@ import com.luna.luna_project.models.*;
 import com.luna.luna_project.repositories.PlanRepository;
 import com.luna.luna_project.repositories.ProductStockRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,17 +20,13 @@ import java.util.List;
 @Service
 public class FinanceService {
 
-    private final SchedulingService SchedulingService;
-    private final ProductService ProductService;
     private final ProductStockRepository ProductStockRepository;
     private final FrenquencyDTO frenquencyDTO;
 
     private final SchedulingRepository schedulingRepository;
     private final PlanRepository planRepository;
 
-    public FinanceService(com.luna.luna_project.services.SchedulingService schedulingService, com.luna.luna_project.services.ProductService productService, com.luna.luna_project.repositories.ProductStockRepository productStockRepository, FrenquencyDTO frenquencyDTO, SchedulingRepository schedulingRepository, PlanRepository planRepository) {
-        SchedulingService = schedulingService;
-        ProductService = productService;
+    public FinanceService(com.luna.luna_project.repositories.ProductStockRepository productStockRepository, FrenquencyDTO frenquencyDTO, SchedulingRepository schedulingRepository, PlanRepository planRepository) {
         ProductStockRepository = productStockRepository;
         this.frenquencyDTO = frenquencyDTO;
         this.schedulingRepository = schedulingRepository;
@@ -190,4 +187,23 @@ public class FinanceService {
 
         return frenquencyDTO;
     }
+
+    public String formFrequencyScheduleServiceById(Long id) {
+        // Frequentes: 16/11/2024 - 01/12/2024
+        Scheduling frequencyOpp = schedulingRepository.findLastSchedulingByClientId(id);
+
+        if (frequencyOpp == null) {
+            return "Sem agendamentos encontrados";
+        }
+        if (frequencyOpp.getStartDateTime().isBefore(LocalDateTime.now())
+                && frequencyOpp.getStartDateTime().isAfter(LocalDateTime.now().minusDays(15))) {
+            return "Frequente";
+        } else if (frequencyOpp.getStartDateTime().isBefore(LocalDateTime.now().minusDays(15))
+                && frequencyOpp.getStartDateTime().isAfter(LocalDateTime.now().minusDays(30))) {
+            return "Médio";
+        } else {
+            return "Ocasional";
+        }
+    }
+
 }
