@@ -65,13 +65,17 @@ public class SchedulingService {
 
     public List<LocalDateTime> listAvailable(Long employeeId, Long clientId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         // Verifica se o cliente e o funcionário existem
+        System.out.println("Iniciando a busca de horários disponíveis para o funcionário " + employeeId + " e cliente " + clientId);
+        System.out.println("Período: " + startDateTime + " até " + endDateTime);
 
         // Obtém os agendamentos do cliente e do funcionário dentro do período especificado
         List<Scheduling> schedulingsEmployee = schedulingRepository
                 .findSchedulingByEmployee_IdAndStartDateTimeBetween(employeeId, startDateTime, endDateTime);
-
         List<Scheduling> agendamentosClient = schedulingRepository
                 .findSchedulingByClient_IdAndStartDateTimeBetween(clientId, startDateTime, endDateTime);
+
+        System.out.println("Agendamentos do funcionário: " + schedulingsEmployee);
+        System.out.println("Agendamentos do cliente: " + agendamentosClient);
 
         Set<Scheduling> schedulings = new HashSet<>();
         schedulings.addAll(schedulingsEmployee);
@@ -82,28 +86,41 @@ public class SchedulingService {
                 .sorted(Comparator.comparing(Scheduling::getStartDateTime))
                 .collect(Collectors.toList());
 
+        System.out.println("Agendamentos ordenados: ");
+        sortedSchedulings.forEach(s -> System.out.println("Início: " + s.getStartDateTime() + ", Fim: " + s.calculateEndDate()));
+
         // Gera todos os horários possíveis dentro do período
         List<LocalDateTime> availableHours = new ArrayList<>();
+        System.out.println("Gerando horários disponíveis dentro do período...");
 
         // Ajusta a condição para garantir que o último horário de 45 minutos seja incluído
         for (LocalDateTime time = startDateTime; !time.plusMinutes(45).isAfter(endDateTime); time = time.plusMinutes(45)) {
             availableHours.add(time);
         }
 
+        System.out.println("Horários possíveis gerados: ");
+        availableHours.forEach(time -> System.out.println(time));
+
         // Remove os horários que se sobrepõem com os agendamentos existentes
+        System.out.println("Removendo horários conflitantes com os agendamentos...");
         for (Scheduling scheduling : sortedSchedulings) {
             availableHours.removeIf(time ->
                     (time.isBefore(scheduling.calculateEndDate()) && time.plusMinutes(45).isAfter(scheduling.getStartDateTime()))
             );
         }
 
+        System.out.println("Horários disponíveis após remoção de conflitos: ");
+        availableHours.forEach(time -> System.out.println(time));
+
         // Verifica se há horários disponíveis
         if (availableHours.isEmpty()) {
+            System.out.println("Não há horários disponíveis entre " + startDateTime + " e " + endDateTime);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Não há horários disponíveis entre " + startDateTime + " e " + endDateTime);
         }
 
         return availableHours;
     }
+
 
     public List<Scheduling> listSchedulingByEmployeeId(Long employeeId, LocalDateTime startDateTime,
                                                        LocalDateTime endDateTime) {
