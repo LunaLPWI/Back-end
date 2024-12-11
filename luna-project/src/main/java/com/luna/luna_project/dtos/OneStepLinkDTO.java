@@ -9,7 +9,6 @@ public class OneStepLinkDTO {
     private Long id;
     private String payment_url;
     private Plans chargeRequest;
-    private String custom_id;
     private String created_at;
     private Integer subscription_id;
     private String expire_at;

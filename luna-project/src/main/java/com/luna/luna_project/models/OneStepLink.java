@@ -19,7 +19,6 @@ public class OneStepLink {
     private String payment_url;
     @OneToMany(mappedBy = "oneStepLink", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Charge> charges;
-    private String custom_id;
     private String created_at;
     private String message;
     private Integer subscription_id;

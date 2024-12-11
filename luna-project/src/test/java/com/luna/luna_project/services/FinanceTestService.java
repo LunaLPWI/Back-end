@@ -357,7 +357,7 @@ public class FinanceTestService {
         Mockito.when(productStockRepository.findAll()).thenReturn(productStockList);
 
         List<Integer> results = List.of(4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0);
-        assertEquals(financeService.formRevenueScheduleProductsQtt(start,end),results);
+        assertEquals(financeService.formRevenueScheduleProductsValues(start,end),results);
     }
 
     @Test

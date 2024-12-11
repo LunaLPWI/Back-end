@@ -8,6 +8,7 @@ import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.dtos.client.ClientTokenDTO;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.models.Client;
+import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.services.ClientService;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -69,8 +71,8 @@ public class ClientControllerTest {
     void shouldFindClientByCpf() {
         String cpf = "12345678900";
         Client mockClient = new Client(1L, "John Doe", cpf, "john@example.com", "password123", LocalDate.of(1990, 5, 15), "123456789",
-                null, Set.of("USER"));
-        ClientResponseDTO expectedResponse = new ClientResponseDTO(1L, "John Doe", "john@example.com", "123456789",
+                null, Set.of("USER"), new Plan(1L, "John", 1, null, LocalDateTime.now(), "124840", null, 1L));
+        ClientResponseDTO expectedResponse = new ClientResponseDTO(1L, "John Doe", "john@example.com", "52725320828","123456789",
                 LocalDate.of(1990, 5, 15), Set.of("USER"));
 
         when(clientService.searchClientByCpf(cpf)).thenReturn(mockClient);
@@ -92,9 +94,9 @@ public class ClientControllerTest {
         );
 
         Client mockClient = new Client(1L, "John Doe", "12345678900", "john@example.com", "password123",
-                LocalDate.of(1990, 5, 15), "123456789", null, Set.of("USER"));
+                LocalDate.of(1990, 5, 15), "123456789", null, Set.of("USER"), new Plan(1L, "John", 1, null, LocalDateTime.now(), "124840", null, 1L));
 
-        ClientResponseDTO responseDTO = new ClientResponseDTO(1L, "John Doe", "john@example.com", "123456789",
+        ClientResponseDTO responseDTO = new ClientResponseDTO(1L, "John Doe", "john@example.com", "52725320828","123456789",
                 LocalDate.of(1990, 5, 15), Set.of("USER"));
 
         when(clientService.saveClient(any(Client.class), any())).thenReturn(mockClient);
@@ -137,7 +139,7 @@ public class ClientControllerTest {
     @Test
     void shouldAuthenticateClient() {
         ClientLoginDTO loginDTO = new ClientLoginDTO("john@example.com", "password123");
-        ClientTokenDTO tokenDTO = new ClientTokenDTO(1L, "John Doe", "john@example.com", "jwt-token", null,
+        ClientTokenDTO tokenDTO = new ClientTokenDTO(1L, "John Doe", "52725320828", "john@example.com", "jwt-token",null,
                 LocalDate.of(1990, 5, 15), "123456789", Set.of("USER"));
 
         when(clientService.authenticate(loginDTO)).thenReturn(tokenDTO);
