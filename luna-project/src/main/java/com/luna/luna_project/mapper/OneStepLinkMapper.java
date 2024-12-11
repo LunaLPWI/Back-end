@@ -69,9 +69,6 @@ public interface OneStepLinkMapper {
                 oneStepLink.setCharges(charges);
             }
 
-            // Handle custom_id
-            oneStepLink.setCustom_id((String) data.get("custom_id"));
-
             // Handle created_at
             oneStepLink.setCreated_at((String) data.get("created_at"));
 

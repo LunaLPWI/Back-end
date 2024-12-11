@@ -61,7 +61,11 @@ public class OneStepService {
         OneStepLink oneStep = PlanEFI.createOneStepLink(request);
 
         OneStepLinkDTO oneStepMapp = oneStepLinkMapper.oneSetToOneStepDTO(oneStep);
+        oneStepMapp.setChargeRequest(request.getPlanName());
         OneStepLink oneConvert = oneStepLinkMapper.oneStepDTOtoOneStep(oneStepMapp);
+
+
+
 
         chargeService.saveCharge(oneStep, idClient);
         OneStepLink saveOneStep = oneStepLinkRepository.save(oneConvert);
