@@ -23,4 +23,6 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     Boolean existsByIdClient(Long id);
 
     void deleteByIdClient(Long idClient);
+
+    Optional<Plan> findPlanIdClient(Long idClient);
 }

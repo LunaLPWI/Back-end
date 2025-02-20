@@ -1,5 +1,6 @@
 package com.luna.luna_project.models;
 
+import com.luna.luna_project.enums.Plans;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -41,6 +40,7 @@ public class Client implements UserDetails {
     private Plan plan;
 
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
@@ -60,27 +60,4 @@ public class Client implements UserDetails {
         return email;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        // Retorna se a conta está expirada (exemplo simples)
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        // Retorna se a conta está bloqueada (exemplo simples)
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        // Retorna se as credenciais (senha) expiraram (exemplo simples)
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        // Retorna se a conta está habilitada (exemplo simples)
-        return true;
-    }
 }

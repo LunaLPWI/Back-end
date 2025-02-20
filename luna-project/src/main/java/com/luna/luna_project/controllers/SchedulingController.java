@@ -41,13 +41,7 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
     //devolve os horários válidos para um novo agendamento, passando horário de inicio fim e id do cliente e funcionários
-    @GetMapping("/vacant-schedules")
-    public ResponseEntity<List<LocalDateTime>> getVacantSchedules(@RequestParam LocalDateTime start,
-                                                                  @RequestParam LocalDateTime end,
-                                                                  @RequestParam Long employeeId,
-                                                                  @RequestParam Long clientId) {
-        return ResponseEntity.ok(schedulingService.listAvailable(employeeId,clientId, start, end));
-    }
+ 
     // retorna os agendamentos referente ao cliente com base no id
     @GetMapping("/client-schedules")
     public ResponseEntity<List<SchedulingClientDTO>> getScheduling(@RequestParam LocalDateTime start,

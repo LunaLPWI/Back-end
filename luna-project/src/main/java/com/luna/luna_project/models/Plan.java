@@ -1,9 +1,12 @@
 package com.luna.luna_project.models;
 
+import com.luna.luna_project.enums.Plans;
+import com.luna.luna_project.enums.Task;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -23,4 +26,8 @@ public class Plan {
     @ManyToOne
     private OneStepCardSubscription oneStepPlan;
     private Long idClient;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<Task> coupons;
+    private int qtdCoupons;
+
 }

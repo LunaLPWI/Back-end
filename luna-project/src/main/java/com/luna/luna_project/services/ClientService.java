@@ -5,6 +5,7 @@ import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
+import com.luna.luna_project.enums.Plans;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Client;
@@ -232,6 +233,11 @@ public class ClientService {
         }
 
         return planMapper.planToPlanDTO(plan);
+    }
+
+    public void renewCoupons(Long idClient){
+
+
     }
 
 }

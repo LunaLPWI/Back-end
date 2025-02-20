@@ -3,6 +3,8 @@ package com.luna.luna_project.services;
 import com.luna.luna_project.dtos.CpfDTO;
 import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.PlanDTO;
+import com.luna.luna_project.enums.Plans;
+import com.luna.luna_project.enums.Task;
 import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.Client;
@@ -15,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -85,4 +89,52 @@ public class PlanService {
         }
         return id;
     }
+
+    public void renewCoupons(Long clientId) {
+      Optional<Plan> planOptional =  planRepository.findPlanIdClient(clientId);
+      if (planOptional.isPresent()){
+          Plan plan = planOptional.get();
+          plan.setQtdCoupons(4);
+          List<Task> coupons = new ArrayList<>();
+          switch (plan.getName()){
+              case"Cabelo ou barba":
+                  coupons.addAll(List.of(Task.BARBA, Task.CORTE));
+                  break;
+              case "Raspar a cabeça + barba":
+                  coupons.addAll(List.of(Task.BARBA, Task.RASPARCABECA));
+                  break;
+              case"Raspar a cabeça":
+                  coupons.add(Task.RASPARCABECA);
+              default:
+                  coupons.addAll(List.of(Task.BARBA, Task.CORTE , Task.BARBA,Task.CORTE));
+          }
+      }
+    }
+
+    public List<Task> returnTasksToPay(Plan plan, List<Task> tasks){
+        if(plan.getQtdCoupons()>= tasks.size()){
+
+            switch (plan.getName()){
+                case"Cabelo ou barba":
+                   plan.setQtdCoupons(plan.getQtdCoupons() -1);
+                   tasks = tasks.stream().filter(task ->
+                       task != Task.CORTE && task!= Task.BARBA).toList();
+                   break;
+                case "Raspar a cabeça + barba":
+
+                    break;
+                case"Raspar a cabeça":
+                    plan.setQtdCoupons(plan.getQtdCoupons() -1);
+                    tasks = tasks.stream().filter(task ->
+                            task != Task.RASPARCABECA).toList();
+                    break;
+                default:
+
+            }
+            plan.setQtdCoupons(plan.getQtdCoupons() -tasks.size());
+
+        }
+    }
+
+
 }
