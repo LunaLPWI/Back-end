@@ -90,6 +90,9 @@ public class PlanService {
         return id;
     }
 
+    //RENOVA OS CUPONS COM BASE NO TEMPO
+    //NÃO TA PRONTO
+
     public void renewCoupons(Long clientId) {
       Optional<Plan> planOptional =  planRepository.findPlanIdClient(clientId);
       if (planOptional.isPresent()){
@@ -110,6 +113,10 @@ public class PlanService {
           }
       }
     }
+
+    //RETORNAS AS TASKS(SERVIÇOS) A SEREM PAGOS COM BASE NO PLANO
+
+    //INCOMPLETO
 
     public List<Task> returnTasksToPay(Plan plan, List<Task> tasks){
         if(plan.getQtdCoupons()>= tasks.size()){
