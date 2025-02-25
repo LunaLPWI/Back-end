@@ -1,15 +1,9 @@
 package com.luna.luna_project.services;
 
 import com.luna.luna_project.enums.StatusScheduling;
-import com.luna.luna_project.models.ProductScheduling;
-import com.luna.luna_project.models.ProductStock;
 import com.luna.luna_project.models.Queue;
 import com.luna.luna_project.models.Scheduling;
-import com.luna.luna_project.models.Stack;
-import com.luna.luna_project.repositories.ProductStockRepository;
-import com.luna.luna_project.repositories.ProductSchedulingRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,19 +16,11 @@ import java.util.*;
 public class SchedulingService {
 
     private final SchedulingRepository schedulingRepository;
-    private final ClientService clientService;
-    private final ProductSchedulingRepository productSchedulingRepository;
-    private final ProductStockRepository productStockRepository;
-    private final ProductService productService;
     private Queue<Scheduling> queue = new Queue<Scheduling>();
 
     @Autowired
-    public SchedulingService(SchedulingRepository schedulingRepository, ClientService clientService, ProductSchedulingRepository productSchedulingRepository, ProductStockRepository productStockRepository, ProductService productService) {
+    public SchedulingService(SchedulingRepository schedulingRepository, ClientService clientService) {
         this.schedulingRepository = schedulingRepository;
-        this.clientService = clientService;
-        this.productSchedulingRepository = productSchedulingRepository;
-        this.productStockRepository = productStockRepository;
-        this.productService = productService;
     }
 
     public Boolean existsById(Long id) {
@@ -103,8 +89,6 @@ public class SchedulingService {
 
     public List<Scheduling> listSchedulingByEmployeeId(Long employeeId, LocalDateTime startDateTime,
                                                        LocalDateTime endDateTime) {
-
-
         return schedulingRepository.findSchedulingByEmployee_IdAndStartDateTimeBetween(employeeId,
                 startDateTime, endDateTime);
     }
@@ -159,73 +143,6 @@ public class SchedulingService {
         }
 
         schedulingRepository.deleteById(id);
-    }
-
-    //// ele faz um rollback no banco caso de algum erro
-    @Transactional
-    public Scheduling addProducts(Long schedulingId, List<ProductScheduling> productScheduling) {
-
-        if (productScheduling.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "A lista passada está vazia");
-        }
-        Optional<Scheduling> scheduling = schedulingRepository.findById(schedulingId);
-
-
-        if (scheduling.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Não existe agendamento com o id:%d".formatted(schedulingId));
-        }
-
-        for (ProductScheduling newProduct : productScheduling) {
-            Optional<ProductScheduling> existingProductOpt = scheduling.get().getProducts().stream()
-                    .filter(p -> p.getId().equals(newProduct.getId()))
-                    .findFirst();
-
-            if (existingProductOpt.isPresent()) {
-                ProductScheduling existingProduct = existingProductOpt.get();
-                existingProduct.setAmount(existingProduct.getAmount() + newProduct.getAmount());
-            } else {
-                if (productStockRepository.findById(newProduct.getId()).isEmpty()) {
-                    throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED,
-                            (" o produto com o nome %s não está cadastrado no sistema" +
-                                    "(Não existe Produto com o id:%d cadastrado no sistema)")
-                                    .formatted(newProduct.getProductName(), newProduct.getId()));
-                }
-                scheduling.get().getProducts().add(newProduct);
-            }
-        }
-        return schedulingRepository.save(scheduling.get());
-    }
-
-
-    @Transactional
-    public Scheduling removeProduct(Long schedulingId, Long productScheduleId) {
-
-        Optional<Scheduling> schedulingOptional = schedulingRepository.findById(schedulingId);
-
-        if (schedulingOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Não existe agendamento com o id:%d".formatted(schedulingId));
-        }
-        Scheduling scheduling = schedulingOptional.get();
-
-        if (scheduling.getProducts().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Não há produtos na lista");
-        }
-
-        List<ProductScheduling> productSchedulingList = scheduling.getProducts();
-        boolean removed = productSchedulingList.removeIf(product -> product.getId().equals(productScheduleId));
-
-        if (!removed) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Produto com o id:%d não encontrado".formatted(productScheduleId));
-        }
-
-        scheduling.setProducts(productSchedulingList);
-
-        return schedulingRepository.save(scheduling);
     }
 
     public Scheduling changeStatus(Long schedulingId, StatusScheduling statusScheduling){

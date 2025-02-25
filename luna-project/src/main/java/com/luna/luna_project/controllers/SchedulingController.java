@@ -84,20 +84,6 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
 
-    @Secured("ROLE_ADMIN")
-    @PutMapping("/add-products")
-    public ResponseEntity<SchedulingResponseDTO> addProductSchedule(@RequestBody @Valid SchedulingProductDTO schedulingProductDTO) {
-        Scheduling scheduling = schedulingService.addProducts(schedulingProductDTO.getId(), schedulingProductDTO.getProducts());
-        return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
-    }
-
-    @Secured("ROLE_ADMIN")
-    @PutMapping("/remove-products")
-    public ResponseEntity<SchedulingResponseDTO> addProductSchedule(@RequestParam Long schedulingId,@RequestParam  Long ProductSchduleId) {
-        Scheduling scheduling = schedulingService.removeProduct(schedulingId,ProductSchduleId);
-        return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
-    }
-
 
     /// Para mudar os status deve passar o id do agendamento e o enum deseja sendo as opções:
     ///

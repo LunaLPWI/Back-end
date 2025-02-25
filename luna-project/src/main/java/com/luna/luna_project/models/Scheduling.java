@@ -29,9 +29,6 @@ public class Scheduling {
     private Client client;
     @ManyToOne
     private Client employee;
-    @ElementCollection
-    @CollectionTable(name = "scheduling_products", joinColumns = @JoinColumn(name = "scheduling_id"))
-    private List<ProductScheduling> products;
     private StatusScheduling statusScheduling;
 
     @PrePersist

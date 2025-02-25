@@ -48,10 +48,6 @@ public class FinanceController {
     }
 
     //mesma coisa do anterior porem para valor de produtos
-    @GetMapping("/revenue/products")
-    public List<Double> revenueProducts(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
-        return financeService.formRevenueScheduleProductsValues(startDate,endDate);
-    }
 
     //mesma coisa do anterior porem para quantidade de serviços feitos
     @GetMapping("/quantity/services")
@@ -67,7 +63,7 @@ public class FinanceController {
 
 
 
-    ///esses retornam dados únicos só mandar as datas referentes que tá suave, data de inicio fim e o id do funcionário
+
 
 
 
@@ -80,15 +76,7 @@ public class FinanceController {
         return financeService.getServiceQttforEmployee(start, end, funcId);
     }
 
-    //Retorna a a quantidade de produtos dado o funcionário de uma data a outra
-    @GetMapping("/quantity/products-employee")
-    public long qttQuantityProducts(@RequestParam LocalDate startDate,
-                                    @RequestParam LocalDate  endDate, @RequestParam Long funcId){
 
-        LocalDateTime start = LocalDateTime.of(startDate.getYear(),startDate.getMonth(),startDate.getDayOfMonth(),0,0,0);
-        LocalDateTime end = LocalDateTime.of(endDate.getYear(),endDate.getMonth(),endDate.getDayOfMonth(),23,59,0);
-        return financeService.getProductQttforEmployee(start, end, funcId);
-    }
 
     //Retorna a frequencia dos clientes
     @GetMapping("/revenue/frequence")

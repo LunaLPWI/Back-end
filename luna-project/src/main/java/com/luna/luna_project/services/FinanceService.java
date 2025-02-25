@@ -4,11 +4,8 @@ import com.luna.luna_project.dtos.FrenquencyDTO;
 import com.luna.luna_project.enums.Task;
 import com.luna.luna_project.models.*;
 import com.luna.luna_project.repositories.PlanRepository;
-import com.luna.luna_project.repositories.ProductStockRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,17 +17,13 @@ import java.util.List;
 public class FinanceService {
 
     private final SchedulingService SchedulingService;
-    private final ProductService ProductService;
-    private final ProductStockRepository ProductStockRepository;
     private final FrenquencyDTO frenquencyDTO;
 
     private final SchedulingRepository schedulingRepository;
     private final PlanRepository planRepository;
 
-    public FinanceService(com.luna.luna_project.services.SchedulingService schedulingService, com.luna.luna_project.services.ProductService productService, com.luna.luna_project.repositories.ProductStockRepository productStockRepository, FrenquencyDTO frenquencyDTO, SchedulingRepository schedulingRepository, PlanRepository planRepository) {
+    public FinanceService(com.luna.luna_project.services.SchedulingService schedulingService, FrenquencyDTO frenquencyDTO, SchedulingRepository schedulingRepository, PlanRepository planRepository) {
         SchedulingService = schedulingService;
-        ProductService = productService;
-        ProductStockRepository = productStockRepository;
         this.frenquencyDTO = frenquencyDTO;
         this.schedulingRepository = schedulingRepository;
         this.planRepository = planRepository;
@@ -63,41 +56,6 @@ public class FinanceService {
         return revenueMontlyList;
     }
 
-    public List <Double> formRevenueScheduleProductsValues(LocalDate startDate, LocalDate endDate) {
-
-        LocalDateTime start =
-                LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
-        LocalDateTime end =
-                LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), 0, 0, 0);
-
-        List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
-
-        List<ProductStock> productStockList =  ProductStockRepository.findAll();
-        LocalDateTime time = start;
-
-        List <Double> revenueMontlyList = new ArrayList<>();
-        for (int i = 1; i <= 12; i++) {
-            LocalDateTime finalTime = time;
-            List<ProductScheduling> productsMonth = schedulings.stream()
-                    .filter(scheduling -> scheduling.getStartDateTime().getMonth() == finalTime.getMonth()
-                            && scheduling.getStartDateTime().getYear() == finalTime.getYear())
-                    .flatMap(scheduling -> scheduling.getProducts().stream())
-                    .toList();
-
-            double sumMonthly = productsMonth.stream()
-                    .filter(productScheduling ->
-                            productStockList.stream()
-                            .map(ProductStock::getId).
-                                    anyMatch(id -> id.equals(productScheduling.getId()))
-                    )
-                    .mapToDouble(productStock ->
-                            productStock.getAmount() * productStock.getPrice())
-                    .sum();
-            time = time.plusMonths(1);
-            revenueMontlyList.add(sumMonthly);
-        }
-        return revenueMontlyList;
-    }
 
     public List <Integer> formRevenuePlanQtt(LocalDate startDate, LocalDate endDate) {
         LocalDateTime start =
@@ -150,14 +108,6 @@ public class FinanceService {
         return revenueMontlyList;
     }
 
-    public Long getProductQttforEmployee(LocalDateTime startDate, LocalDateTime endDate, Long id) {
-        Long num = schedulingRepository.sumProductAmountsByEmployeeAndDateRange(id,startDate, endDate);
-
-        if(num == null){
-            num = 0L;
-        }
-        return num;
-    }
 
     public Long getServiceQttforEmployee(LocalDateTime startDate, LocalDateTime endDate, Long id) {
         Long num = schedulingRepository.sumServicesByEmployeeAndDateRange(id,startDate, endDate);

@@ -60,14 +60,7 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
     Long countClientsWithRecentSchedulingDifferenceBetween15And30DaysAndWithoutEmployeeRole(@Param("start")int startDate,
                                                                                             @Param("end") int start);
 
-    @Query("SELECT SUM(p.amount) " +
-            "FROM Scheduling s " +
-            "JOIN s.products p " +
-            "WHERE s.employee.id = :employeeId " +
-            "AND s.startDateTime BETWEEN :startDate AND :endDate")
-    Long sumProductAmountsByEmployeeAndDateRange(@Param("employeeId") Long employeeId,
-                                                 @Param("startDate") LocalDateTime startDate,
-                                                 @Param("endDate") LocalDateTime endDate);
+
 
     @Query("SELECT count(p) " +
             "FROM Scheduling s " +
