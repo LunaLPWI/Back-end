@@ -105,7 +105,6 @@ public class SchedulingController {
     ///     CONCLUDED, (Concluído)
     ///     DELAYED  (Atrasado)
     ///
-    @Secured("ROLE_ADMIN")
     @PutMapping("/change-status")
     public ResponseEntity<SchedulingResponseDTO> changeStatus(@RequestParam Long schedulingId,@RequestParam StatusScheduling statusScheduling) {
         Scheduling scheduling = schedulingService.changeStatus(schedulingId,statusScheduling);
