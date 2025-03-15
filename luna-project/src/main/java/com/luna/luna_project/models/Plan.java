@@ -22,5 +22,5 @@ public class Plan {
     private String plan_id;
     @ManyToOne
     private OneStepCardSubscription oneStepPlan;
-    private Long idClient;
+    private Long idEstablishment;
 }

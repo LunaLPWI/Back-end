@@ -49,9 +49,6 @@ public class SchedulingService {
     }
 
     public List<LocalDateTime> listAvailable(Long employeeId, Long clientId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        // Verifica se o cliente e o funcionário existem
-
-
         // Obtém os agendamentos do cliente e do funcionário dentro do período especificado
         List<Scheduling> schedulingsEmployee = schedulingRepository
                 .findSchedulingByEmployee_IdAndStartDateTimeBetween(employeeId, startDateTime, endDateTime);
@@ -60,31 +57,38 @@ public class SchedulingService {
                 .findSchedulingByClient_IdAndStartDateTimeBetween(clientId, startDateTime, endDateTime);
 
         Set<Scheduling> schedulings = new HashSet<>();
-
         schedulings.addAll(schedulingsEmployee);
         schedulings.addAll(agendamentosClient);
         schedulings.stream().sorted(Comparator.comparing(Scheduling::getStartDateTime));
 
         // Gera todos os horários possíveis dentro do período
-
         List<LocalDateTime> availableHours = new ArrayList<>();
-        for (LocalDateTime time = startDateTime; time.plusMinutes(45).isBefore(endDateTime); time = time.plusMinutes(45)) {
+        for (LocalDateTime time = startDateTime; !time.plusMinutes(30).isAfter(endDateTime); time = time.plusMinutes(30)) {
             availableHours.add(time);
         }
 
+        System.out.println("Horários gerados:");
+        for (LocalDateTime time : availableHours) {
+            System.out.println(time);
+        }
+
+        // Remover horários ocupados
         for (Scheduling scheduling : schedulings) {
             availableHours.removeIf(time ->
-                    (time.isBefore(scheduling.calculateEndDate()) && time.plusMinutes(45).isAfter(scheduling.getStartDateTime()))
+                    (time.isBefore(scheduling.calculateEndDate()) && time.plusMinutes(45).isAfter(scheduling.getStartDateTime())) ||
+                            (time.isEqual(scheduling.getStartDateTime()) || time.isEqual(scheduling.calculateEndDate()))
             );
         }
 
         // Verifica se há horários disponíveis
         if (availableHours.isEmpty()) {
+            System.out.println("Não há horários disponíveis!");
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Não há horários disponíveis entre " + startDateTime + " e " + endDateTime);
         }
 
         return availableHours;
     }
+
 
 
     public List<Scheduling> listSchedulingByEmployeeId(Long employeeId, LocalDateTime startDateTime,

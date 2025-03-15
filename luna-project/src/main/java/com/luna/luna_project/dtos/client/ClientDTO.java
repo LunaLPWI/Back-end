@@ -32,7 +32,6 @@ public record ClientDTO(
         @NotNull(message = "O campo birthDay não deve estar vazio.")
         @PastOrPresent(message = "A data de nascimento não pode ser no futuro.")
         LocalDate birthDay,
-        AddressDTO address,
         Set<String> roles
 ) {
 }
