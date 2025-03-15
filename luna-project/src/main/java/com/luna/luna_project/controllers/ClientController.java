@@ -59,8 +59,7 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientResponseDTO> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
-        Client client = clientService.saveClient(clientMapper.clientRequestDTOtoClient(clientDTO),
-                clientDTO.getAddress());
+        Client client = clientService.saveClient(clientMapper.clientRequestDTOtoClient(clientDTO));
         return ResponseEntity.ok().body(clientMapper.clientToClientDTOResponse(client));
     }
     @Secured("ROLE_ADMIN")
@@ -124,16 +123,13 @@ public class ClientController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-    @GetMapping("/clients-overview")
-    public ResponseEntity<List<ClientOverviewDTO>> clientsOverview(){
-        return ResponseEntity.ok().body(clientService.clientOverview());
-    }
-
-    @GetMapping("/plan-by-client")
-    public ResponseEntity<PlanDTO> searchByPlanClient(@RequestParam String cpf){
-        return ResponseEntity.ok().body(clientService.searchByPlanClient(cpf));
-    }
-
-
+//    @GetMapping("/clients-overview")
+//    public ResponseEntity<List<ClientOverviewDTO>> clientsOverview(){
+//        return ResponseEntity.ok().body(clientService.clientOverview());
+//    }
+//
+//    @GetMapping("/plan-by-client")
+//    public ResponseEntity<PlanDTO> searchByPlanClient(@RequestParam String cpf){
+//        return ResponseEntity.ok().body(clientService.searchByPlanClient(cpf));
+//    }
 }

@@ -47,18 +47,16 @@ public class ClientService {
     @Autowired
     private PlanMapper planMapper;
 
-    public Client saveClient(Client client, AddressDTO addressDTO) {
+    public Client saveClient(Client client) {
         if (clientRepository.existsByCpf(client.getCpf())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"CPF já cadastrado");
         }
         if (clientRepository.existsByEmail(client.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Email já cadastrado");
         }
-        Address address = viaCepService.saveAddress(addressDTO);
+//        Address address = viaCepService.saveAddress(addressDTO);
         String encryptedPassword = passwordEncoder.encode(client.getPassword());
         client.setPassword(encryptedPassword);
-        client.setAddress(address);
-
         return clientRepository.save(client);
     }
 
@@ -209,30 +207,30 @@ public class ClientService {
         return clientRepository.findById(id).orElseThrow(null);
     }
 
-    public List<ClientOverviewDTO> clientOverview() {
-        List<Client> clients = clientRepository.findAll();
+//    public List<ClientOverviewDTO> clientOverview() {
+//        List<Client> clients = clientRepository.findAll();
+//
+//        return clients.stream().map(client -> {
+//            PlanDTO planDTO = client.getPlan() != null ? planMapper.planToPlanDTO(client.getPlan()) : null;
+//            return new ClientOverviewDTO(
+//                    client.getName(),
+//                    planDTO,
+//                    client.getPhoneNumber()
+//            );
+//        }).collect(Collectors.toList());
+//    }
 
-        return clients.stream().map(client -> {
-            PlanDTO planDTO = client.getPlan() != null ? planMapper.planToPlanDTO(client.getPlan()) : null;
-            return new ClientOverviewDTO(
-                    client.getName(),
-                    planDTO,
-                    client.getPhoneNumber()
-            );
-        }).collect(Collectors.toList());
-    }
-
-    public PlanDTO searchByPlanClient(String cpf) {
-        Client client = searchClientByCpf(cpf);
-
-        Plan plan = client.getPlan();
-
-        if (plan == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Plano não associado ao cliente com CPF: " + cpf);
-        }
-
-        return planMapper.planToPlanDTO(plan);
-    }
+//    public PlanDTO searchByPlanClient(String cpf) {
+//        Client client = searchClientByCpf(cpf);
+//
+//        Plan plan = client.getPlan();
+//
+//        if (plan == null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Plano não associado ao cliente com CPF: " + cpf);
+//        }
+//
+//        return planMapper.planToPlanDTO(plan);
+//    }
 
 }
 

@@ -30,7 +30,6 @@ public class ClientRequestDTO {
     private String phoneNumber;
     @NotBlank
     private String password;
-    private AddressDTO address;
     @Past
     private LocalDate birthDay;
     private Set<String> roles;

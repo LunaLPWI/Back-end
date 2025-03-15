@@ -87,7 +87,7 @@ public class PlanEFI {
     public static OneStepCardSubscription createOneStep(PlanDTO plan,
                                                         String token,
                                                         Plans chargeRequestDTO,
-                                                        Client client) {
+                                                        Client client, Establishment establishment) {
         Credentials credentials = new Credentials();
         HashMap<String, Object> options = new HashMap<String, Object>();
         options.put("client_id", credentials.getClientId());
@@ -112,12 +112,12 @@ public class PlanEFI {
         customer.put("birth", client.getBirthDay());
 
         Map<String, Object> billingAddress = new HashMap<String, Object>();
-        billingAddress.put("street", client.getAddress().getLogradouro());
-        billingAddress.put("number", client.getAddress().getNumber());
-        billingAddress.put("neighborhood", client.getAddress().getBairro());
+        billingAddress.put("street", establishment.getAddress().getLogradouro());
+        billingAddress.put("number", establishment.getAddress().getNumber());
+        billingAddress.put("neighborhood", establishment.getAddress().getBairro());
         billingAddress.put("zipcode", "03206010");
-        billingAddress.put("city", client.getAddress().getCidade());
-        billingAddress.put("state", client.getAddress().getUf());
+        billingAddress.put("city", establishment.getAddress().getCidade());
+        billingAddress.put("state", establishment.getAddress().getUf());
 
         Map<String, Object> creditCard = new HashMap<String, Object>();
         creditCard.put("installments", null);

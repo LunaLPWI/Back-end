@@ -29,5 +29,4 @@ public class OneStepLink {
     private Boolean request_delivery_address;
     private String payment_method;
     private String status;
-
 }

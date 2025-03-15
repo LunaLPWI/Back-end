@@ -9,9 +9,10 @@ import java.util.Optional;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 
-    @Query("SELECT s.subscriptionId FROM Subscription s WHERE s.idClient = :idClient")
-    Optional<String> findSubscriptionIdByIdClient(@Param("idClient") Long idClient);
 
+
+    @Query("SELECT s.subscriptionId FROM Subscription s WHERE s.idEstablishment = :establishmentId")
+    Optional<String> findSubscriptionIdByIdEstablishment(Long establishmentId);
     void deleteBySubscriptionId(String subscriptionId);
 
 }

@@ -31,14 +31,12 @@ public class Client implements UserDetails {
     private String password;
     private LocalDate birthDay;
     private String phoneNumber;
-    @ManyToOne
-    @JoinColumn(name = "address_id_address", nullable = false)
-    private Address address;
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
+
     @ManyToOne
-    @JoinColumn(name = "plan_id_plan", nullable = true)
-    private Plan plan;
+    @JoinColumn(name = "establishment_id_establishment", nullable = true)
+    private Establishment establishment;
 
 
     @Override
