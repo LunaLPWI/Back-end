@@ -27,29 +27,8 @@ public class SchedulingService {
         return schedulingRepository.existsById(id);
     }
 
-    public Set<LocalDateTime> listBusySchedules(Long clientId,
+    public Set<Scheduling> listBusySchedules(Long employeeId,Long clientId,
                                                 LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        List<Scheduling> schedulings = schedulingRepository.
-                findSchedulingByClient_IdAndStartDateTimeBetween(clientId, startDateTime, endDateTime);
-        Set<LocalDateTime> busySchedules = new HashSet<>();
-
-        for (Scheduling scheduling : schedulings) {
-            LocalDateTime start = scheduling.getStartDateTime();
-            LocalDateTime end = scheduling.calculateEndDate();
-            for (LocalDateTime time = start; time.isBefore(end); time = time.plusMinutes(30)) {
-                busySchedules.add(time);
-            }
-        }
-
-        if (busySchedules.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há ocupados horários neste intervalo");
-        }
-
-        return busySchedules;
-    }
-
-    public List<LocalDateTime> listAvailable(Long employeeId, Long clientId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        // Obtém os agendamentos do cliente e do funcionário dentro do período especificado
         List<Scheduling> schedulingsEmployee = schedulingRepository
                 .findSchedulingByEmployee_IdAndStartDateTimeBetween(employeeId, startDateTime, endDateTime);
 
@@ -61,6 +40,16 @@ public class SchedulingService {
         schedulings.addAll(agendamentosClient);
         schedulings.stream().sorted(Comparator.comparing(Scheduling::getStartDateTime));
 
+        if (schedulings.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há ocupados horários neste intervalo");
+        }
+
+        return schedulings;
+    }
+
+    public List<LocalDateTime> listAvailable(Long employeeId, Long clientId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        // Obtém os agendamentos do cliente e do funcionário dentro do período especificado
+        Set<Scheduling> schedulings = listBusySchedules(employeeId,clientId,startDateTime,endDateTime);
         // Gera todos os horários possíveis dentro do período
         List<LocalDateTime> availableHours = new ArrayList<>();
         for (LocalDateTime time = startDateTime; !time.plusMinutes(30).isAfter(endDateTime); time = time.plusMinutes(30)) {
@@ -75,8 +64,8 @@ public class SchedulingService {
         // Remover horários ocupados
         for (Scheduling scheduling : schedulings) {
             availableHours.removeIf(time ->
-                    (time.isBefore(scheduling.calculateEndDate()) && time.plusMinutes(45).isAfter(scheduling.getStartDateTime())) ||
-                            (time.isEqual(scheduling.getStartDateTime()) || time.isEqual(scheduling.calculateEndDate()))
+                    time.isEqual(scheduling.getStartDateTime()) ||
+                            (time.isAfter(scheduling.getStartDateTime()) && time.isBefore(scheduling.calculateEndDate()))
             );
         }
 

@@ -58,12 +58,12 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingResponseDTOS);
     }
 
-    @GetMapping("/busy-schedules")
-    public ResponseEntity<Set<LocalDateTime>> getFullSchedules(@RequestParam LocalDateTime start,
-                                                               @RequestParam LocalDateTime end,
-                                                               @RequestParam Long clientId) {
-        return ResponseEntity.ok(schedulingService.listBusySchedules(clientId, start, end));
-    }
+//    @GetMapping("/busy-schedules")
+//    public ResponseEntity<Set<LocalDateTime>> getFullSchedules(@RequestParam LocalDateTime start,
+//                                                               @RequestParam LocalDateTime end,
+//                                                               @RequestParam Long clientId) {
+//        return ResponseEntity.ok(schedulingService.listBusySchedules(clientId, start, end));
+//    }
 
     @Secured("ROLE_EMPLOYEE")
     @GetMapping("/busy-schedules-admin")
