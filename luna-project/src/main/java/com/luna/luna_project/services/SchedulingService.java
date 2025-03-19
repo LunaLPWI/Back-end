@@ -121,6 +121,14 @@ public class SchedulingService {
         return availableHours;
     }
 
+    public void removeById(Long id){
+        if (!existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Agendamento com esse Id não existe");
+        }
+
+        schedulingRepository.removeSchedulingById(id);
+    }
+
 
     public List<Scheduling> listSchedulingByEmployeeId(Long employeeId, LocalDateTime startDateTime,
                                                        LocalDateTime endDateTime) {

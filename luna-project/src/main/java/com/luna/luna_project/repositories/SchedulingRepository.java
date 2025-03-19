@@ -82,4 +82,6 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
             "WHERE s.client.id = :clientId " +
             "ORDER BY s.startDateTime DESC")
     Scheduling findLastSchedulingByClientId(@Param("clientId") Long clientId);
+
+    Long removeSchedulingById(Long id);
 }

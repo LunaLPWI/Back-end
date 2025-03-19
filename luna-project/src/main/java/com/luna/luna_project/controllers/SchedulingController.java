@@ -84,6 +84,12 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
 
+    @DeleteMapping
+    public ResponseEntity<Void> deleteById(@RequestParam Long id) {
+        schedulingService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @Secured("ROLE_ADMIN")
     @PutMapping("/add-products")
     public ResponseEntity<SchedulingResponseDTO> addProductSchedule(@RequestBody @Valid SchedulingProductDTO schedulingProductDTO) {
