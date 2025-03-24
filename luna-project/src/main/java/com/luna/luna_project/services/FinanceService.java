@@ -171,7 +171,7 @@ public class FinanceService {
 
         // Frequentes: 16/11/2024 - 01/12/2024
         List<Client> frequentes = schedulingRepository.findClientsWithRecentSchedulingBetweenDatesAndWithoutRole(endDate,startDate,"ROLE_EMPLOYEE");
-        startDate = endDate.minusDays(15);
+        startDate = endDate.minusDays(15);  
         endDate = startDate.minusDays(15);
         List<Client> medios = schedulingRepository.findClientsWithRecentSchedulingBetweenDatesAndWithoutRole(endDate,startDate,"ROLE_EMPLOYEE");
         System.out.println("Médios: " + medios); // Log para depuração

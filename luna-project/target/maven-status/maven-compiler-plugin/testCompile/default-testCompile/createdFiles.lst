@@ -1,0 +1,5 @@
+com\luna\luna_project\LunaProjectApplicationTests.class
+com\luna\luna_project\services\FinanceTestService.class
+com\luna\luna_project\services\SchedulingServiceTest.class
+com\luna\luna_project\controllers\ClientControllerTest.class
+com\luna\luna_project\services\ClientServiceTest.class
