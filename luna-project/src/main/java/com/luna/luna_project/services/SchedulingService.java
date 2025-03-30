@@ -41,7 +41,6 @@ public class SchedulingService {
         schedulings.addAll(agendamentosClient);
         schedulings.stream().sorted(Comparator.comparing(Scheduling::getStartDateTime));
 
-
         return schedulings;
     }
 

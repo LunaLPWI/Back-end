@@ -23,4 +23,5 @@ public class Establishment {
     @ManyToOne
     @JoinColumn(name = "plan_id_plan", nullable = true)
     private Plan plan;
+    private String cnpj;
 }

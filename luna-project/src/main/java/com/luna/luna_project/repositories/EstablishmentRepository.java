@@ -10,4 +10,7 @@ public interface EstablishmentRepository extends JpaRepository<Establishment, Lo
 
 Boolean existsByName(String name);
 
+
+    boolean existsByCnpj(String cnpj);
+
 }
