@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -40,37 +41,53 @@ public class SchedulingService {
         schedulings.addAll(agendamentosClient);
         schedulings.stream().sorted(Comparator.comparing(Scheduling::getStartDateTime));
 
-        if (schedulings.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há ocupados horários neste intervalo");
-        }
 
         return schedulings;
     }
 
     public List<LocalDateTime> listAvailable(Long employeeId, Long clientId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         // Obtém os agendamentos do cliente e do funcionário dentro do período especificado
+
         Set<Scheduling> schedulings = listBusySchedules(employeeId,clientId,startDateTime,endDateTime);
+        for (Scheduling scheduling : schedulings) {
+            System.out.println(scheduling);
+        }
         // Gera todos os horários possíveis dentro do período
         List<LocalDateTime> availableHours = new ArrayList<>();
         for (LocalDateTime time = startDateTime; !time.plusMinutes(30).isAfter(endDateTime); time = time.plusMinutes(30)) {
+            // Verifica se o horário "time" cai dentro de algum agendamento
+            LocalDateTime time1 = time;
+            for (Scheduling scheduling : schedulings) {
+                // Se "time" estiver dentro de um agendamento, ajusta "time" para o final do agendamento
+                if (time.isAfter(scheduling.getStartDateTime()) && time.isBefore(scheduling.calculateEndDate())) {
+                    time = scheduling.calculateEndDate();  // Ajusta o horário para o final do agendamento
+                    break;  // Não precisamos verificar os outros agendamentos, pois já ajustamos o horário
+                }
+            }
             availableHours.add(time);
+            time = time1;
         }
 
         System.out.println("Horários gerados:");
         for (LocalDateTime time : availableHours) {
             System.out.println(time);
         }
-
-        // Remover horários ocupados
-        for (Scheduling scheduling : schedulings) {
-            availableHours.removeIf(time ->
-                    time.isEqual(scheduling.getStartDateTime()) ||
-                            (time.isAfter(scheduling.getStartDateTime()) && time.isBefore(scheduling.calculateEndDate()))
-            );
+        if (schedulings.isEmpty()) {
+            availableHours.add(startDateTime);
+        }else{
+            for (Scheduling scheduling : schedulings) {
+                availableHours.removeIf(time ->
+                        time.isEqual(scheduling.getStartDateTime()) ||
+                                (time.isAfter(scheduling.getStartDateTime()) && time.isBefore(scheduling.calculateEndDate()))
+                );
+            }
         }
 
+        // Remover horários ocupados
+
+
         // Verifica se há horários disponíveis
-        if (availableHours.isEmpty()) {
+        if (availableHours.isEmpty() && !schedulings.isEmpty()) {
             System.out.println("Não há horários disponíveis!");
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Não há horários disponíveis entre " + startDateTime + " e " + endDateTime);
         }

@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public enum Task {
     CORTE(50.0, "Corte de cabelo", 30),
-    BARBA(40.0, "Aparar barba", 30),
+    BARBA(40.0, "Aparar barba", 10),
     BOTOX(65.0,"botox",30),
     HIDRATACAO(40.0,"Hidratação no cabelo",30),
     PEZINHOCABELOBARBA(30.0, "Pezinho cabelo e barba",30),
