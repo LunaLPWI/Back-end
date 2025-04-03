@@ -15,7 +15,7 @@ public interface PlanMapper {
 
     PlanDTO planToPlanDTO(Plan plan);
 
-    Plan planDTOtoPlan(Plan planDTO);
+    Plan planDTOtoPlan(PlanDTO planDTO);
 
 
 

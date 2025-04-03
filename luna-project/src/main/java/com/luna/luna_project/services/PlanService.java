@@ -45,10 +45,9 @@ public class PlanService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        Plan planMapp = planMapper.planDTOtoPlan(planDTOSaved);
-        planMapp.setIdEstablishment(establishment.getId());
+        planDTOSaved.setIdEstablishment(establishment.getId());
 
-        Plan plan = planRepository.save(planMapp);
+        Plan plan = planRepository.save(planDTOSaved);
         establishment.setPlan(plan);
 
         return planMapper.planToPlanDTO(plan);

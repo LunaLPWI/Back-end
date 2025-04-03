@@ -2,6 +2,7 @@ package com.luna.luna_project.gerencianet.subscription.json;
 
 import br.com.efi.efisdk.EfiPay;
 import br.com.efi.efisdk.exceptions.EfiPayException;
+import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.enums.Plans;
@@ -11,6 +12,7 @@ import com.luna.luna_project.mapper.OneStepLinkMapper;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.mapper.SubscriptionMapper;
 import com.luna.luna_project.models.*;
+import com.luna.luna_project.services.GeoCodeGoogle;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 public class PlanEFI {
+
+
+    private static final GeoCodeGoogle geoCodeGoogle = new GeoCodeGoogle();
+
 
 
     public static Plan createPlan(PlanDTO planDTO, Plans plans) {
@@ -87,7 +93,7 @@ public class PlanEFI {
     public static OneStepCardSubscription createOneStep(PlanDTO plan,
                                                         String token,
                                                         Plans chargeRequestDTO,
-                                                        Client client, Establishment establishment) {
+                                                        Client client, Establishment establishment) throws Exception {
         Credentials credentials = new Credentials();
         HashMap<String, Object> options = new HashMap<String, Object>();
         options.put("client_id", credentials.getClientId());
@@ -112,12 +118,13 @@ public class PlanEFI {
         customer.put("birth", client.getBirthDay());
 
         Map<String, Object> billingAddress = new HashMap<String, Object>();
-        billingAddress.put("street", establishment.getAddress().getLogradouro());
-        billingAddress.put("number", establishment.getAddress().getNumber());
-        billingAddress.put("neighborhood", establishment.getAddress().getBairro());
+        AddressDTO addressDTO = geoCodeGoogle.getEnderecoFromCoordenadas(establishment.getLat(), establishment.getLng());
+        billingAddress.put("street", addressDTO.getLogradouro());
+        billingAddress.put("number", addressDTO.getNumber());
+        billingAddress.put("neighborhood", addressDTO.getBairro());
         billingAddress.put("zipcode", "03206010");
-        billingAddress.put("city", establishment.getAddress().getCidade());
-        billingAddress.put("state", establishment.getAddress().getUf());
+        billingAddress.put("city", addressDTO.getCidade());
+        billingAddress.put("state", addressDTO.getUf());
 
         Map<String, Object> creditCard = new HashMap<String, Object>();
         creditCard.put("installments", null);

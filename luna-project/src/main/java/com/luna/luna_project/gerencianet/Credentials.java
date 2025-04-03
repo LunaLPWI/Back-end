@@ -1,11 +1,14 @@
 package com.luna.luna_project.gerencianet;
 
 import lombok.Getter;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 @Getter
 public class Credentials {
@@ -18,19 +21,27 @@ public class Credentials {
 	public Credentials() {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		InputStream credentialsFile = classLoader.getResourceAsStream("credentials.json");
-		JSONTokener tokener = new JSONTokener(credentialsFile);
-		JSONObject credentials = new JSONObject(tokener);
-		try {
-			credentialsFile.close();
-		} catch (IOException e) {
-			System.out.println("Impossible to close file credentials.json");
+
+		if (credentialsFile == null) {
+			throw new RuntimeException("credentials.json file not found");
 		}
 
-		this.clientId = credentials.getString("client_id");
-		this.clientSecret = credentials.getString("client_secret");
-		this.certificate = credentials.getString("certificate");
-		this.sandbox = credentials.getBoolean("sandbox");
-		this.debug = credentials.getBoolean("debug");
-	}
+		// Parse o arquivo JSON
+		try {
+			JSONParser parser = new JSONParser();
+			JSONObject credentials = (JSONObject) parser.parse(new InputStreamReader(credentialsFile, StandardCharsets.UTF_8));
 
+			// Fechar o arquivo após leitura
+			credentialsFile.close();
+
+			// Atribuir os valores das credenciais
+			this.clientId = (String) credentials.get("client_id");
+			this.clientSecret = (String) credentials.get("client_secret");
+			this.certificate = (String) credentials.get("certificate");
+			this.sandbox = (boolean) credentials.get("sandbox");
+			this.debug = (boolean) credentials.get("debug");
+		} catch (IOException | ParseException e) {
+			System.out.println("Error reading or parsing the credentials file: " + e.getMessage());
+		}
+	}
 }
