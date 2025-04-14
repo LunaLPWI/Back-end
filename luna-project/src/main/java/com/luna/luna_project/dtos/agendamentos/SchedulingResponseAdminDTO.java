@@ -1,7 +1,7 @@
 package com.luna.luna_project.dtos.agendamentos;
 
 import com.luna.luna_project.enums.StatusScheduling;
-import com.luna.luna_project.enums.Task;
+import com.luna.luna_project.models.Office;
 import jakarta.persistence.ElementCollection;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +25,7 @@ public class SchedulingResponseAdminDTO {
     private LocalDateTime endDateTime;
     @NotBlank
     private String clientName;
-    @ElementCollection(targetClass = Task.class)
-    private List<Task> items;
+    @ElementCollection(targetClass = Office.class)
+    private List<Office> items;
     private StatusScheduling statusScheduling;
 }

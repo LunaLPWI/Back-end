@@ -1,6 +1,6 @@
 package com.luna.luna_project.dtos.agendamentos;
 
-import com.luna.luna_project.enums.Task;
+import com.luna.luna_project.models.Office;
 import jakarta.persistence.ElementCollection;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
@@ -25,6 +25,6 @@ public class SchedulingRequestDTO {
 //    @Future
     private LocalDateTime startDateTime;
     @NotEmpty
-    @ElementCollection(targetClass = Task.class)
-    private List<Task> items;
+    @ElementCollection(targetClass = Office.class)
+    private List<Office> items;
 }

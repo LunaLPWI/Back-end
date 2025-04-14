@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TaskDTO {
+public class OfficeDTO {
     @NotNull
     private Double value;
     @NotBlank

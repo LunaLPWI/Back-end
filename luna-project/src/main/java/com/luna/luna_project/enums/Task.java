@@ -20,10 +20,7 @@ public enum Task {
     SOBRANCELHA(20.0,"Fazer a sobrancelha", 30),
     RELAXAMENTO(20.0,"Relaxamento no cabelo",30);
 
-
     private final Double value;
     private final String description;
     private final Integer duration;
-
-
 }

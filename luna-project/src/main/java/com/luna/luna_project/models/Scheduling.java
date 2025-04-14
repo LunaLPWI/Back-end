@@ -1,15 +1,11 @@
 package com.luna.luna_project.models;
 
 import com.luna.luna_project.enums.StatusScheduling;
-import com.luna.luna_project.enums.Task;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Getter
@@ -22,14 +18,20 @@ public class Scheduling {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private LocalDateTime startDateTime;
-    @ElementCollection(targetClass = Task.class)
-    private List<Task> items;
+
+    @OneToMany
+    private List<Office> items;
+
     @ManyToOne
     private Client client;
+
     @ManyToOne
     private Client employee;
+
     private StatusScheduling statusScheduling;
+
 
     @PrePersist
     public void setDefaultStatusScheduling() {
@@ -55,7 +57,7 @@ public class Scheduling {
     public int calculateTotalDuration() {
         if (items != null && !items.isEmpty()) {
             return items.stream()
-                    .mapToInt(Task::getDuration)
+                    .mapToInt(Office::getDuration)
                     .sum();
         }
         return 0;
