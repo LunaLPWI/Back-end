@@ -1,14 +1,12 @@
 package com.luna.luna_project.dtos.client;
-import com.luna.luna_project.dtos.AddressDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 
@@ -16,7 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ClientRequestDTO {
+public class ClientEmployeeRequest {
     private Long id;
     @NotBlank
     private String name;
@@ -33,7 +31,9 @@ public class ClientRequestDTO {
     @Past
     private LocalDate birthDay;
     private Set<String> roles;
-
+    @NotNull
+    private Long establishmentId;
 }
+
 
 

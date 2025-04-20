@@ -5,12 +5,15 @@ import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
+import com.luna.luna_project.mapper.EstablishmentMapper;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
+import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.repositories.ClientRepository;
+import com.luna.luna_project.repositories.EstablishmentRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,10 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +46,8 @@ public class ClientService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private PlanMapper planMapper;
+    @Autowired
+    private EstablishmentRepository establishmentRepository;
 
     public Client saveClient(Client client) {
         if (clientRepository.existsByCpf(client.getCpf())) {
@@ -58,6 +60,29 @@ public class ClientService {
         String encryptedPassword = passwordEncoder.encode(client.getPassword());
         client.setPassword(encryptedPassword);
         return clientRepository.save(client);
+    }
+
+    public Client registerEmployee(ClientEmployeeRequest dto) {
+        Establishment establishment = establishmentRepository.findById(dto.getEstablishmentId())
+                .orElseThrow(() -> new RuntimeException("Estabelecimento não encontrado"));
+
+        Client client = Client.builder()
+                .name(dto.getName())
+                .cpf(dto.getCpf())
+                .email(dto.getEmail())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .phoneNumber(dto.getPhoneNumber())
+                .birthDay(dto.getBirthDay())
+                .roles(dto.getRoles() == null ? Set.of("ROLE_EMPLOYEE") : dto.getRoles())
+                .establishment(establishment)
+                .build();
+
+        return clientRepository.save(client);
+    }
+
+
+    public List<Client> getEmployeesByEstablishmentId(Long establishmentId) {
+        return clientRepository.findEmployeesByEstablishmentId(establishmentId);
     }
 
     public List<Client> searchClients() {

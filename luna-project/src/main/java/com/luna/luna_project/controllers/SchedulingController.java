@@ -7,6 +7,7 @@ import com.luna.luna_project.mapper.SchedulingMapper;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.services.SchedulingService;
 import jakarta.validation.Valid;
+import org.quartz.SchedulerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class SchedulingController {
     }
     //salva um novo agendamento, tem verificação caso sobreponha horários de agendamentos ja existentes, volta 409 caso isso aconteça
     @PostMapping
-    public ResponseEntity<SchedulingResponseDTO> saveScheduling(@RequestBody @Valid SchedulingRequestDTO schedulingRequestDTO) {
+    public ResponseEntity<SchedulingResponseDTO> saveScheduling(@RequestBody @Valid SchedulingRequestDTO schedulingRequestDTO) throws SchedulerException {
 
         Scheduling scheduling = schedulingService.schedulingSave(schedulingMapper.RequestToEntity(schedulingRequestDTO));
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));

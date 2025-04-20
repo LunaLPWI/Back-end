@@ -41,6 +41,17 @@ public class Scheduling {
         }
     }
 
+    public String toString() {
+        return "Scheduling{" +
+                "id=" + id +
+                ", startDateTime=" + startDateTime +
+                ", items=" + (items != null ? items.toString() : "[]") +  // Verificando se a lista de items é nula
+                ", client=" + (client != null ? client.getName() : "null") +  // Evitar printar toda a entidade, pegar apenas o nome
+                ", employee=" + (employee != null ? employee.getName() : "null") +  // Evitar printar toda a entidade, pegar apenas o nome
+                ", statusScheduling=" + statusScheduling +
+                '}';
+    }
+
     public StatusScheduling checkAndUpdateStatus() {
         if (statusScheduling == StatusScheduling.PENDING) {
             if (startDateTime.isBefore(LocalDateTime.now())) {

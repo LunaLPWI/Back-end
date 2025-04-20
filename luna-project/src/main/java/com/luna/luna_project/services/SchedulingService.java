@@ -4,12 +4,12 @@ import com.luna.luna_project.enums.StatusScheduling;
 import com.luna.luna_project.models.Queue;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.repositories.SchedulingRepository;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -23,6 +23,9 @@ public class SchedulingService {
     public SchedulingService(SchedulingRepository schedulingRepository, ClientService clientService) {
         this.schedulingRepository = schedulingRepository;
     }
+
+    @Autowired
+    QuartzSchedulerJob quartzScheduler;
 
     public Boolean existsById(Long id) {
         return schedulingRepository.existsById(id);
@@ -113,20 +116,28 @@ public class SchedulingService {
         return schedulings;
     }
 
-    public Scheduling schedulingSave(Scheduling scheduling) {
+    public Scheduling schedulingSave(Scheduling scheduling) throws SchedulerException {
         scheduling.setId(null);
         queue.insert(scheduling);
         return registerSchedule();
     }
 
-    public Scheduling registerSchedule() {
+    public Scheduling registerSchedule() throws SchedulerException {
         Scheduling scheduling = queue.poll();
         if (!validatyScheduleSave(scheduling)) {
             throw new ResponseStatusException
                     (HttpStatus.CONFLICT, "Já existe agendamentos nesse horário");
         }
-        return schedulingRepository.save(scheduling);
+        Scheduling scheduling1 = schedulingRepository.save(scheduling);
+        String texto = "Olá, "+scheduling1.getClient().getName()+
+                "! Seu horário na"+scheduling1.getEmployee().getEstablishment().getName()+
+                "foi confirmado para o dia "+scheduling1.getStartDateTime()+" com" +
+                " "+scheduling1.getEmployee().getName()+ ". Te esperamos lá!.";
+        quartzScheduler.agendarEnvio(scheduling1,texto);
+        System.out.println(scheduling1.toString());
+        return scheduling1;
     }
+
 
     public Boolean validatyScheduleSave(Scheduling scheduling) {
         List<LocalDateTime> times =

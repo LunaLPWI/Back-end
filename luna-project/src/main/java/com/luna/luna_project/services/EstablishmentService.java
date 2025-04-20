@@ -53,11 +53,6 @@ public class EstablishmentService {
     public List<Establishment> getAllEstablishments(double lat, double lng) {
         return establishmentRepository.findEstablishmentsByLocationNative(lat, lng, 5.0);
     }
-
-
-
-
-
     @Transactional
     public void delete(Long id) {
         Optional<Establishment> establishmentOpt = establishmentRepository.findById(id);
@@ -95,9 +90,4 @@ public class EstablishmentService {
 
         return establishmentRepository.save(establishmentOpt.get());
     }
-
-
-
-
-
 }

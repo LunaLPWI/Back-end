@@ -11,6 +11,7 @@ import com.luna.luna_project.services.ClientService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,29 @@ public class ClientController {
 
 
     @Secured("ROLE_EMPLOYEE")
+    @PostMapping
+    public ResponseEntity<ClientResponseDTO> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
+        Client client = clientService.saveClient(clientMapper.clientRequestDTOtoClient(clientDTO));
+        return ResponseEntity.ok().body(clientMapper.clientToClientDTOResponse(client));
+    }
+
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/register-employee")
+    public ResponseEntity<ClientEmployeeResponse> registerEmployee(@RequestBody @Valid ClientEmployeeRequest dto) {
+        Client savedClient = clientService.registerEmployee(dto);
+
+        ClientEmployeeResponse response = ClientEmployeeResponse.builder()
+                .name(savedClient.getName())
+                .cpf(savedClient.getCpf())
+                .email(savedClient.getEmail())
+                .phoneNumber(savedClient.getPhoneNumber())
+                .birthDay(savedClient.getBirthDay())
+                .establishmentName(savedClient.getEstablishment().getName())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @GetMapping
     public ResponseEntity<List<ClientResponseDTO>> searchClients() {
         List<ClientResponseDTO> clients = clientService.searchClients().stream()
@@ -50,6 +74,23 @@ public class ClientController {
         return ResponseEntity.ok().body(employes);
     }
 
+    @GetMapping("/establishment/{id}/employees")
+    public ResponseEntity<List<ClientEmployeeResponse>> getEmployeesByEstablishment(@PathVariable Long id) {
+        List<Client> employees = clientService.getEmployeesByEstablishmentId(id);
+
+        List<ClientEmployeeResponse> response = employees.stream().map(client -> ClientEmployeeResponse.builder()
+                .name(client.getName())
+                .cpf(client.getCpf())
+                .email(client.getEmail())
+                .phoneNumber(client.getPhoneNumber())
+                .birthDay(client.getBirthDay())
+                .establishmentName(client.getEstablishment() != null ? client.getEstablishment().getName() : null)
+                .build()
+        ).toList();
+
+        return ResponseEntity.ok(response);
+    }
+
     @Secured("ROLE_EMPLOYEE")
     @GetMapping("/search-by-cpf")
     public ResponseEntity<ClientResponseDTO> searchClientByCpf(@RequestParam String cpf) {
@@ -57,11 +98,6 @@ public class ClientController {
         return ResponseEntity.ok().body(clientMapper.clientToClientDTOResponse(client));
     }
 
-    @PostMapping
-    public ResponseEntity<ClientResponseDTO> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
-        Client client = clientService.saveClient(clientMapper.clientRequestDTOtoClient(clientDTO));
-        return ResponseEntity.ok().body(clientMapper.clientToClientDTOResponse(client));
-    }
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/delete-by-cpf")
     public ResponseEntity<String> deleteClientByCpf(@RequestParam String cpf) {
