@@ -4,6 +4,7 @@ import com.luna.luna_project.enums.StatusScheduling;
 import com.luna.luna_project.models.Queue;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.repositories.SchedulingRepository;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,33 +24,15 @@ public class SchedulingService {
         this.schedulingRepository = schedulingRepository;
     }
 
+    @Autowired
+    QuartzSchedulerJob quartzScheduler;
+
     public Boolean existsById(Long id) {
         return schedulingRepository.existsById(id);
     }
 
-    public Set<LocalDateTime> listBusySchedules(Long clientId,
+    public Set<Scheduling> listBusySchedules(Long employeeId,Long clientId,
                                                 LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        List<Scheduling> schedulings = schedulingRepository.
-                findSchedulingByClient_IdAndStartDateTimeBetween(clientId, startDateTime, endDateTime);
-        Set<LocalDateTime> busySchedules = new HashSet<>();
-
-        for (Scheduling scheduling : schedulings) {
-            LocalDateTime start = scheduling.getStartDateTime();
-            LocalDateTime end = scheduling.calculateEndDate();
-            for (LocalDateTime time = start; time.isBefore(end); time = time.plusMinutes(30)) {
-                busySchedules.add(time);
-            }
-        }
-
-        if (busySchedules.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há ocupados horários neste intervalo");
-        }
-
-        return busySchedules;
-    }
-
-    public List<LocalDateTime> listAvailable(Long employeeId, Long clientId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        // Obtém os agendamentos do cliente e do funcionário dentro do período especificado
         List<Scheduling> schedulingsEmployee = schedulingRepository
                 .findSchedulingByEmployee_IdAndStartDateTimeBetween(employeeId, startDateTime, endDateTime);
 
@@ -61,27 +44,52 @@ public class SchedulingService {
         schedulings.addAll(agendamentosClient);
         schedulings.stream().sorted(Comparator.comparing(Scheduling::getStartDateTime));
 
+        return schedulings;
+    }
+
+    public Set<LocalDateTime> listAvailable(Long employeeId, Long clientId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        // Obtém os agendamentos do cliente e do funcionário dentro do período especificado
+
+        Set<Scheduling> schedulings = listBusySchedules(employeeId,clientId,startDateTime,endDateTime);
+        for (Scheduling scheduling : schedulings) {
+            System.out.println(scheduling);
+        }
         // Gera todos os horários possíveis dentro do período
-        List<LocalDateTime> availableHours = new ArrayList<>();
+        Set<LocalDateTime> availableHours = new LinkedHashSet<>();
         for (LocalDateTime time = startDateTime; !time.plusMinutes(30).isAfter(endDateTime); time = time.plusMinutes(30)) {
+            // Verifica se o horário "time" cai dentro de algum agendamento
+            LocalDateTime time1 = time;
+            for (Scheduling scheduling : schedulings) {
+                // Se "time" estiver dentro de um agendamento, ajusta "time" para o final do agendamento
+                if (time.isAfter(scheduling.getStartDateTime()) && time.isBefore(scheduling.calculateEndDate())) {
+                    time = scheduling.calculateEndDate();  // Ajusta o horário para o final do agendamento
+                    break;  // Não precisamos verificar os outros agendamentos, pois já ajustamos o horário
+                }
+            }
             availableHours.add(time);
+            time = time1;
         }
 
         System.out.println("Horários gerados:");
         for (LocalDateTime time : availableHours) {
             System.out.println(time);
         }
-
-        // Remover horários ocupados
-        for (Scheduling scheduling : schedulings) {
-            availableHours.removeIf(time ->
-                    (time.isBefore(scheduling.calculateEndDate()) && time.plusMinutes(45).isAfter(scheduling.getStartDateTime())) ||
-                            (time.isEqual(scheduling.getStartDateTime()) || time.isEqual(scheduling.calculateEndDate()))
-            );
+        if (schedulings.isEmpty()) {
+            availableHours.add(startDateTime);
+        }else{
+            for (Scheduling scheduling : schedulings) {
+                availableHours.removeIf(time ->
+                        time.isEqual(scheduling.getStartDateTime()) ||
+                                (time.isAfter(scheduling.getStartDateTime()) && time.isBefore(scheduling.calculateEndDate()))
+                );
+            }
         }
 
+        // Remover horários ocupados
+
+
         // Verifica se há horários disponíveis
-        if (availableHours.isEmpty()) {
+        if (availableHours.isEmpty() && !schedulings.isEmpty()) {
             System.out.println("Não há horários disponíveis!");
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Não há horários disponíveis entre " + startDateTime + " e " + endDateTime);
         }
@@ -108,23 +116,31 @@ public class SchedulingService {
         return schedulings;
     }
 
-    public Scheduling schedulingSave(Scheduling scheduling) {
+    public Scheduling schedulingSave(Scheduling scheduling) throws SchedulerException {
         scheduling.setId(null);
         queue.insert(scheduling);
         return registerSchedule();
     }
 
-    public Scheduling registerSchedule() {
+    public Scheduling registerSchedule() throws SchedulerException {
         Scheduling scheduling = queue.poll();
         if (!validatyScheduleSave(scheduling)) {
             throw new ResponseStatusException
                     (HttpStatus.CONFLICT, "Já existe agendamentos nesse horário");
         }
-        return schedulingRepository.save(scheduling);
+        Scheduling scheduling1 = schedulingRepository.save(scheduling);
+        String texto = "Olá, "+scheduling1.getClient().getName()+
+                "! Seu horário na"+scheduling1.getEmployee().getEstablishment().getName()+
+                "foi confirmado para o dia "+scheduling1.getStartDateTime()+" com" +
+                " "+scheduling1.getEmployee().getName()+ ". Te esperamos lá!.";
+//        quartzScheduler.agendarEnvio(scheduling1,texto);
+        System.out.println(scheduling1.toString());
+        return scheduling1;
     }
 
+
     public Boolean validatyScheduleSave(Scheduling scheduling) {
-        List<LocalDateTime> times =
+        Set<LocalDateTime> times =
                 listAvailable(scheduling.getEmployee().getId(),
                         scheduling.getClient().getId(), scheduling.getStartDateTime(),
                         scheduling.calculateEndDate());

@@ -1,7 +1,6 @@
 package com.luna.luna_project.services;
 
 import com.luna.luna_project.dtos.FrenquencyDTO;
-import com.luna.luna_project.enums.Task;
 import com.luna.luna_project.models.*;
 import com.luna.luna_project.repositories.PlanRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
@@ -48,7 +47,7 @@ public class FinanceService {
 
             double sumMontly =schedulingMounth.stream().
                     flatMap(Scheduling -> Scheduling.getItems().stream()).
-                    mapToDouble(Task::getValue).sum();
+                    mapToDouble(EmployeeTask::getValue).sum();
             revenueMontlyList.add(sumMontly);
             start = start.plusMonths(1);
             time = time.plusMonths(1);

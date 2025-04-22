@@ -7,6 +7,7 @@ import com.luna.luna_project.mapper.SchedulingMapper;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.services.SchedulingService;
 import jakarta.validation.Valid;
+import org.quartz.SchedulerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +36,14 @@ public class SchedulingController {
     }
     //salva um novo agendamento, tem verificação caso sobreponha horários de agendamentos ja existentes, volta 409 caso isso aconteça
     @PostMapping
-    public ResponseEntity<SchedulingResponseDTO> saveScheduling(@RequestBody @Valid SchedulingRequestDTO schedulingRequestDTO) {
+    public ResponseEntity<SchedulingResponseDTO> saveScheduling(@RequestBody @Valid SchedulingRequestDTO schedulingRequestDTO) throws SchedulerException {
 
         Scheduling scheduling = schedulingService.schedulingSave(schedulingMapper.RequestToEntity(schedulingRequestDTO));
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
     //devolve os horários válidos para um novo agendamento, passando horário de inicio fim e id do cliente e funcionários
     @GetMapping("/vacant-schedules")
-    public ResponseEntity<List<LocalDateTime>> getVacantSchedules(@RequestParam LocalDateTime start,
+    public ResponseEntity<Set<LocalDateTime>> getVacantSchedules(@RequestParam LocalDateTime start,
                                                                   @RequestParam LocalDateTime end,
                                                                   @RequestParam Long employeeId,
                                                                   @RequestParam Long clientId) {
@@ -58,12 +59,12 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingResponseDTOS);
     }
 
-    @GetMapping("/busy-schedules")
-    public ResponseEntity<Set<LocalDateTime>> getFullSchedules(@RequestParam LocalDateTime start,
-                                                               @RequestParam LocalDateTime end,
-                                                               @RequestParam Long clientId) {
-        return ResponseEntity.ok(schedulingService.listBusySchedules(clientId, start, end));
-    }
+//    @GetMapping("/busy-schedules")
+//    public ResponseEntity<Set<LocalDateTime>> getFullSchedules(@RequestParam LocalDateTime start,
+//                                                               @RequestParam LocalDateTime end,
+//                                                               @RequestParam Long clientId) {
+//        return ResponseEntity.ok(schedulingService.listBusySchedules(clientId, start, end));
+//    }
 
     @Secured("ROLE_EMPLOYEE")
     @GetMapping("/busy-schedules-admin")
