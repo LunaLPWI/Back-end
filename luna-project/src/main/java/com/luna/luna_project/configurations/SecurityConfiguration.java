@@ -71,7 +71,12 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/plans/create-plan**"),
             new AntPathRequestMatcher("/plans/create-plan-and-charge**"),
             new AntPathRequestMatcher("/plans/create-one-step**"),
-            new AntPathRequestMatcher("/clients/**")
+            new AntPathRequestMatcher("/clients/**"),
+            new AntPathRequestMatcher("/employee-tasks/{clientId}"),
+            new AntPathRequestMatcher( "/establishments/search"),
+            new AntPathRequestMatcher( "/establishments"),
+            new AntPathRequestMatcher( "/establishments/nearbyestablishments"),
+
     };
 
     @Bean

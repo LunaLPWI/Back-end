@@ -38,6 +38,8 @@ public class EstablishmentMapper {
         PlanDTO plandto = establichmentRequestDTO.getPlanDTO();
         planMapper.planDTOtoPlan(plandto);
         establishment.setCnpj(establichmentRequestDTO.getCnpj());
+        establishment.setCloseHour(establichmentRequestDTO.getCloseHour());
+        establishment.setOpenHour(establichmentRequestDTO.getOpenHour());
 
         return establishment;
     }
@@ -55,6 +57,8 @@ public class EstablishmentMapper {
         responseDTO.setName(establichment.getName());// Atribui o AddressDTO convertido
         responseDTO.setPlanDTO(planDTO);  // Atribui o PlanDTO convertido
         responseDTO.setCnpj(establichment.getCnpj());
+        responseDTO.setOpenHour(establichment.getOpenHour());
+        responseDTO.setCloseHour(establichment.getCloseHour());
 
         return responseDTO;
     }

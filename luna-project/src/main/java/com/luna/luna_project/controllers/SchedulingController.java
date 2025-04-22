@@ -43,7 +43,7 @@ public class SchedulingController {
     }
     //devolve os horários válidos para um novo agendamento, passando horário de inicio fim e id do cliente e funcionários
     @GetMapping("/vacant-schedules")
-    public ResponseEntity<List<LocalDateTime>> getVacantSchedules(@RequestParam LocalDateTime start,
+    public ResponseEntity<Set<LocalDateTime>> getVacantSchedules(@RequestParam LocalDateTime start,
                                                                   @RequestParam LocalDateTime end,
                                                                   @RequestParam Long employeeId,
                                                                   @RequestParam Long clientId) {

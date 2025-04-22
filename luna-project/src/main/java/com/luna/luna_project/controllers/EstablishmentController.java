@@ -40,8 +40,13 @@ public class EstablishmentController {
         this.establishmentService = establishmentService;
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Establishment>> searchByName(@RequestParam String name) {
+        List<Establishment> result = establishmentService.searchByName(name);
+        return ResponseEntity.ok(result);
+    }
+
     // Endpoint para salvar um estabelecimento
-    @Secured("ROLE_ADMIN")
     @PostMapping
     public ResponseEntity<EstablichmentResponseDTO> saveEstablishment(@Valid @RequestBody EstablichmentRequestDTO establishmentRequest) throws Exception {
         GeoCodeGoogle geoCodeGoogle = new GeoCodeGoogle();

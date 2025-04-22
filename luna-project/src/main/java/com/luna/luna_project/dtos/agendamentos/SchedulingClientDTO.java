@@ -1,6 +1,6 @@
 package com.luna.luna_project.dtos.agendamentos;
 
-import com.luna.luna_project.dtos.TaskDTO;
+import com.luna.luna_project.dtos.EmployeeTask.EmployeeTaskDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ import java.util.List;
 public class SchedulingClientDTO {
     Long id;
     private LocalDateTime startDateTime;
-    private List<TaskDTO> items;
+    private List<EmployeeTaskDTO> items;
     private String nameEmployee;
 
 }

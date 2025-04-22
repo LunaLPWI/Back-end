@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Time;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,5 +19,6 @@ public class EstablichmentResponseDTO {
     private AddressDTO addressDTO;
     private PlanDTO planDTO;
     private String cnpj;
-
+    private Time openHour;
+    private Time closeHour;
 }

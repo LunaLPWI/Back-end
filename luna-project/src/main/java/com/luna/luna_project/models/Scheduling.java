@@ -1,15 +1,11 @@
 package com.luna.luna_project.models;
 
 import com.luna.luna_project.enums.StatusScheduling;
-import com.luna.luna_project.enums.Task;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Getter
@@ -23,8 +19,13 @@ public class Scheduling {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime startDateTime;
-    @ElementCollection(targetClass = Task.class)
-    private List<Task> items;
+    @ManyToMany
+    @JoinTable(
+            name = "scheduling_employee_tasks",
+            joinColumns = @JoinColumn(name = "scheduling_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_task_id")
+    )
+    private List<EmployeeTask> items;
     @ManyToOne
     private Client client;
     @ManyToOne
@@ -63,21 +64,19 @@ public class Scheduling {
     }
 
 
-    public int calculateTotalDuration() {
-        if (items != null && !items.isEmpty()) {
-            return items.stream()
-                    .mapToInt(Task::getDuration)
-                    .sum();
-        }
-        return 0;
-    }
+
 
     public LocalDateTime calculateEndDate() {
-        if (startDateTime != null) {
-            int totalDuration = calculateTotalDuration();
-            return startDateTime.plusMinutes(totalDuration);
-        } else {
-            return null;
+        if (items == null || startDateTime == null) {
+            throw new IllegalStateException("Tasks ou data de início não podem ser nulos.");
         }
+
+        int totalDuration = items.stream()
+                .mapToInt(EmployeeTask::getDuration)
+                .sum();
+
+        return startDateTime.plusMinutes(totalDuration);
     }
+
+
 }

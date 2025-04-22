@@ -32,4 +32,6 @@ Boolean existsByName(String name);
             @Param("lng") double longitude,
             @Param("raio") double raio
     );
+
+    List<Establishment> findByNameContainingIgnoreCase(String name);
 }

@@ -29,7 +29,7 @@ public class ClientController {
     private ClientMapper clientMapper;
 
 
-    @Secured("ROLE_EMPLOYEE")
+
     @PostMapping
     public ResponseEntity<ClientResponseDTO> saveClient(@RequestBody @Valid ClientRequestDTO clientDTO) {
         Client client = clientService.saveClient(clientMapper.clientRequestDTOtoClient(clientDTO));
@@ -52,7 +52,7 @@ public class ClientController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
+    @Secured("ROLE_EMPLOYEE")
     @GetMapping
     public ResponseEntity<List<ClientResponseDTO>> searchClients() {
         List<ClientResponseDTO> clients = clientService.searchClients().stream()
@@ -79,6 +79,7 @@ public class ClientController {
         List<Client> employees = clientService.getEmployeesByEstablishmentId(id);
 
         List<ClientEmployeeResponse> response = employees.stream().map(client -> ClientEmployeeResponse.builder()
+                .id(client.getId())
                 .name(client.getName())
                 .cpf(client.getCpf())
                 .email(client.getEmail())

@@ -47,7 +47,7 @@ public class SchedulingService {
         return schedulings;
     }
 
-    public List<LocalDateTime> listAvailable(Long employeeId, Long clientId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public Set<LocalDateTime> listAvailable(Long employeeId, Long clientId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         // Obtém os agendamentos do cliente e do funcionário dentro do período especificado
 
         Set<Scheduling> schedulings = listBusySchedules(employeeId,clientId,startDateTime,endDateTime);
@@ -55,7 +55,7 @@ public class SchedulingService {
             System.out.println(scheduling);
         }
         // Gera todos os horários possíveis dentro do período
-        List<LocalDateTime> availableHours = new ArrayList<>();
+        Set<LocalDateTime> availableHours = new LinkedHashSet<>();
         for (LocalDateTime time = startDateTime; !time.plusMinutes(30).isAfter(endDateTime); time = time.plusMinutes(30)) {
             // Verifica se o horário "time" cai dentro de algum agendamento
             LocalDateTime time1 = time;
@@ -133,14 +133,14 @@ public class SchedulingService {
                 "! Seu horário na"+scheduling1.getEmployee().getEstablishment().getName()+
                 "foi confirmado para o dia "+scheduling1.getStartDateTime()+" com" +
                 " "+scheduling1.getEmployee().getName()+ ". Te esperamos lá!.";
-        quartzScheduler.agendarEnvio(scheduling1,texto);
+//        quartzScheduler.agendarEnvio(scheduling1,texto);
         System.out.println(scheduling1.toString());
         return scheduling1;
     }
 
 
     public Boolean validatyScheduleSave(Scheduling scheduling) {
-        List<LocalDateTime> times =
+        Set<LocalDateTime> times =
                 listAvailable(scheduling.getEmployee().getId(),
                         scheduling.getClient().getId(), scheduling.getStartDateTime(),
                         scheduling.calculateEndDate());

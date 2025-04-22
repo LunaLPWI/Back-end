@@ -63,6 +63,10 @@ public class EstablishmentService {
         }
     }
 
+    public List<Establishment> searchByName(String name) {
+        return establishmentRepository.findByNameContainingIgnoreCase(name);
+    }
+
     public Client registerEmployee(Long idEmployee, Long idEstablishment) {
         Optional<Client> clientOpt = clientRepository.findById(idEmployee);
         Optional<Establishment> establishmentOpt = establishmentRepository.findById(idEstablishment);

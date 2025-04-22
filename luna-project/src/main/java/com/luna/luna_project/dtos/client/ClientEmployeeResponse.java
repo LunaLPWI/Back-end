@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 
 public class ClientEmployeeResponse {
+        private Long id;
         private String name;
         private String cpf;
         private String email;
