@@ -76,6 +76,7 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher( "/establishments/search"),
             new AntPathRequestMatcher( "/establishments"),
             new AntPathRequestMatcher( "/establishments/nearbyestablishments"),
+            new AntPathRequestMatcher( "/schedules/vacant-schedules"),
 
     };
 
@@ -88,8 +89,8 @@ public class SecurityConfiguration {
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(URLS_PERMITIDAS).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/clients", "/clients/login", "/plans/create-plan-and-charge**").permitAll()
-                        .requestMatchers("/products", "/products/change-quantity").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/clients", "/clients/login", "/plans/create-plan-and-charge**", "/schedules/vacant-schedules").permitAll()
+                        .requestMatchers("/products", "/products/change-quantity", "/schedules/vacant-schedules").authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> handling

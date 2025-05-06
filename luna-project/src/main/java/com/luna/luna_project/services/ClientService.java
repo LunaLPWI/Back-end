@@ -198,13 +198,13 @@ public class ClientService {
 
 
     public ClientTokenDTO authenticate(ClientLoginDTO clientLoginDTO) {
-        Client client = searchClientByEmail(clientLoginDTO.getEmail());
-        if (client == null) {
+        Optional<Client> clientOptional = clientRepository.findByEmail(clientLoginDTO.getEmail());
+        if (clientOptional.isEmpty()) {
             throw new ResponseStatusException(404, "Email do usuário não cadastrado", null);
         }
 
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                clientLoginDTO.getEmail(), clientLoginDTO.getPassword(), client.getAuthorities());
+                clientLoginDTO.getEmail(), clientLoginDTO.getPassword(), clientOptional.get().getAuthorities());
 
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
@@ -212,7 +212,7 @@ public class ClientService {
 
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
-        return clientMapper.clientToClientDTO(client, token);
+        return clientMapper.clientToClientDTO(clientOptional.get(), token);
     }
 
 

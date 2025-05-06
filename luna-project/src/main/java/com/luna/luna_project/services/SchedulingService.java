@@ -116,6 +116,7 @@ public class SchedulingService {
         return schedulings;
     }
 
+
     public Scheduling schedulingSave(Scheduling scheduling) throws SchedulerException {
         scheduling.setId(null);
         queue.insert(scheduling);

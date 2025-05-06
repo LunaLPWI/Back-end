@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @Setter
 public class SchedulingRequestDTO {
-
     @NotNull
     private Long clientId;
     @NotNull

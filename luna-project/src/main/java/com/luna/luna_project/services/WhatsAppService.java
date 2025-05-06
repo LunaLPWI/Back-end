@@ -19,7 +19,7 @@ public class WhatsAppService {
 
     private static final String ACCOUNT_SID = "ACdab3efae1bd9cf71ddf83e269d99dcef";
     private static final String AUTH_TOKEN = "5b4e9500d8115aab2f5f35367c612e60";
-    private static final String FROM = "whatsapp:+14155238886";
+    private static final String FROM = "whatsapp:+18777804236";
 
     public void enviarMensagem(String texto, String numeroDestino) {
 

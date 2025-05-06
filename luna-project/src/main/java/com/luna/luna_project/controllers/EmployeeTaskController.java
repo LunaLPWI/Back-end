@@ -28,4 +28,5 @@ public class EmployeeTaskController {
     public ResponseEntity<List<EmployeeTaskDTO>> getTasks(@PathVariable Long clientId) {
         return ResponseEntity.ok(service.getTasksByEmployee(clientId));
     }
+
 }
