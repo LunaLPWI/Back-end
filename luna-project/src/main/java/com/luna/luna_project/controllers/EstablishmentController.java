@@ -3,10 +3,8 @@ package com.luna.luna_project.controllers;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.dtos.establishment.EstablichmentRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablichmentResponseDTO;
-import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.mapper.EstablishmentMapper;
-import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.services.EstablishmentService;
 import com.luna.luna_project.services.GeoCodeGoogle;
@@ -17,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,8 +28,7 @@ public class EstablishmentController {
     @Autowired
     private ClientMapper clientMapper;
 
-    @Autowired
-    private AddressMapper addressMapper;
+
 
 
     @Autowired
@@ -41,9 +37,16 @@ public class EstablishmentController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Establishment>> searchByName(@RequestParam String name) {
+    public ResponseEntity<List<EstablichmentResponseDTO>> searchByName(@RequestParam String name) {
         List<Establishment> result = establishmentService.searchByName(name);
-        return ResponseEntity.ok(result);
+        List<EstablichmentResponseDTO> establishmentList = result
+                .stream()
+                .map(establishment -> {
+                    EstablichmentResponseDTO responseDTO = establishmentMapper.establichmentToEstablshmentResponse(establishment);
+                    return responseDTO;
+                })
+                .toList();
+        return ResponseEntity.ok(establishmentList);
     }
 
     // Endpoint para salvar um estabelecimento
@@ -74,10 +77,10 @@ public class EstablishmentController {
         return new ResponseEntity<>(registeredClient, HttpStatus.OK);
     }
     @PostMapping("/nearbyestablishments")
-    public ResponseEntity<List<EstablichmentResponseDTO>> getNearbyEstablishments(@RequestParam double lat, @RequestParam double logn) {
+    public ResponseEntity<List<EstablichmentResponseDTO>> getNearbyEstablishments(@RequestParam double lat, @RequestParam double lgn) {
         GeoCodeGoogle geoCodeGoogle = new GeoCodeGoogle();
         List<EstablichmentResponseDTO> establishmentList = establishmentService
-                .getAllEstablishments(lat, logn)
+                .getAllEstablishments(lat, lgn)
                 .stream()
                 .map(establishment -> {
                     EstablichmentResponseDTO responseDTO = establishmentMapper.establichmentToEstablshmentResponse(establishment);

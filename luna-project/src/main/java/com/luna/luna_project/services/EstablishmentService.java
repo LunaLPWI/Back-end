@@ -23,9 +23,6 @@ public class EstablishmentService {
     private final EstablishmentRepository establishmentRepository;
 
     @Autowired
-    ClientService clientService;
-
-    @Autowired
     ClientRepository clientRepository;
 
     @Autowired

@@ -12,9 +12,11 @@ import java.util.List;
 @Getter
 @Setter
 public class SchedulingClientDTO {
-    Long id;
+    private Long id;
     private LocalDateTime startDateTime;
     private List<EmployeeTaskDTO> items;
     private String nameEmployee;
+    private String stablishmentName;
+    private String status;
 
 }

@@ -28,4 +28,6 @@ public class Establishment {
     private double lng;
     private Time openHour;
     private Time closeHour;
+    @ManyToOne
+    private Address address;
 }

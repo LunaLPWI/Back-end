@@ -21,4 +21,6 @@ public class EstablichmentResponseDTO {
     private String cnpj;
     private Time openHour;
     private Time closeHour;
+    private double lat;
+    private double lng;
 }

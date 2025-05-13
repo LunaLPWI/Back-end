@@ -1,16 +1,10 @@
 package com.luna.luna_project.mapper;
 
-import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.establishment.EstablichmentRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablichmentResponseDTO;
 import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Establishment;
-import com.luna.luna_project.models.Plan;
-import com.luna.luna_project.services.EstablishmentService;
-import com.luna.luna_project.services.GeoCodeGoogle;
-import com.luna.luna_project.services.OneStepService;
-import com.luna.luna_project.services.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 @Component
@@ -18,16 +12,8 @@ public class EstablishmentMapper {
 
     @Autowired
     AddressMapper addressMapper;
-
     @Autowired
     PlanMapper planMapper;
-    @Autowired
-    private PlanService planService;
-    @Autowired
-    private OneStepService oneStepService;
-
-
-
 
 
     public Establishment establichmentRequestToEstablishment(EstablichmentRequestDTO establichmentRequestDTO) {
@@ -40,6 +26,7 @@ public class EstablishmentMapper {
         establishment.setCnpj(establichmentRequestDTO.getCnpj());
         establishment.setCloseHour(establichmentRequestDTO.getCloseHour());
         establishment.setOpenHour(establichmentRequestDTO.getOpenHour());
+        establishment.setAddress(address);
 
         return establishment;
     }
@@ -59,6 +46,9 @@ public class EstablishmentMapper {
         responseDTO.setCnpj(establichment.getCnpj());
         responseDTO.setOpenHour(establichment.getOpenHour());
         responseDTO.setCloseHour(establichment.getCloseHour());
+        responseDTO.setLat(establichment.getLat());
+        responseDTO.setLng(establichment.getLng());
+        responseDTO.setAddressDTO(addressMapper.addressToAddressDTO(establichment.getAddress()));
 
         return responseDTO;
     }
