@@ -78,6 +78,7 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher( "/establishments/nearbyestablishments"),
             new AntPathRequestMatcher( "/schedules/vacant-schedules"),
 
+
     };
 
     @Bean

@@ -63,6 +63,7 @@ public class Scheduling {
         return statusScheduling;
     }
 
+
     public Double totalPrice() {
         if (items == null) {
             throw new IllegalStateException("Tasks ou data de início não podem ser nulos.");
@@ -74,6 +75,7 @@ public class Scheduling {
 
         return totalDuration;
     }
+
 
 
     public LocalDateTime calculateEndDate() {

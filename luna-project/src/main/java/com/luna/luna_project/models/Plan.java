@@ -14,7 +14,7 @@ public class Plan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @Column(name = "intevalDays")
+    @Column(name = "intervalDays")
     private Integer interval;
     private Integer repeats;
     @Column(name = "created_at")
@@ -22,5 +22,4 @@ public class Plan {
     private String plan_id;
     @ManyToOne
     private OneStepCardSubscription oneStepPlan;
-    private Long idEstablishment;
 }

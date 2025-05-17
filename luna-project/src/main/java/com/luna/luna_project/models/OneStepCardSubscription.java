@@ -30,4 +30,7 @@ public class OneStepCardSubscription {
 
     private String status;
 
+    @Column(nullable = false)
+    private Long idEstablish;
+
 }

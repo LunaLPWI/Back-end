@@ -27,10 +27,8 @@ public class PlanController {
     private OneStepService oneStepService;
 
     @PostMapping("/create-plan-and-charge")
-    public ResponseEntity<OneStepLinkDTO> createPlanAndCharge(@RequestBody OneStepDTO request,
-                                                              @RequestParam String paymentToken,
-                                                              @RequestParam String cpf) {
-        OneStepDTO oneStepSaved = oneStepService.saveOneStep(request, paymentToken, cpf);
+    public ResponseEntity<OneStepLinkDTO> createPlanAndCharge(@RequestBody OneStepDTO request, String cnpj) {
+        OneStepDTO oneStepSaved = oneStepService.saveOneStep(request, cnpj);
         OneStepLinkDTO oneSaved = oneStepService.saveOneStepLink(oneStepSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(oneSaved);
@@ -42,10 +40,10 @@ public class PlanController {
         return ResponseEntity.ok().body(count);
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> cancelPlan(@RequestBody CpfDTO cpfDTO) {
-        return ResponseEntity.ok().body(planService.cancelPlan(cpfDTO));
-    }
+//    @DeleteMapping
+//    public ResponseEntity<String> cancelPlan(@RequestBody CpfDTO cpfDTO) {
+//        return ResponseEntity.ok().body(planService.cancelPlan(cpfDTO));
+//    }
 
     @GetMapping("/count-by-plans")
     public ResponseEntity<Long> countPlans(){

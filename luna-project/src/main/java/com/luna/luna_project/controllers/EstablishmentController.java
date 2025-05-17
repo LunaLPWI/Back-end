@@ -1,19 +1,28 @@
 package com.luna.luna_project.controllers;
 
+
+import com.luna.luna_project.dtos.OneStepDTO;
+import com.luna.luna_project.dtos.OneStepLinkDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
-import com.luna.luna_project.dtos.establishment.EstablichmentRequestDTO;
-import com.luna.luna_project.dtos.establishment.EstablichmentResponseDTO;
+import com.luna.luna_project.dtos.establishment.EstablishPlanRequestDTO;
+import com.luna.luna_project.dtos.establishment.EstablishmentRequestDTO;
+import com.luna.luna_project.dtos.establishment.EstablishmentResponseDTO;
+import com.luna.luna_project.mapper.AddressMapper;
+
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.mapper.EstablishmentMapper;
 import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.services.EstablishmentService;
 import com.luna.luna_project.services.GeoCodeGoogle;
+import com.luna.luna_project.services.OneStepService;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,11 +33,14 @@ public class EstablishmentController {
 
     private final EstablishmentService establishmentService;
     @Autowired
-    private EstablishmentMapper establishmentMapper;
-    @Autowired
+
     private ClientMapper clientMapper;
-
-
+    @Autowired
+    private AddressMapper addressMapper;
+    @Autowired
+    private OneStepService oneStepService;
+    @Autowired
+    private EstablishmentMapper establishmentMapper;
 
 
     @Autowired
@@ -37,28 +49,40 @@ public class EstablishmentController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<EstablichmentResponseDTO>> searchByName(@RequestParam String name) {
+    public ResponseEntity<List<Establishment>> searchByName(@RequestParam String name) {
         List<Establishment> result = establishmentService.searchByName(name);
-        List<EstablichmentResponseDTO> establishmentList = result
-                .stream()
-                .map(establishment -> {
-                    EstablichmentResponseDTO responseDTO = establishmentMapper.establichmentToEstablshmentResponse(establishment);
-                    return responseDTO;
-                })
-                .toList();
-        return ResponseEntity.ok(establishmentList);
+        return ResponseEntity.ok(result);
     }
 
     // Endpoint para salvar um estabelecimento
     @PostMapping
-    public ResponseEntity<EstablichmentResponseDTO> saveEstablishment(@Valid @RequestBody EstablichmentRequestDTO establishmentRequest) throws Exception {
+    public ResponseEntity<EstablishmentResponseDTO> saveEstablishment(@RequestBody EstablishmentRequestDTO establishmentRequest) throws Exception {
         GeoCodeGoogle geoCodeGoogle = new GeoCodeGoogle();
 
-        Establishment savedEstablishment = establishmentService.saveEstablishment(establishmentMapper.establichmentRequestToEstablishment(establishmentRequest), establishmentRequest.getAddressDTO());
-        EstablichmentResponseDTO establishmentResponseDTO = establishmentMapper.establichmentToEstablshmentResponse(savedEstablishment);
+        Establishment savedEstablishment = establishmentService.saveEstablishment(
+                establishmentMapper.establishmentRequestToEstablishment(establishmentRequest),
+                establishmentRequest.getAddressDTO()
+        );
+
+        if (savedEstablishment == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao salvar estabelecimento.");
+        }
+        EstablishmentResponseDTO establishmentResponseDTO = establishmentMapper.establishmentToEstablshmentResponse(savedEstablishment);
+
         establishmentResponseDTO.setAddressDTO(geoCodeGoogle.getEnderecoFromCoordenadas(savedEstablishment.getLat(), savedEstablishment.getLng()));
 
         return new ResponseEntity<>(establishmentResponseDTO, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/plan-for-establishment")
+    public ResponseEntity<EstablishmentResponseDTO> savePlanEstablish(@RequestBody EstablishPlanRequestDTO establishmentRequest){
+        OneStepDTO oneStepSaved = oneStepService.saveOneStep(establishmentRequest.getOneStepDTO(), establishmentRequest.getCnpj());
+        oneStepService.saveOneStepLink(oneStepSaved);
+
+        EstablishmentResponseDTO putEstablishPlan = establishmentService.putEstablishPlan(establishmentRequest,  oneStepSaved.getPlan());
+
+
+        return new ResponseEntity<>(putEstablishPlan, HttpStatus.CREATED);
     }
 
     // Endpoint para excluir um estabelecimento
@@ -76,6 +100,7 @@ public class EstablishmentController {
         ClientResponseDTO registeredClient = clientMapper.clientToClientDTOResponse(establishmentService.registerEmployee(idEmployee, idEstablishment));
         return new ResponseEntity<>(registeredClient, HttpStatus.OK);
     }
+
     @PostMapping("/nearbyestablishments")
     public ResponseEntity<List<EstablichmentResponseDTO>> getNearbyEstablishments(@RequestParam double lat, @RequestParam double lgn) {
         GeoCodeGoogle geoCodeGoogle = new GeoCodeGoogle();

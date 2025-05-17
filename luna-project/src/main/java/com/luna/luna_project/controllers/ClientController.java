@@ -1,10 +1,8 @@
 package com.luna.luna_project.controllers;
 
-import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
 import com.luna.luna_project.exceptions.ValidationException;
-import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.services.ClientService;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -52,6 +49,7 @@ public class ClientController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
     @Secured("ROLE_EMPLOYEE")
     @GetMapping
     public ResponseEntity<List<ClientResponseDTO>> searchClients() {
@@ -169,4 +167,20 @@ public class ClientController {
 //    public ResponseEntity<PlanDTO> searchByPlanClient(@RequestParam String cpf){
 //        return ResponseEntity.ok().body(clientService.searchByPlanClient(cpf));
 //    }
+
+
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/update-favorite-by-client/{id}")
+    public ResponseEntity<String> updateFavoriteByClient(@RequestBody ClientWithEstablishmentDTO clientRequest, @PathVariable Long id){
+        try {
+            Client client = clientService.updateFavorite(clientRequest, id);
+            if (client == null){
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok().body("Campo favorito em estabelicemento foi atualizado.");
+        }catch (ValidationException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

@@ -17,15 +17,15 @@ public class ChargeService {
     @Autowired
     private SubscriptionMapper subscriptionMapper;
 
-    public void saveCharge(@Valid OneStepLink request, Long idStablishment) {
+
+    public void saveCharge(@Valid OneStepLink request) {
+
 
         Subscription subscription = new Subscription();
 
         subscription.setSubscriptionId(request.getSubscription_id().toString());
         subscription.setCreated_at(request.getCreated_at());
         subscription.setStatus(request.getStatus());
-        subscription.setIdEstablishment(idStablishment);
-
         subscriptionRepository.save(subscription);
     }
 

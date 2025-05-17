@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackages = "com.luna.luna_project.repositories")
 public class LunaProjectApplication {
 
 	public static void main(String[] args) {
