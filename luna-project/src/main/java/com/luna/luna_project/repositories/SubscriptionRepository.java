@@ -8,5 +8,14 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
+
+
+
+
+    @Query("SELECT s.subscriptionId FROM Subscription s WHERE s.idEstablishment = :establishmentId")
+    Optional<String> findSubscriptionIdByIdEstablishment(Long establishmentId);
+    void deleteBySubscriptionId(String subscriptionId);
+
+
 }
 

@@ -46,9 +46,11 @@ public class OneStepService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Estabelecimento com CNPJ " + cnpj + " não encontrado.");
         }
 
+
         PlanDTO planSaved = planService.savePlan(request);
 
         if (planSaved == null) {
+
             throw new ResponseStatusException(HttpStatus.CONFLICT, "O cliente já tem um plano.");
         }
 
@@ -57,7 +59,9 @@ public class OneStepService {
         OneStepDTO oneStepMapp = new OneStepDTO();
         oneStepMapp.setPlan(planSaved);
         oneStepMapp.setChargeRequest(chargeRequestDTO);
+
         oneStepMapp.setIdEstablish(idEstablish);
+
         OneStepCardSubscription oneConvert = oneStepCardMapper.oneStepDTOtoOneStep(oneStepMapp);
 
 
@@ -68,13 +72,17 @@ public class OneStepService {
 
 
 
+
+
     public OneStepLinkDTO saveOneStepLink(@Valid OneStepDTO request){
         OneStepLink oneStep = PlanEFI.createOneStepLink(request);
 
         OneStepLinkDTO oneStepMapp = oneStepLinkMapper.oneSetToOneStepDTO(oneStep);
         OneStepLink oneConvert = oneStepLinkMapper.oneStepDTOtoOneStep(oneStepMapp);
 
+
         chargeService.saveCharge(oneStep);
+
         OneStepLink saveOneStep = oneStepLinkRepository.save(oneConvert);
 
         return oneStepLinkMapper.oneSetToOneStepDTO(saveOneStep);

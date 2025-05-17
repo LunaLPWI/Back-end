@@ -34,7 +34,6 @@ public class ClientRequestDTO {
     private LocalDate birthDay;
     private Set<String> roles;
 
-
 }
 
 

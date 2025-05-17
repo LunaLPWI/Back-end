@@ -29,4 +29,7 @@ public class Establishment {
     private Time openHour;
     private Time closeHour;
     private Boolean favorite;
+    @ManyToOne
+    private Address address;
+
 }

@@ -1,7 +1,11 @@
 package com.luna.luna_project.dtos;
 
 import com.luna.luna_project.enums.Plans;
+
 import lombok.*;
+import com.luna.luna_project.models.Establishment;
+import lombok.Data;
+
 
 import java.time.LocalDateTime;
 
@@ -20,4 +24,5 @@ public class OneStepDTO {
     private PlanDTO plan;
     private String status;
     private Long idEstablish;
+
 }

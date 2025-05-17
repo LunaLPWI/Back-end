@@ -64,6 +64,18 @@ public class Scheduling {
     }
 
 
+    public Double totalPrice() {
+        if (items == null) {
+            throw new IllegalStateException("Tasks ou data de início não podem ser nulos.");
+        }
+
+        Double totalDuration = items.stream()
+                .mapToDouble(EmployeeTask::getValue)
+                .sum();
+
+        return totalDuration;
+    }
+
 
 
     public LocalDateTime calculateEndDate() {

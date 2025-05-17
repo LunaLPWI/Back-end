@@ -25,6 +25,9 @@ public class Subscription {
     private String created_at;
 
     private String status;
+
+
+
 }
 
 

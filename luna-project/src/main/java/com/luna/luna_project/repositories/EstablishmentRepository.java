@@ -18,6 +18,12 @@ public interface EstablishmentRepository extends JpaRepository<Establishment, Lo
     @Query("SELECT e.id FROM Establishment e WHERE e.cnpj = :cnpj")
     Long findIdByCnpj(@Param("cnpj") String cnpj);
 
+    Boolean existsByName(String name);
+
+
+    boolean existsByCnpj(String cnpj);
+
+
     @Query(value = """
     SELECT e.*, 
            (6371 * ACOS(

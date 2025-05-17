@@ -31,6 +31,7 @@ public class PlanService {
 
 
 
+
     public PlanDTO savePlan(OneStepDTO request) {
         PlanDTO planDTO = request.getPlan();
 
@@ -38,6 +39,7 @@ public class PlanService {
         if (planDTOSaved == null) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
 
         Plan plan = planRepository.save(planDTOSaved);
 
@@ -47,6 +49,7 @@ public class PlanService {
     public Long searchClientsByPlan(String name) {
         return planRepository.countByName(name);
     }
+
 
 //    @Transactional
 //    public String cancelPlan(CpfDTO cpfDto) {
@@ -63,6 +66,7 @@ public class PlanService {
 //
 //        return cancelSu;
 //    }
+
 
 
     public Long countPlan() {

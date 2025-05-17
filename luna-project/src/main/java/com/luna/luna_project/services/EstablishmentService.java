@@ -1,6 +1,7 @@
 package com.luna.luna_project.services;
 
 import com.luna.luna_project.dtos.AddressDTO;
+
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.establishment.EstablishPlanRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablishmentRequestDTO;
@@ -10,6 +11,7 @@ import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.AddressCoord;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.models.Establishment;
+
 import com.luna.luna_project.repositories.ClientRepository;
 import com.luna.luna_project.repositories.EstablishmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,7 @@ public class EstablishmentService {
     @Autowired
     private EstablishmentMapper establishmentMapper;
 
+
     public EstablishmentService(EstablishmentRepository establishmentRepository) {
         this.establishmentRepository = establishmentRepository;
     }
@@ -57,6 +60,7 @@ public class EstablishmentService {
         AddressCoord addressCoord = geoCodeGoogle.getCoordenadas(address.formatAddress());
         establishment.setLat(addressCoord.getLat());
         establishment.setLng(addressCoord.getLng());
+
         establishment.setFavorite(false);
 
         return establishmentRepository.save(establishment);
@@ -76,6 +80,7 @@ public class EstablishmentService {
 
         return establishmentMapper.establishmentToEstablshmentResponse(establishmentMapp);
     }
+
 
     public List<Establishment> getAllEstablishments(double lat, double lng) {
         return establishmentRepository.findEstablishmentsByLocationNative(lat, lng, 5.0);

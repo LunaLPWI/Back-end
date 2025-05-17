@@ -3,10 +3,12 @@ package com.luna.luna_project.services;
 import com.luna.luna_project.configurations.jwt.GerenciadorTokenJwt;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
+import com.luna.luna_project.mapper.EstablishmentMapper;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.models.Establishment;
+
 import com.luna.luna_project.repositories.ClientRepository;
 import com.luna.luna_project.repositories.EstablishmentRepository;
 import jakarta.validation.ValidationException;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+
 
 @Service
 public class ClientService {
@@ -250,6 +253,7 @@ public class ClientService {
 //        return planMapper.planToPlanDTO(plan);
 //    }
 
+
     public Client updateFavorite(ClientWithEstablishmentDTO client, Long id){
         Client clientExist = clientRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "não há cliente com esse id" + client.getId()));
@@ -258,6 +262,7 @@ public class ClientService {
 
         return clientRepository.save(clientExist);
     }
+
 
 
 }

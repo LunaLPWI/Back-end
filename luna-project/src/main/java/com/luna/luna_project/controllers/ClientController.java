@@ -168,6 +168,7 @@ public class ClientController {
 //        return ResponseEntity.ok().body(clientService.searchByPlanClient(cpf));
 //    }
 
+
     @Secured("ROLE_ADMIN")
     @PutMapping("/update-favorite-by-client/{id}")
     public ResponseEntity<String> updateFavoriteByClient(@RequestBody ClientWithEstablishmentDTO clientRequest, @PathVariable Long id){

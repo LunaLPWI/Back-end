@@ -1,5 +1,6 @@
 package com.luna.luna_project.mapper;
 
+
 import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.establishment.EstablishPlanRequestDTO;
@@ -9,6 +10,7 @@ import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.services.OneStepService;
 import com.luna.luna_project.services.PlanService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 @Component
@@ -16,6 +18,7 @@ public class EstablishmentMapper {
 
     @Autowired
     AddressMapper addressMapper;
+
 
     @Autowired
     OneStepCardMapper oneStepCardMapper;
@@ -50,10 +53,13 @@ public class EstablishmentMapper {
         establishment.setCloseHour(establishmentRequestDTO.getCloseHour());
         establishment.setOpenHour(establishmentRequestDTO.getOpenHour());
 
+
         return establishment;
     }
 
+
     public EstablishmentResponseDTO establishmentToEstablshmentResponse(Establishment establichment){
+
         // Criação do AddressDTO se presente
 
 
@@ -61,12 +67,14 @@ public class EstablishmentMapper {
         PlanDTO planDTO = planMapper.planToPlanDTO(establichment.getPlan());
 
         // Agora cria e retorna o EstablichmentResponseDTO
+
         EstablishmentResponseDTO responseDTO = new EstablishmentResponseDTO();
         responseDTO.setId(establichment.getId());
         responseDTO.setName(establichment.getName());
         responseDTO.setCnpj(establichment.getCnpj());
         responseDTO.setOpenHour(establichment.getOpenHour());
         responseDTO.setCloseHour(establichment.getCloseHour());
+
 
         return responseDTO;
     }
