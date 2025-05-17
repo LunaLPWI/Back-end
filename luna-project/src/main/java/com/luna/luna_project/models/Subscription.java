@@ -25,9 +25,6 @@ public class Subscription {
     private String created_at;
 
     private String status;
-
-    @Column(name = "id_establishment")
-    private Long idEstablishment;
 }
 
 

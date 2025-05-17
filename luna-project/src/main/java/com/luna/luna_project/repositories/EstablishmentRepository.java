@@ -11,10 +11,12 @@ import java.util.Optional;
 
 public interface EstablishmentRepository extends JpaRepository<Establishment, Long> {
 
-Boolean existsByName(String name);
-
-
     boolean existsByCnpj(String cnpj);
+
+    Optional<Establishment> findByCnpj(String cnpj);
+
+    @Query("SELECT e.id FROM Establishment e WHERE e.cnpj = :cnpj")
+    Long findIdByCnpj(@Param("cnpj") String cnpj);
 
     @Query(value = """
     SELECT e.*, 

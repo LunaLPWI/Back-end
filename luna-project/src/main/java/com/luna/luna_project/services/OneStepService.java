@@ -8,8 +8,10 @@ import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
 import com.luna.luna_project.mapper.OneStepCardMapper;
 import com.luna.luna_project.mapper.OneStepLinkMapper;
 import com.luna.luna_project.models.*;
+import com.luna.luna_project.repositories.EstablishmentRepository;
 import com.luna.luna_project.repositories.OneStepCardRepository;
 import com.luna.luna_project.repositories.OneStepLinkRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,40 +35,46 @@ public class OneStepService {
     private OneStepLinkMapper oneStepLinkMapper;
     @Autowired
     private OneStepLinkRepository oneStepLinkRepository;
+    @Autowired
+    private EstablishmentRepository establishmentRepository;
 
-    public OneStepDTO saveOneStep(@Valid OneStepDTO request, String paymentToken, String cpf) {
-        Client client = clientService.searchClientByCpf(cpf);
-        Establishment establishment = client.getEstablishment();
+    @Transactional
+    public OneStepDTO saveOneStep(@Valid OneStepDTO request, String cnpj) {
+        Long idEstablish = establishmentRepository.findIdByCnpj(cnpj);
 
+        if (idEstablish == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Estabelecimento com CNPJ " + cnpj + " não encontrado.");
+        }
 
-        PlanDTO planSaved = planService.savePlan(request, establishment);
-        if (planSaved == null){
+        PlanDTO planSaved = planService.savePlan(request);
+
+        if (planSaved == null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "O cliente já tem um plano.");
         }
+
         Plans chargeRequestDTO = request.getChargeRequest();
 
         OneStepDTO oneStepMapp = new OneStepDTO();
-
         oneStepMapp.setPlan(planSaved);
         oneStepMapp.setChargeRequest(chargeRequestDTO);
-        oneStepMapp.setPlan(planSaved);
-        oneStepMapp.setIdEstablishment(client.getId());
+        oneStepMapp.setIdEstablish(idEstablish);
         OneStepCardSubscription oneConvert = oneStepCardMapper.oneStepDTOtoOneStep(oneStepMapp);
+
+
         oneStepCardRepository.save(oneConvert);
 
         return oneStepMapp;
     }
 
 
-    public OneStepLinkDTO saveOneStepLink(@Valid OneStepDTO request){
-        Long idEstablishment = request.getIdEstablishment();
 
+    public OneStepLinkDTO saveOneStepLink(@Valid OneStepDTO request){
         OneStepLink oneStep = PlanEFI.createOneStepLink(request);
 
         OneStepLinkDTO oneStepMapp = oneStepLinkMapper.oneSetToOneStepDTO(oneStep);
         OneStepLink oneConvert = oneStepLinkMapper.oneStepDTOtoOneStep(oneStepMapp);
 
-        chargeService.saveCharge(oneStep, idEstablishment);
+        chargeService.saveCharge(oneStep);
         OneStepLink saveOneStep = oneStepLinkRepository.save(oneConvert);
 
         return oneStepLinkMapper.oneSetToOneStepDTO(saveOneStep);

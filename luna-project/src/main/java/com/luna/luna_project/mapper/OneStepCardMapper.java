@@ -5,6 +5,7 @@ import com.luna.luna_project.models.Charge;
 import com.luna.luna_project.models.OneStepCardSubscription;
 import com.luna.luna_project.models.Plan;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDate;
@@ -20,6 +21,8 @@ public interface OneStepCardMapper {
 
     OneStepDTO oneSetToOneStepDTO(OneStepCardSubscription oneStepRequestDTO);
 
+
+    @Mapping(source = "idEstablish", target = "idEstablish")
     OneStepCardSubscription oneStepDTOtoOneStep(OneStepDTO oneStepDTO);
 
     default OneStepCardSubscription mapToOneStepCardSub(Map<String, Object> data) {

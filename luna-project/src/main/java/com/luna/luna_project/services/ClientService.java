@@ -1,23 +1,17 @@
 package com.luna.luna_project.services;
 
 import com.luna.luna_project.configurations.jwt.GerenciadorTokenJwt;
-import com.luna.luna_project.dtos.AddressDTO;
-import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
-import com.luna.luna_project.mapper.EstablishmentMapper;
 import com.luna.luna_project.mapper.PlanMapper;
-import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.models.Establishment;
-import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.repositories.ClientRepository;
 import com.luna.luna_project.repositories.EstablishmentRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
@@ -56,7 +49,7 @@ public class ClientService {
         if (clientRepository.existsByEmail(client.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Email já cadastrado");
         }
-//        Address address = viaCepService.saveAddress(addressDTO);
+
         String encryptedPassword = passwordEncoder.encode(client.getPassword());
         client.setPassword(encryptedPassword);
         return clientRepository.save(client);
@@ -256,6 +249,16 @@ public class ClientService {
 //
 //        return planMapper.planToPlanDTO(plan);
 //    }
+
+    public Client updateFavorite(ClientWithEstablishmentDTO client, Long id){
+        Client clientExist = clientRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "não há cliente com esse id" + client.getId()));
+
+        clientExist.setEstablishment(clientMapper.clientWithEstabDTOtoClient(client).getEstablishment());
+
+        return clientRepository.save(clientExist);
+    }
+
 
 }
 

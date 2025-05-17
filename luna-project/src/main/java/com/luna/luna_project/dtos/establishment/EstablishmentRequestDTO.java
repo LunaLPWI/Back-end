@@ -1,7 +1,7 @@
 package com.luna.luna_project.dtos.establishment;
 
 import com.luna.luna_project.dtos.AddressDTO;
-import com.luna.luna_project.dtos.PlanDTO;
+import com.luna.luna_project.dtos.OneStepDTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,14 +14,15 @@ import java.sql.Time;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EstablichmentRequestDTO {
+public class EstablishmentRequestDTO {
     @NotBlank
     private String name;
     private AddressDTO addressDTO;
-    private PlanDTO planDTO;
+    private OneStepDTO oneStepDTO;
     @NotBlank
     private String cnpj;
     private Time openHour;
     private Time closeHour;
+    private Boolean favorite;
 
 }

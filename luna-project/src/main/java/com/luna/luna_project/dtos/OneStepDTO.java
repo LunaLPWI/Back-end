@@ -1,12 +1,15 @@
 package com.luna.luna_project.dtos;
 
 import com.luna.luna_project.enums.Plans;
-import com.luna.luna_project.models.Establishment;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class OneStepDTO {
     private Long id;
     private String subscription_id;
@@ -16,5 +19,5 @@ public class OneStepDTO {
     private LocalDateTime first_execution;
     private PlanDTO plan;
     private String status;
-    private Long idEstablishment;
+    private Long idEstablish;
 }

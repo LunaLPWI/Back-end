@@ -73,10 +73,6 @@ public class SecurityConfiguration {
             new AntPathRequestMatcher("/plans/create-one-step**"),
             new AntPathRequestMatcher("/clients/**"),
             new AntPathRequestMatcher("/employee-tasks/{clientId}"),
-            new AntPathRequestMatcher( "/establishments/search"),
-            new AntPathRequestMatcher( "/establishments"),
-            new AntPathRequestMatcher( "/establishments/nearbyestablishments"),
-            new AntPathRequestMatcher( "/schedules/vacant-schedules"),
 
     };
 

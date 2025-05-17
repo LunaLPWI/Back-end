@@ -31,24 +31,15 @@ public class PlanService {
 
 
 
-    public PlanDTO savePlan(OneStepDTO request, Establishment establishment) {
+    public PlanDTO savePlan(OneStepDTO request) {
         PlanDTO planDTO = request.getPlan();
 
-        Boolean planBol = planRepository.existsByIdEstablishment(establishment.getId());
-
-        if (planBol){
-            return null;
-        }
-
-        Plan planDTOSaved = PlanEFI.createPlan(planDTO, request.getChargeRequest());
+        Plan planDTOSaved = PlanEFI.createPlan(request.getChargeRequest());
         if (planDTOSaved == null) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        planDTOSaved.setIdEstablishment(establishment.getId());
-
         Plan plan = planRepository.save(planDTOSaved);
-        establishment.setPlan(plan);
 
         return planMapper.planToPlanDTO(plan);
     }
@@ -57,23 +48,21 @@ public class PlanService {
         return planRepository.countByName(name);
     }
 
-    @Transactional
-    public String cancelPlan(CpfDTO cpfDto) {
-        Client client = clientService.searchClientByCpf(cpfDto.getCpf());
-        Establishment establishment = client.getEstablishment();
-
-        String subscriptionId = subscriptionRepository.findSubscriptionIdByIdEstablishment(establishment.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há nenhum cliente com esse id com plano"));
-
-        String cancelSu = PlanEFI.cancelSubscription(subscriptionId);
-
-        establishment.setPlan(null);
-
-        subscriptionRepository.deleteBySubscriptionId(subscriptionId);
-        planRepository.deleteByIdEstablishment(establishment.getId());
-
-        return cancelSu;
-    }
+//    @Transactional
+//    public String cancelPlan(CpfDTO cpfDto) {
+//        Client client = clientService.searchClientByCpf(cpfDto.getCpf());
+//
+//        String subscriptionId = subscriptionRepository.findById(client.get())
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há nenhum cliente com esse id com plano"));
+//
+//        String cancelSu = PlanEFI.cancelSubscription(subscriptionId);
+//
+//        establishment.setPlan(null);
+//
+//        subscriptionRepository.deleteBySubscriptionId(subscriptionId);
+//
+//        return cancelSu;
+//    }
 
 
     public Long countPlan() {

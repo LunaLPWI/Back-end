@@ -28,7 +28,7 @@ public class PlanEFI {
 
 
 
-    public static Plan createPlan(PlanDTO planDTO, Plans plans) {
+    public static Plan createPlan(Plans plans) {
         Credentials credentials = new Credentials();
 
         HashMap<String, Object> options = new HashMap<>();

@@ -1,14 +1,12 @@
 package com.luna.luna_project.mapper;
 
-import com.luna.luna_project.dtos.AddressDTO;
+import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.PlanDTO;
-import com.luna.luna_project.dtos.establishment.EstablichmentRequestDTO;
-import com.luna.luna_project.dtos.establishment.EstablichmentResponseDTO;
+import com.luna.luna_project.dtos.establishment.EstablishPlanRequestDTO;
+import com.luna.luna_project.dtos.establishment.EstablishmentRequestDTO;
+import com.luna.luna_project.dtos.establishment.EstablishmentResponseDTO;
 import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Establishment;
-import com.luna.luna_project.models.Plan;
-import com.luna.luna_project.services.EstablishmentService;
-import com.luna.luna_project.services.GeoCodeGoogle;
 import com.luna.luna_project.services.OneStepService;
 import com.luna.luna_project.services.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,8 @@ public class EstablishmentMapper {
     AddressMapper addressMapper;
 
     @Autowired
+    OneStepCardMapper oneStepCardMapper;
+    @Autowired
     PlanMapper planMapper;
     @Autowired
     private PlanService planService;
@@ -29,22 +29,31 @@ public class EstablishmentMapper {
 
 
 
-
-    public Establishment establichmentRequestToEstablishment(EstablichmentRequestDTO establichmentRequestDTO) {
-        // Criação da instância de Address se presente
-        Address address = addressMapper.addressDTOtoAddress(establichmentRequestDTO.getAddressDTO());
+    public Establishment establichmentRequestToEstablishmentPlan(EstablishPlanRequestDTO establishPlanRequestDTO) {
         Establishment establishment = new Establishment();
-        establishment.setName(establichmentRequestDTO.getName());
-        PlanDTO plandto = establichmentRequestDTO.getPlanDTO();
-        planMapper.planDTOtoPlan(plandto);
-        establishment.setCnpj(establichmentRequestDTO.getCnpj());
-        establishment.setCloseHour(establichmentRequestDTO.getCloseHour());
-        establishment.setOpenHour(establichmentRequestDTO.getOpenHour());
+        OneStepDTO oneStepDTO = establishPlanRequestDTO.getOneStepDTO();
+        oneStepCardMapper.oneStepDTOtoOneStep(oneStepDTO);
+        establishment.setCnpj(establishPlanRequestDTO.getCnpj());
 
         return establishment;
     }
 
-    public EstablichmentResponseDTO establichmentToEstablshmentResponse(Establishment establichment){
+
+    public Establishment establishmentRequestToEstablishment(EstablishmentRequestDTO establishmentRequestDTO) {
+        // Criação da instância de Address se presente
+        Address address = addressMapper.addressDTOtoAddress(establishmentRequestDTO.getAddressDTO());
+        Establishment establishment = new Establishment();
+        establishment.setName(establishmentRequestDTO.getName());
+        OneStepDTO oneStepDTO = establishmentRequestDTO.getOneStepDTO();
+        oneStepCardMapper.oneStepDTOtoOneStep(oneStepDTO);
+        establishment.setCnpj(establishmentRequestDTO.getCnpj());
+        establishment.setCloseHour(establishmentRequestDTO.getCloseHour());
+        establishment.setOpenHour(establishmentRequestDTO.getOpenHour());
+
+        return establishment;
+    }
+
+    public EstablishmentResponseDTO establishmentToEstablshmentResponse(Establishment establichment){
         // Criação do AddressDTO se presente
 
 
@@ -52,10 +61,9 @@ public class EstablishmentMapper {
         PlanDTO planDTO = planMapper.planToPlanDTO(establichment.getPlan());
 
         // Agora cria e retorna o EstablichmentResponseDTO
-        EstablichmentResponseDTO responseDTO = new EstablichmentResponseDTO();
+        EstablishmentResponseDTO responseDTO = new EstablishmentResponseDTO();
         responseDTO.setId(establichment.getId());
-        responseDTO.setName(establichment.getName());// Atribui o AddressDTO convertido
-        responseDTO.setPlanDTO(planDTO);  // Atribui o PlanDTO convertido
+        responseDTO.setName(establichment.getName());
         responseDTO.setCnpj(establichment.getCnpj());
         responseDTO.setOpenHour(establichment.getOpenHour());
         responseDTO.setCloseHour(establichment.getCloseHour());
