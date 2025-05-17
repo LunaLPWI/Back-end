@@ -19,6 +19,7 @@ public class OneStepLink {
     private String payment_url;
     @OneToMany(mappedBy = "oneStepLink", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Charge> charges;
+    private String custom_id;
     private String created_at;
     private String message;
     private Integer subscription_id;
@@ -28,5 +29,4 @@ public class OneStepLink {
     private Boolean request_delivery_address;
     private String payment_method;
     private String status;
-
 }

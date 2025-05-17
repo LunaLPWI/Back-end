@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-22T21:21:53-0300",
-    comments = "version: 1.5.0.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
+    date = "2025-04-28T21:20:30-0300",
+    comments = "version: 1.5.0.Final, compiler: javac, environment: Java 21.0.5 (Eclipse Adoptium)"
 )
 @Component
 public class OneStepLinkMapperImpl implements OneStepLinkMapper {
@@ -23,6 +23,7 @@ public class OneStepLinkMapperImpl implements OneStepLinkMapper {
 
         oneStepLinkDTO.setId( oneStepRequestDTO.getId() );
         oneStepLinkDTO.setPayment_url( oneStepRequestDTO.getPayment_url() );
+        oneStepLinkDTO.setCustom_id( oneStepRequestDTO.getCustom_id() );
         oneStepLinkDTO.setCreated_at( oneStepRequestDTO.getCreated_at() );
         oneStepLinkDTO.setSubscription_id( oneStepRequestDTO.getSubscription_id() );
         oneStepLinkDTO.setExpire_at( oneStepRequestDTO.getExpire_at() );
@@ -43,6 +44,7 @@ public class OneStepLinkMapperImpl implements OneStepLinkMapper {
 
         oneStepLink.setId( oneStepDTO.getId() );
         oneStepLink.setPayment_url( oneStepDTO.getPayment_url() );
+        oneStepLink.setCustom_id( oneStepDTO.getCustom_id() );
         oneStepLink.setCreated_at( oneStepDTO.getCreated_at() );
         oneStepLink.setSubscription_id( oneStepDTO.getSubscription_id() );
         oneStepLink.setExpire_at( oneStepDTO.getExpire_at() );

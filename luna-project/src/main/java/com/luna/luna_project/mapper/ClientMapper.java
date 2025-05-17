@@ -13,7 +13,7 @@ public interface ClientMapper {
     Client clientDTOtoClient(ClientDTO clientDTO);
     ClientDTO clientToClientDTO(Client client);
     ClientTokenDTO clientToClientDTO(Client client, String token);
-    @Mapping(source = "address.cidade", target = "address.cidade")
+//    @mapping(source = "address.cidade", target = "address.cidade")
     Client  clientRequestDTOtoClient(ClientRequestDTO clientRequestDTO);
     ClientResponseDTO clientToClientDTOResponse(Client client);
     ClientRequestDTO clientToClientDTORequest (Client client);

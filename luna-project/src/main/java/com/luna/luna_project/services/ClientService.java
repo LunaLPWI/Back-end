@@ -5,14 +5,16 @@ import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
+import com.luna.luna_project.mapper.EstablishmentMapper;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
+import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.repositories.ClientRepository;
+import com.luna.luna_project.repositories.EstablishmentRepository;
 import jakarta.validation.ValidationException;
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,23 +46,43 @@ public class ClientService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private PlanMapper planMapper;
-    @Lazy
     @Autowired
-    private FinanceService financeService;
+    private EstablishmentRepository establishmentRepository;
 
-    public Client saveClient(Client client, AddressDTO addressDTO) {
+    public Client saveClient(Client client) {
         if (clientRepository.existsByCpf(client.getCpf())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"CPF já cadastrado");
         }
         if (clientRepository.existsByEmail(client.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Email já cadastrado");
         }
-        Address address = viaCepService.saveAddress(addressDTO);
+//        Address address = viaCepService.saveAddress(addressDTO);
         String encryptedPassword = passwordEncoder.encode(client.getPassword());
         client.setPassword(encryptedPassword);
-        client.setAddress(address);
+        return clientRepository.save(client);
+    }
+
+    public Client registerEmployee(ClientEmployeeRequest dto) {
+        Establishment establishment = establishmentRepository.findById(dto.getEstablishmentId())
+                .orElseThrow(() -> new RuntimeException("Estabelecimento não encontrado"));
+
+        Client client = Client.builder()
+                .name(dto.getName())
+                .cpf(dto.getCpf())
+                .email(dto.getEmail())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .phoneNumber(dto.getPhoneNumber())
+                .birthDay(dto.getBirthDay())
+                .roles(dto.getRoles() == null ? Set.of("ROLE_EMPLOYEE") : dto.getRoles())
+                .establishment(establishment)
+                .build();
 
         return clientRepository.save(client);
+    }
+
+
+    public List<Client> getEmployeesByEstablishmentId(Long establishmentId) {
+        return clientRepository.findEmployeesByEstablishmentId(establishmentId);
     }
 
     public List<Client> searchClients() {
@@ -179,13 +198,13 @@ public class ClientService {
 
 
     public ClientTokenDTO authenticate(ClientLoginDTO clientLoginDTO) {
-        Client client = searchClientByEmail(clientLoginDTO.getEmail());
-        if (client == null) {
+        Optional<Client> clientOptional = clientRepository.findByEmail(clientLoginDTO.getEmail());
+        if (clientOptional.isEmpty()) {
             throw new ResponseStatusException(404, "Email do usuário não cadastrado", null);
         }
 
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                clientLoginDTO.getEmail(), clientLoginDTO.getPassword(), client.getAuthorities());
+                clientLoginDTO.getEmail(), clientLoginDTO.getPassword(), clientOptional.get().getAuthorities());
 
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
@@ -193,10 +212,8 @@ public class ClientService {
 
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
-        return clientMapper.clientToClientDTO(client, token);
+        return clientMapper.clientToClientDTO(clientOptional.get(), token);
     }
-
-
 
 
     public void resetPassword(ResetPasswordDTO resetPasswordDTO) {
@@ -215,32 +232,30 @@ public class ClientService {
         return clientRepository.findById(id).orElseThrow(null);
     }
 
-    public List<ClientOverviewDTO> clientOverview() {
-        List<Client> clients = clientRepository.findAll();
+//    public List<ClientOverviewDTO> clientOverview() {
+//        List<Client> clients = clientRepository.findAll();
+//
+//        return clients.stream().map(client -> {
+//            PlanDTO planDTO = client.getPlan() != null ? planMapper.planToPlanDTO(client.getPlan()) : null;
+//            return new ClientOverviewDTO(
+//                    client.getName(),
+//                    planDTO,
+//                    client.getPhoneNumber()
+//            );
+//        }).collect(Collectors.toList());
+//    }
 
-        return clients.stream().map(client -> {
-            PlanDTO planDTO = client.getPlan() != null ? planMapper.planToPlanDTO(client.getPlan()) : null;
-            return new ClientOverviewDTO(
-                    client.getName(),
-                    planDTO != null ? planDTO.getName() : null,
-                    planDTO != null ? planDTO.getCreated_at().plusYears(1) : null,
-                    financeService.formFrequencyScheduleServiceById(client.getId()),
-                    client.getPhoneNumber()
-            );
-        }).collect(Collectors.toList());
-    }
-
-    public PlanDTO searchByPlanClient(String cpf) {
-        Client client = searchClientByCpf(cpf);
-
-        Plan plan = client.getPlan();
-
-        if (plan == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Plano não associado ao cliente com CPF: " + cpf);
-        }
-
-        return planMapper.planToPlanDTO(plan);
-    }
+//    public PlanDTO searchByPlanClient(String cpf) {
+//        Client client = searchClientByCpf(cpf);
+//
+//        Plan plan = client.getPlan();
+//
+//        if (plan == null) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Plano não associado ao cliente com CPF: " + cpf);
+//        }
+//
+//        return planMapper.planToPlanDTO(plan);
+//    }
 
 }
 

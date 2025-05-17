@@ -1,11 +1,9 @@
 package com.luna.luna_project.mapper;
 
-import com.luna.luna_project.dtos.AddressDTO;
 import com.luna.luna_project.dtos.client.ClientDTO;
 import com.luna.luna_project.dtos.client.ClientRequestDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.dtos.client.ClientTokenDTO;
-import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.Client;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -15,8 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-22T21:21:52-0300",
-    comments = "version: 1.5.0.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
+    date = "2025-04-28T21:20:31-0300",
+    comments = "version: 1.5.0.Final, compiler: javac, environment: Java 21.0.5 (Eclipse Adoptium)"
 )
 @Component
 public class ClientMapperImpl implements ClientMapper {
@@ -36,7 +34,6 @@ public class ClientMapperImpl implements ClientMapper {
         client.password( clientDTO.password() );
         client.birthDay( clientDTO.birthDay() );
         client.phoneNumber( clientDTO.phoneNumber() );
-        client.address( addressDTOToAddress( clientDTO.address() ) );
         Set<String> set = clientDTO.roles();
         if ( set != null ) {
             client.roles( new LinkedHashSet<String>( set ) );
@@ -58,7 +55,6 @@ public class ClientMapperImpl implements ClientMapper {
         String phoneNumber = null;
         String cpf = null;
         LocalDate birthDay = null;
-        AddressDTO address = null;
         Set<String> roles = null;
 
         id = client.getId();
@@ -68,13 +64,12 @@ public class ClientMapperImpl implements ClientMapper {
         phoneNumber = client.getPhoneNumber();
         cpf = client.getCpf();
         birthDay = client.getBirthDay();
-        address = addressToAddressDTO( client.getAddress() );
         Set<String> set = client.getRoles();
         if ( set != null ) {
             roles = new LinkedHashSet<String>( set );
         }
 
-        ClientDTO clientDTO = new ClientDTO( id, name, email, password, phoneNumber, cpf, birthDay, address, roles );
+        ClientDTO clientDTO = new ClientDTO( id, name, email, password, phoneNumber, cpf, birthDay, roles );
 
         return clientDTO;
     }
@@ -89,7 +84,6 @@ public class ClientMapperImpl implements ClientMapper {
         String name = null;
         String cpf = null;
         String email = null;
-        Address address = null;
         LocalDate birthDay = null;
         String phoneNumber = null;
         Set<String> roles = null;
@@ -98,7 +92,6 @@ public class ClientMapperImpl implements ClientMapper {
             name = client.getName();
             cpf = client.getCpf();
             email = client.getEmail();
-            address = client.getAddress();
             birthDay = client.getBirthDay();
             phoneNumber = client.getPhoneNumber();
             Set<String> set = client.getRoles();
@@ -109,7 +102,7 @@ public class ClientMapperImpl implements ClientMapper {
         String token1 = null;
         token1 = token;
 
-        ClientTokenDTO clientTokenDTO = new ClientTokenDTO( id, name, cpf, email, token1, address, birthDay, phoneNumber, roles );
+        ClientTokenDTO clientTokenDTO = new ClientTokenDTO( id, name, cpf, email, token1, birthDay, phoneNumber, roles );
 
         return clientTokenDTO;
     }
@@ -122,7 +115,6 @@ public class ClientMapperImpl implements ClientMapper {
 
         Client.ClientBuilder client = Client.builder();
 
-        client.address( addressDTOToAddress1( clientRequestDTO.getAddress() ) );
         client.id( clientRequestDTO.getId() );
         client.name( clientRequestDTO.getName() );
         client.cpf( clientRequestDTO.getCpf() );
@@ -174,7 +166,6 @@ public class ClientMapperImpl implements ClientMapper {
         clientRequestDTO.email( client.getEmail() );
         clientRequestDTO.phoneNumber( client.getPhoneNumber() );
         clientRequestDTO.password( client.getPassword() );
-        clientRequestDTO.address( addressToAddressDTO( client.getAddress() ) );
         clientRequestDTO.birthDay( client.getBirthDay() );
         Set<String> set = client.getRoles();
         if ( set != null ) {
@@ -182,59 +173,5 @@ public class ClientMapperImpl implements ClientMapper {
         }
 
         return clientRequestDTO.build();
-    }
-
-    protected Address addressDTOToAddress(AddressDTO addressDTO) {
-        if ( addressDTO == null ) {
-            return null;
-        }
-
-        Address.AddressBuilder address = Address.builder();
-
-        address.cep( addressDTO.getCep() );
-        address.logradouro( addressDTO.getLogradouro() );
-        address.number( addressDTO.getNumber() );
-        address.complemento( addressDTO.getComplemento() );
-        address.bairro( addressDTO.getBairro() );
-        address.uf( addressDTO.getUf() );
-        address.cidade( addressDTO.getCidade() );
-
-        return address.build();
-    }
-
-    protected AddressDTO addressToAddressDTO(Address address) {
-        if ( address == null ) {
-            return null;
-        }
-
-        AddressDTO.AddressDTOBuilder addressDTO = AddressDTO.builder();
-
-        addressDTO.cep( address.getCep() );
-        addressDTO.logradouro( address.getLogradouro() );
-        addressDTO.number( address.getNumber() );
-        addressDTO.complemento( address.getComplemento() );
-        addressDTO.cidade( address.getCidade() );
-        addressDTO.bairro( address.getBairro() );
-        addressDTO.uf( address.getUf() );
-
-        return addressDTO.build();
-    }
-
-    protected Address addressDTOToAddress1(AddressDTO addressDTO) {
-        if ( addressDTO == null ) {
-            return null;
-        }
-
-        Address.AddressBuilder address = Address.builder();
-
-        address.cidade( addressDTO.getCidade() );
-        address.cep( addressDTO.getCep() );
-        address.logradouro( addressDTO.getLogradouro() );
-        address.number( addressDTO.getNumber() );
-        address.complemento( addressDTO.getComplemento() );
-        address.bairro( addressDTO.getBairro() );
-        address.uf( addressDTO.getUf() );
-
-        return address.build();
     }
 }

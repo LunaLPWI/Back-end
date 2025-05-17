@@ -7,6 +7,7 @@ import com.luna.luna_project.mapper.SchedulingMapper;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.services.SchedulingService;
 import jakarta.validation.Valid;
+import org.quartz.SchedulerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +36,14 @@ public class SchedulingController {
     }
     //salva um novo agendamento, tem verificação caso sobreponha horários de agendamentos ja existentes, volta 409 caso isso aconteça
     @PostMapping
-    public ResponseEntity<SchedulingResponseDTO> saveScheduling(@RequestBody @Valid SchedulingRequestDTO schedulingRequestDTO) {
+    public ResponseEntity<SchedulingResponseDTO> saveScheduling(@RequestBody @Valid SchedulingRequestDTO schedulingRequestDTO) throws SchedulerException {
 
         Scheduling scheduling = schedulingService.schedulingSave(schedulingMapper.RequestToEntity(schedulingRequestDTO));
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
     //devolve os horários válidos para um novo agendamento, passando horário de inicio fim e id do cliente e funcionários
     @GetMapping("/vacant-schedules")
-    public ResponseEntity<List<LocalDateTime>> getVacantSchedules(@RequestParam LocalDateTime start,
+    public ResponseEntity<Set<LocalDateTime>> getVacantSchedules(@RequestParam LocalDateTime start,
                                                                   @RequestParam LocalDateTime end,
                                                                   @RequestParam Long employeeId,
                                                                   @RequestParam Long clientId) {
@@ -58,12 +59,12 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingResponseDTOS);
     }
 
-    @GetMapping("/busy-schedules")
-    public ResponseEntity<Set<LocalDateTime>> getFullSchedules(@RequestParam LocalDateTime start,
-                                                               @RequestParam LocalDateTime end,
-                                                               @RequestParam Long clientId) {
-        return ResponseEntity.ok(schedulingService.listBusySchedules(clientId, start, end));
-    }
+//    @GetMapping("/busy-schedules")
+//    public ResponseEntity<Set<LocalDateTime>> getFullSchedules(@RequestParam LocalDateTime start,
+//                                                               @RequestParam LocalDateTime end,
+//                                                               @RequestParam Long clientId) {
+//        return ResponseEntity.ok(schedulingService.listBusySchedules(clientId, start, end));
+//    }
 
     @Secured("ROLE_EMPLOYEE")
     @GetMapping("/busy-schedules-admin")
@@ -84,26 +85,6 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteById(@RequestParam Long id) {
-        schedulingService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Secured("ROLE_ADMIN")
-    @PutMapping("/add-products")
-    public ResponseEntity<SchedulingResponseDTO> addProductSchedule(@RequestBody @Valid SchedulingProductDTO schedulingProductDTO) {
-        Scheduling scheduling = schedulingService.addProducts(schedulingProductDTO.getId(), schedulingProductDTO.getProducts());
-        return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
-    }
-
-    @Secured("ROLE_ADMIN")
-    @PutMapping("/remove-products")
-    public ResponseEntity<SchedulingResponseDTO> addProductSchedule(@RequestParam Long schedulingId,@RequestParam  Long ProductSchduleId) {
-        Scheduling scheduling = schedulingService.removeProduct(schedulingId,ProductSchduleId);
-        return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
-    }
-
 
     /// Para mudar os status deve passar o id do agendamento e o enum deseja sendo as opções:
     ///
@@ -111,6 +92,7 @@ public class SchedulingController {
     ///     CONCLUDED, (Concluído)
     ///     DELAYED  (Atrasado)
     ///
+    @Secured("ROLE_ADMIN")
     @PutMapping("/change-status")
     public ResponseEntity<SchedulingResponseDTO> changeStatus(@RequestParam Long schedulingId,@RequestParam StatusScheduling statusScheduling) {
         Scheduling scheduling = schedulingService.changeStatus(schedulingId,statusScheduling);

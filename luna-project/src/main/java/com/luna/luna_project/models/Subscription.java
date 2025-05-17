@@ -26,8 +26,8 @@ public class Subscription {
 
     private String status;
 
-    @Column(name = "id_client")
-    private Long idClient;
+    @Column(name = "id_establishment")
+    private Long idEstablishment;
 }
 
 

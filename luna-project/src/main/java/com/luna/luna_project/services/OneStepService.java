@@ -2,6 +2,7 @@ package com.luna.luna_project.services;
 
 
 import com.luna.luna_project.dtos.*;
+import com.luna.luna_project.dtos.ChargeRequestDTO;
 import com.luna.luna_project.enums.Plans;
 import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
 import com.luna.luna_project.mapper.OneStepCardMapper;
@@ -33,21 +34,23 @@ public class OneStepService {
     @Autowired
     private OneStepLinkRepository oneStepLinkRepository;
 
-    public OneStepDTO saveOneStep(@Valid OneStepDTO request, String cpf) {
+    public OneStepDTO saveOneStep(@Valid OneStepDTO request, String paymentToken, String cpf) {
         Client client = clientService.searchClientByCpf(cpf);
+        Establishment establishment = client.getEstablishment();
 
-        PlanDTO planSaved = planService.savePlan(request, client.getId());
+
+        PlanDTO planSaved = planService.savePlan(request, establishment);
         if (planSaved == null){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "O cliente já tem um plano.");
         }
-        Plans chargeRequestDTO = request.getPlanName();
+        Plans chargeRequestDTO = request.getChargeRequest();
 
         OneStepDTO oneStepMapp = new OneStepDTO();
 
         oneStepMapp.setPlan(planSaved);
-        oneStepMapp.setPlanName(chargeRequestDTO);
+        oneStepMapp.setChargeRequest(chargeRequestDTO);
         oneStepMapp.setPlan(planSaved);
-        oneStepMapp.setIdClient(client.getId());
+        oneStepMapp.setIdEstablishment(client.getId());
         OneStepCardSubscription oneConvert = oneStepCardMapper.oneStepDTOtoOneStep(oneStepMapp);
         oneStepCardRepository.save(oneConvert);
 
@@ -56,18 +59,14 @@ public class OneStepService {
 
 
     public OneStepLinkDTO saveOneStepLink(@Valid OneStepDTO request){
-        Long idClient = request.getIdClient();
+        Long idEstablishment = request.getIdEstablishment();
 
         OneStepLink oneStep = PlanEFI.createOneStepLink(request);
 
         OneStepLinkDTO oneStepMapp = oneStepLinkMapper.oneSetToOneStepDTO(oneStep);
-        oneStepMapp.setChargeRequest(request.getPlanName());
         OneStepLink oneConvert = oneStepLinkMapper.oneStepDTOtoOneStep(oneStepMapp);
 
-
-
-
-        chargeService.saveCharge(oneStep, idClient);
+        chargeService.saveCharge(oneStep, idEstablishment);
         OneStepLink saveOneStep = oneStepLinkRepository.save(oneConvert);
 
         return oneStepLinkMapper.oneSetToOneStepDTO(saveOneStep);

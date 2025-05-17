@@ -6,6 +6,7 @@ import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.gerencianet.subscription.json.PlanEFI;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.Client;
+import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.models.Plan;
 import com.luna.luna_project.repositories.PlanRepository;
 import com.luna.luna_project.repositories.SubscriptionRepository;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Service
 public class PlanService {
@@ -27,27 +30,25 @@ public class PlanService {
     private SubscriptionRepository subscriptionRepository;
 
 
-    public PlanDTO savePlan(OneStepDTO request, Long idClient) {
-        Client client = clientService.findById(idClient);
+
+    public PlanDTO savePlan(OneStepDTO request, Establishment establishment) {
         PlanDTO planDTO = request.getPlan();
 
-        Boolean planBol = planRepository.existsByIdClient(idClient);
+        Boolean planBol = planRepository.existsByIdEstablishment(establishment.getId());
 
         if (planBol){
             return null;
         }
 
-        Plan planDTOSaved = PlanEFI.createPlan(planDTO, request.getPlanName());
+        Plan planDTOSaved = PlanEFI.createPlan(planDTO, request.getChargeRequest());
         if (planDTOSaved == null) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        Plan planMapp = planMapper.planDTOtoPlan(planDTOSaved);
-        planMapp.setIdClient(idClient);
+        planDTOSaved.setIdEstablishment(establishment.getId());
 
-        Plan plan = planRepository.save(planMapp);
-        client.setPlan(plan);
-
+        Plan plan = planRepository.save(planDTOSaved);
+        establishment.setPlan(plan);
 
         return planMapper.planToPlanDTO(plan);
     }
@@ -59,17 +60,17 @@ public class PlanService {
     @Transactional
     public String cancelPlan(CpfDTO cpfDto) {
         Client client = clientService.searchClientByCpf(cpfDto.getCpf());
-        Long idClient = client.getId();
+        Establishment establishment = client.getEstablishment();
 
-        String subscriptionId = subscriptionRepository.findSubscriptionIdByIdClient(idClient)
+        String subscriptionId = subscriptionRepository.findSubscriptionIdByIdEstablishment(establishment.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT, "Não há nenhum cliente com esse id com plano"));
 
         String cancelSu = PlanEFI.cancelSubscription(subscriptionId);
 
-        client.setPlan(null);
+        establishment.setPlan(null);
 
         subscriptionRepository.deleteBySubscriptionId(subscriptionId);
-        planRepository.deleteByIdClient(idClient);
+        planRepository.deleteByIdEstablishment(establishment.getId());
 
         return cancelSu;
     }

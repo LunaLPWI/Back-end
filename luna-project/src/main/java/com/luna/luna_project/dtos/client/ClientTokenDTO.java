@@ -16,7 +16,6 @@ public class ClientTokenDTO {
     private String cpf;
     private String email;
     private String token;
-    private Address address;
     private LocalDate birthDay;
     private String phoneNumber;
     private Set<String> roles;

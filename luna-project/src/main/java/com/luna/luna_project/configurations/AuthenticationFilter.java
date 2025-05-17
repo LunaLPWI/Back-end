@@ -101,6 +101,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         return requestURI.contains("/public/") ||
                 requestURI.contains("/clients/login") ||
                 requestURI.contains("/swagger-ui/") ||
-                requestURI.contains("/v3/api-docs");
+                requestURI.contains("/v3/api-docs")||
+                requestURI.contains("/employee-tasks/{clientId}")||
+                requestURI.contains("/schedules/vacant-schedules")
+       ;
     }
 }

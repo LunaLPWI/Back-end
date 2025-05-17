@@ -1,5 +1,6 @@
 package com.luna.luna_project.models;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -14,10 +15,12 @@ public class Address {
     private Long id;
     private String cep;
     private String logradouro;
+    @NotNull(message = "O número do endereço é obrigatório.")
     private Integer number;
     private String complemento;
     private String bairro;
-    private String localidade;
     private String uf;
     private String cidade;
+
+
 }

@@ -1,14 +1,6 @@
 package com.luna.luna_project.dtos.agendamentos;
 
-import com.luna.luna_project.dtos.TaskDTO;
-import com.luna.luna_project.enums.StatusScheduling;
-import com.luna.luna_project.enums.Task;
-import com.luna.luna_project.models.ProductScheduling;
-import jakarta.persistence.ElementCollection;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import com.luna.luna_project.dtos.EmployeeTask.EmployeeTaskDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,9 +12,12 @@ import java.util.List;
 @Getter
 @Setter
 public class SchedulingClientDTO {
-    Long id;
+    private Long id;
     private LocalDateTime startDateTime;
-    private List<TaskDTO> items;
+    private List<EmployeeTaskDTO> items;
     private String nameEmployee;
+    private String stablishmentName;
+    private String status;
+    private Double price;
 
 }

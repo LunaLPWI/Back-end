@@ -20,7 +20,8 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
             @Param("endDateTime") LocalDateTime endDateTime
     );
 
-    Boolean existsByIdClient(Long id);
+    Boolean existsByIdEstablishment(Long id);
 
-    void deleteByIdClient(Long idClient);
+
+    void deleteByIdEstablishment(Long idEstablishment);
 }

@@ -2,29 +2,39 @@ package com.luna.luna_project.mapper;
 
 import com.luna.luna_project.dtos.agendamentos.*;
 import com.luna.luna_project.models.Scheduling;
-import com.luna.luna_project.repositories.TaskMapper;
+import com.luna.luna_project.repositories.EmployeeTaskRepository;
 import com.luna.luna_project.services.ClientService;
+import com.luna.luna_project.services.EmployeeTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 public class SchedulingMapper {
 
     private final ClientService clientService;
-    private final TaskMapper taskMapper;
+    private final EmployeeTaskMapper employeeTaskMapper;
 
     @Autowired
-    public SchedulingMapper(ClientService clientService, TaskMapper taskMapper) {
+    EmployeeTaskRepository employeeTaskRepository;
+
+
+    @Autowired
+    public SchedulingMapper(ClientService clientService, EmployeeTaskMapper employeeTaskMapper) {
         this.clientService = clientService;
-        this.taskMapper = taskMapper;
+        this.employeeTaskMapper = employeeTaskMapper;
     }
 
     public Scheduling RequestToEntity(SchedulingRequestDTO schedulingRequestDTO) {
         return Scheduling.builder()
                 .client(clientService.searchClientById(schedulingRequestDTO.getClientId()))
                 .employee(clientService.searchClientById(schedulingRequestDTO.getEmployeeId()))
+                .items(schedulingRequestDTO.getItems().stream()
+                        .map(id -> employeeTaskRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("EmployeeTask not found with id: " + id)))
+                        .collect(Collectors.toList()))
                 .startDateTime(schedulingRequestDTO.getStartDateTime())
-                .items(schedulingRequestDTO.getItems())
                 .build();
     }
     public Scheduling RequestUpdateToEntity(SchedulingRequestUpdateDTO agendamentoRequestDTO) {
@@ -43,8 +53,7 @@ public class SchedulingMapper {
                 .clientId(scheduling.getClient().getId())
                 .employeeId(scheduling.getEmployee().getId())
                 .startDateTime(scheduling.getStartDateTime())
-                .items(scheduling.getItems().stream().map(taskMapper::taskToTaskDTO).toList())
-                .products(scheduling.getProducts())
+                .items(scheduling.getItems().stream().map(employeeTaskMapper::toDTO).toList())
                 .statusScheduling(scheduling.getStatusScheduling())
                 .build();
     }
@@ -55,7 +64,6 @@ public class SchedulingMapper {
                 .endDateTime(scheduling.calculateEndDate())
                 .startDateTime(scheduling.getStartDateTime())
                 .clientName(scheduling.getClient().getName())
-                .products(scheduling.getProducts())
                 .items(scheduling.getItems())
                 .statusScheduling(scheduling.getStatusScheduling())
                 .build();
@@ -65,7 +73,10 @@ public class SchedulingMapper {
                 .id(scheduling.getId())
                 .startDateTime(scheduling.getStartDateTime())
                 .nameEmployee(scheduling.getEmployee().getName())
-                .items(scheduling.getItems().stream().map(taskMapper::taskToTaskDTO).toList())
+                .stablishmentName(scheduling.getEmployee().getEstablishment().getName())
+                .items(scheduling.getItems().stream().map(employeeTaskMapper::toDTO).toList())
+                .status(scheduling.getStatusScheduling().toString())
+                .price(scheduling.totalPrice())
                 .build();
     }
 }
