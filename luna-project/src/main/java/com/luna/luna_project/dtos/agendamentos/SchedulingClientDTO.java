@@ -18,5 +18,6 @@ public class SchedulingClientDTO {
     private String nameEmployee;
     private String stablishmentName;
     private String status;
+    private Double price;
 
 }
