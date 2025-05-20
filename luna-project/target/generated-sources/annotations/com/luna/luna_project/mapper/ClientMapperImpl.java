@@ -4,6 +4,7 @@ import com.luna.luna_project.dtos.client.ClientDTO;
 import com.luna.luna_project.dtos.client.ClientRequestDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.dtos.client.ClientTokenDTO;
+import com.luna.luna_project.dtos.client.ClientWithEstablishmentDTO;
 import com.luna.luna_project.models.Client;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -13,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-28T21:20:31-0300",
-    comments = "version: 1.5.0.Final, compiler: javac, environment: Java 21.0.5 (Eclipse Adoptium)"
+    date = "2025-05-19T21:44:54-0300",
+    comments = "version: 1.5.0.Final, compiler: javac, environment: Java 21.0.5 (Amazon.com Inc.)"
 )
 @Component
 public class ClientMapperImpl implements ClientMapper {
@@ -173,5 +174,33 @@ public class ClientMapperImpl implements ClientMapper {
         }
 
         return clientRequestDTO.build();
+    }
+
+    @Override
+    public Client clientWithEstabDTOtoClient(ClientWithEstablishmentDTO clientWestabilishDTO) {
+        if ( clientWestabilishDTO == null ) {
+            return null;
+        }
+
+        Client.ClientBuilder client = Client.builder();
+
+        client.id( clientWestabilishDTO.getId() );
+        client.name( clientWestabilishDTO.getName() );
+
+        return client.build();
+    }
+
+    @Override
+    public ClientWithEstablishmentDTO clientToClientWithEstab(Client client) {
+        if ( client == null ) {
+            return null;
+        }
+
+        ClientWithEstablishmentDTO.ClientWithEstablishmentDTOBuilder clientWithEstablishmentDTO = ClientWithEstablishmentDTO.builder();
+
+        clientWithEstablishmentDTO.id( client.getId() );
+        clientWithEstablishmentDTO.name( client.getName() );
+
+        return clientWithEstablishmentDTO.build();
     }
 }

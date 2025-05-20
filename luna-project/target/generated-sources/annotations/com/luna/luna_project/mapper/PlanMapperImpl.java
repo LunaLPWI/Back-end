@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-13T19:37:52-0300",
-    comments = "version: 1.5.0.Final, compiler: javac, environment: Java 21.0.5 (Eclipse Adoptium)"
+    date = "2025-05-19T21:44:54-0300",
+    comments = "version: 1.5.0.Final, compiler: javac, environment: Java 21.0.5 (Amazon.com Inc.)"
 )
 @Component
 public class PlanMapperImpl implements PlanMapper {
@@ -19,16 +19,16 @@ public class PlanMapperImpl implements PlanMapper {
             return null;
         }
 
-        PlanDTO planDTO = new PlanDTO();
+        PlanDTO.PlanDTOBuilder planDTO = PlanDTO.builder();
 
-        planDTO.setId( plan.getId() );
-        planDTO.setName( plan.getName() );
-        planDTO.setInterval( plan.getInterval() );
-        planDTO.setRepeats( plan.getRepeats() );
-        planDTO.setCreated_at( plan.getCreated_at() );
-        planDTO.setPlan_id( plan.getPlan_id() );
+        planDTO.id( plan.getId() );
+        planDTO.name( plan.getName() );
+        planDTO.interval( plan.getInterval() );
+        planDTO.repeats( plan.getRepeats() );
+        planDTO.created_at( plan.getCreated_at() );
+        planDTO.plan_id( plan.getPlan_id() );
 
-        return planDTO;
+        return planDTO.build();
     }
 
     @Override

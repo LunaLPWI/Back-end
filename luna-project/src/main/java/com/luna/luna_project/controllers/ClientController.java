@@ -2,9 +2,11 @@ package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
+import com.luna.luna_project.dtos.establishment.FavoriteEstablishmentsDTO;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
+import com.luna.luna_project.repositories.FavoriteRepository;
 import com.luna.luna_project.services.ClientService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -15,6 +17,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/clients")
@@ -24,6 +27,8 @@ public class ClientController {
     private ClientService clientService;
     @Autowired
     private ClientMapper clientMapper;
+    @Autowired
+    private FavoriteRepository favoriteRepository;
 
 
 
@@ -181,6 +186,15 @@ public class ClientController {
         }catch (ValidationException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PostMapping("/{clientId}/favorites")
+    public ResponseEntity<String> saveFavoriteEstablishments(
+            @PathVariable Long clientId,
+            @RequestBody FavoriteEstablishmentsDTO dto
+    ) {
+        clientService.saveFavoriteEstablish(dto);
+        return ResponseEntity.ok("Favoritos atualizados com sucesso");
     }
 
 }
