@@ -21,7 +21,5 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     );
 
 
-    Boolean existsByIdEstablishment(Long id);
-
 
 }

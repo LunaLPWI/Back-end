@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Time;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -31,5 +33,7 @@ public class Establishment {
     private Boolean favorite;
     @ManyToOne
     private Address address;
+    @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Favorite> favoritedByClients = new HashSet<>();
 
 }

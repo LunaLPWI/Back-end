@@ -3,16 +3,22 @@ package com.luna.luna_project.services;
 import com.luna.luna_project.configurations.jwt.GerenciadorTokenJwt;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
+import com.luna.luna_project.dtos.establishment.FavoriteEstablishmentsDTO;
 import com.luna.luna_project.mapper.EstablishmentMapper;
+import com.luna.luna_project.mapper.FavoriteMapper;
 import com.luna.luna_project.mapper.PlanMapper;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.models.Establishment;
 
+import com.luna.luna_project.models.Favorite;
+import com.luna.luna_project.models.FavoriteId;
 import com.luna.luna_project.repositories.ClientRepository;
 import com.luna.luna_project.repositories.EstablishmentRepository;
+import com.luna.luna_project.repositories.FavoriteRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.embedded.netty.NettyWebServer;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,6 +50,10 @@ public class ClientService {
     private PlanMapper planMapper;
     @Autowired
     private EstablishmentRepository establishmentRepository;
+    @Autowired
+    private FavoriteRepository favoriteRepository;
+    @Autowired
+    private FavoriteMapper favoriteMapper;
 
     public Client saveClient(Client client) {
         if (clientRepository.existsByCpf(client.getCpf())) {
@@ -262,6 +272,27 @@ public class ClientService {
 
         return clientRepository.save(clientExist);
     }
+
+    @Transactional
+    public void saveFavoriteEstablish(FavoriteEstablishmentsDTO dto){
+        Client client = clientRepository.findById(dto.getClientId())
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                "Cliente com id " + dto.getClientId() + " não encontrado."));
+
+        favoriteRepository.deleteAllByClient(client);
+
+        List<Favorite> favorites = dto.getEstablishmentIds().stream()
+                .map(id -> {
+                    Establishment establishment = establishmentRepository.findById(id)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                    "Estabelecimento não encontrado"));
+                    return favoriteMapper.favoriteDTOtoFavorite(client, establishment);
+                }).toList();
+
+        favoriteRepository.saveAll(favorites);
+    }
+
 
 
 

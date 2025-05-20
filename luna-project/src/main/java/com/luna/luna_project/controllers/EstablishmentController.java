@@ -80,8 +80,6 @@ public class EstablishmentController {
         oneStepService.saveOneStepLink(oneStepSaved);
 
         EstablishmentResponseDTO putEstablishPlan = establishmentService.putEstablishPlan(establishmentRequest,  oneStepSaved.getPlan());
-
-
         return new ResponseEntity<>(putEstablishPlan, HttpStatus.CREATED);
     }
 
@@ -102,13 +100,13 @@ public class EstablishmentController {
     }
 
     @PostMapping("/nearbyestablishments")
-    public ResponseEntity<List<EstablichmentResponseDTO>> getNearbyEstablishments(@RequestParam double lat, @RequestParam double lgn) {
+    public ResponseEntity<List<EstablishmentResponseDTO>> getNearbyEstablishments(@RequestParam double lat, @RequestParam double lgn) {
         GeoCodeGoogle geoCodeGoogle = new GeoCodeGoogle();
-        List<EstablichmentResponseDTO> establishmentList = establishmentService
+        List<EstablishmentResponseDTO> establishmentList = establishmentService
                 .getAllEstablishments(lat, lgn)
                 .stream()
                 .map(establishment -> {
-                    EstablichmentResponseDTO responseDTO = establishmentMapper.establichmentToEstablshmentResponse(establishment);
+                    EstablishmentResponseDTO responseDTO = establishmentMapper.establishmentToEstablshmentResponse(establishment);
                     try {
                         responseDTO.setAddressDTO(geoCodeGoogle.getEnderecoFromCoordenadas(establishment.getLat(), establishment.getLng()));
                     } catch (Exception e) {
@@ -124,12 +122,12 @@ public class EstablishmentController {
     // Endpoint para alterar informações do estabelecimento
     @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
-    public ResponseEntity<EstablichmentResponseDTO> changeEstablishmentInfo(@PathVariable Long id, @Valid @RequestBody EstablichmentRequestDTO establishmentRequest) throws Exception {
-        Establishment savedEstablishment = establishmentMapper.establichmentRequestToEstablishment(establishmentRequest);
+    public ResponseEntity<EstablishmentResponseDTO> changeEstablishmentInfo(@PathVariable Long id, @Valid @RequestBody EstablishmentRequestDTO establishmentRequest) throws Exception {
+        Establishment savedEstablishment = establishmentMapper.establishmentRequestToEstablishment(establishmentRequest);
         Establishment establishment = establishmentService.saveEstablishment(savedEstablishment, establishmentRequest.getAddressDTO());
         establishment.setId(id);
         Establishment updatedEstablishment = establishmentService.changeInfo(establishment);
-        return new ResponseEntity<>(establishmentMapper.establichmentToEstablshmentResponse(updatedEstablishment), HttpStatus.OK);
+        return new ResponseEntity<>(establishmentMapper.establishmentToEstablshmentResponse(updatedEstablishment), HttpStatus.OK);
     }
 
 

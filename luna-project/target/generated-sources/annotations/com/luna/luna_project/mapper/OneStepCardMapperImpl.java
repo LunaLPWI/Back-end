@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-28T21:20:31-0300",
-    comments = "version: 1.5.0.Final, compiler: javac, environment: Java 21.0.5 (Eclipse Adoptium)"
+    date = "2025-05-19T21:44:54-0300",
+    comments = "version: 1.5.0.Final, compiler: javac, environment: Java 21.0.5 (Amazon.com Inc.)"
 )
 @Component
 public class OneStepCardMapperImpl implements OneStepCardMapper {
@@ -19,16 +19,17 @@ public class OneStepCardMapperImpl implements OneStepCardMapper {
             return null;
         }
 
-        OneStepDTO oneStepDTO = new OneStepDTO();
+        OneStepDTO.OneStepDTOBuilder oneStepDTO = OneStepDTO.builder();
 
-        oneStepDTO.setId( oneStepRequestDTO.getId() );
-        oneStepDTO.setSubscription_id( oneStepRequestDTO.getSubscription_id() );
-        oneStepDTO.setTotal( oneStepRequestDTO.getTotal() );
-        oneStepDTO.setPayment( oneStepRequestDTO.getPayment() );
-        oneStepDTO.setFirst_execution( oneStepRequestDTO.getFirst_execution() );
-        oneStepDTO.setStatus( oneStepRequestDTO.getStatus() );
+        oneStepDTO.id( oneStepRequestDTO.getId() );
+        oneStepDTO.subscription_id( oneStepRequestDTO.getSubscription_id() );
+        oneStepDTO.total( oneStepRequestDTO.getTotal() );
+        oneStepDTO.payment( oneStepRequestDTO.getPayment() );
+        oneStepDTO.first_execution( oneStepRequestDTO.getFirst_execution() );
+        oneStepDTO.status( oneStepRequestDTO.getStatus() );
+        oneStepDTO.idEstablish( oneStepRequestDTO.getIdEstablish() );
 
-        return oneStepDTO;
+        return oneStepDTO.build();
     }
 
     @Override
@@ -39,6 +40,7 @@ public class OneStepCardMapperImpl implements OneStepCardMapper {
 
         OneStepCardSubscription oneStepCardSubscription = new OneStepCardSubscription();
 
+        oneStepCardSubscription.setIdEstablish( oneStepDTO.getIdEstablish() );
         oneStepCardSubscription.setId( oneStepDTO.getId() );
         oneStepCardSubscription.setSubscription_id( oneStepDTO.getSubscription_id() );
         oneStepCardSubscription.setTotal( oneStepDTO.getTotal() );
