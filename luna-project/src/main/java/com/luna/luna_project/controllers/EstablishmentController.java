@@ -4,6 +4,7 @@ package com.luna.luna_project.controllers;
 import com.luna.luna_project.dtos.OneStepDTO;
 import com.luna.luna_project.dtos.OneStepLinkDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
+import com.luna.luna_project.dtos.establishment.EstablichmentResponseDTO;
 import com.luna.luna_project.dtos.establishment.EstablishPlanRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablishmentRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablishmentResponseDTO;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -43,6 +45,7 @@ public class EstablishmentController {
     private EstablishmentMapper establishmentMapper;
 
 
+
     @Autowired
     public EstablishmentController(EstablishmentService establishmentService) {
         this.establishmentService = establishmentService;
@@ -53,15 +56,21 @@ public class EstablishmentController {
         List<Establishment> result = establishmentService.searchByName(name);
         return ResponseEntity.ok(result);
     }
+    @GetMapping("/owner/{id}")
+    public ResponseEntity<List<EstablishmentResponseDTO>> getByOwnerId(@PathVariable Long id) {
+        Set<Establishment> result = establishmentService.searchByOwnerId(id);
+        List<EstablishmentResponseDTO> establishmentReponse = result.stream().
+                map(establishmentMapper::establishmentToEstablshmentResponse).toList();
+        return ResponseEntity.ok(establishmentReponse);
+    }
 
-    // Endpoint para salvar um estabelecimento
+    @Secured("ROLE_ADMIN")
     @PostMapping
     public ResponseEntity<EstablishmentResponseDTO> saveEstablishment(@RequestBody EstablishmentRequestDTO establishmentRequest) throws Exception {
-        GeoCodeGoogle geoCodeGoogle = new GeoCodeGoogle();
 
         Establishment savedEstablishment = establishmentService.saveEstablishment(
                 establishmentMapper.establishmentRequestToEstablishment(establishmentRequest),
-                establishmentRequest.getAddressDTO()
+                establishmentRequest.getAddressDTO(), establishmentRequest.getClientId()
         );
 
         if (savedEstablishment == null) {
@@ -69,10 +78,12 @@ public class EstablishmentController {
         }
         EstablishmentResponseDTO establishmentResponseDTO = establishmentMapper.establishmentToEstablshmentResponse(savedEstablishment);
 
-        establishmentResponseDTO.setAddressDTO(geoCodeGoogle.getEnderecoFromCoordenadas(savedEstablishment.getLat(), savedEstablishment.getLng()));
+        establishmentResponseDTO.setAddressDTO(addressMapper.addressToAddressDTO(savedEstablishment.getAddress()));
 
         return new ResponseEntity<>(establishmentResponseDTO, HttpStatus.CREATED);
     }
+
+
 
     @PutMapping("/plan-for-establishment")
     public ResponseEntity<EstablishmentResponseDTO> savePlanEstablish(@RequestBody EstablishPlanRequestDTO establishmentRequest){
@@ -122,9 +133,9 @@ public class EstablishmentController {
     // Endpoint para alterar informações do estabelecimento
     @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
-    public ResponseEntity<EstablishmentResponseDTO> changeEstablishmentInfo(@PathVariable Long id, @Valid @RequestBody EstablishmentRequestDTO establishmentRequest) throws Exception {
+    public ResponseEntity<EstablishmentResponseDTO> changeEstablishmentInfo(@PathVariable Long id, @Valid @RequestBody EstablishmentRequestDTO establishmentRequest, Long idClient) throws Exception {
         Establishment savedEstablishment = establishmentMapper.establishmentRequestToEstablishment(establishmentRequest);
-        Establishment establishment = establishmentService.saveEstablishment(savedEstablishment, establishmentRequest.getAddressDTO());
+        Establishment establishment = establishmentService.saveEstablishment(savedEstablishment, establishmentRequest.getAddressDTO(), idClient);
         establishment.setId(id);
         Establishment updatedEstablishment = establishmentService.changeInfo(establishment);
         return new ResponseEntity<>(establishmentMapper.establishmentToEstablshmentResponse(updatedEstablishment), HttpStatus.OK);

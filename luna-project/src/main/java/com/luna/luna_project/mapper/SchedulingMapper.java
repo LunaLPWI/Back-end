@@ -1,6 +1,7 @@
 package com.luna.luna_project.mapper;
 
 import com.luna.luna_project.dtos.agendamentos.*;
+import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.repositories.EmployeeTaskRepository;
 import com.luna.luna_project.services.ClientService;
@@ -8,6 +9,8 @@ import com.luna.luna_project.services.EmployeeTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -69,11 +72,12 @@ public class SchedulingMapper {
                 .build();
     }
     public SchedulingClientDTO EntityToClientSchedulling(Scheduling scheduling) {
+
         return SchedulingClientDTO.builder()
                 .id(scheduling.getId())
                 .startDateTime(scheduling.getStartDateTime())
                 .nameEmployee(scheduling.getEmployee().getName())
-                .stablishmentName(scheduling.getEmployee().getEstablishment().getName())
+                .stablishmentName(((List<Establishment>)scheduling.getEmployee().getEstablishments()).get(0).getName())
                 .items(scheduling.getItems().stream().map(employeeTaskMapper::toDTO).toList())
                 .status(scheduling.getStatusScheduling().toString())
                 .price(scheduling.totalPrice())

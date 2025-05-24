@@ -67,10 +67,12 @@ public class ClientService {
         client.setPassword(encryptedPassword);
         return clientRepository.save(client);
     }
-
     public Client registerEmployee(ClientEmployeeRequest dto) {
         Establishment establishment = establishmentRepository.findById(dto.getEstablishmentId())
                 .orElseThrow(() -> new RuntimeException("Estabelecimento não encontrado"));
+
+        Set<Establishment> establishments = new HashSet<>();
+        establishments.add(establishment);
 
         Client client = Client.builder()
                 .name(dto.getName())
@@ -80,7 +82,7 @@ public class ClientService {
                 .phoneNumber(dto.getPhoneNumber())
                 .birthDay(dto.getBirthDay())
                 .roles(dto.getRoles() == null ? Set.of("ROLE_EMPLOYEE") : dto.getRoles())
-                .establishment(establishment)
+                .establishments(establishments)
                 .build();
 
         return clientRepository.save(client);
@@ -268,7 +270,7 @@ public class ClientService {
         Client clientExist = clientRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "não há cliente com esse id" + client.getId()));
 
-        clientExist.setEstablishment(clientMapper.clientWithEstabDTOtoClient(client).getEstablishment());
+        clientExist.setEstablishments(clientMapper.clientWithEstabDTOtoClient(client).getEstablishments());
 
         return clientRepository.save(clientExist);
     }

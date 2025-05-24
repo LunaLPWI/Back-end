@@ -6,12 +6,15 @@ import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.establishment.EstablishPlanRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablishmentRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablishmentResponseDTO;
+import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.mapper.EstablishmentMapper;
 import com.luna.luna_project.mapper.PlanMapper;
+import com.luna.luna_project.models.Address;
 import com.luna.luna_project.models.AddressCoord;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.models.Establishment;
 
+import com.luna.luna_project.repositories.AddressRepository;
 import com.luna.luna_project.repositories.ClientRepository;
 import com.luna.luna_project.repositories.EstablishmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EstablishmentService {
@@ -43,13 +45,17 @@ public class EstablishmentService {
 
     @Autowired
     private EstablishmentMapper establishmentMapper;
+    @Autowired
+    private AddressRepository addressRepository;
+    @Autowired
+    private AddressMapper addressMapper;
 
 
     public EstablishmentService(EstablishmentRepository establishmentRepository) {
         this.establishmentRepository = establishmentRepository;
     }
     @Transactional
-    public Establishment saveEstablishment(Establishment establishment, AddressDTO address) throws Exception {
+    public Establishment saveEstablishment(Establishment establishment, AddressDTO address, Long idClient) throws Exception {
         if (establishmentRepository.existsByCnpj(establishment.getCnpj())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"CNPJ já cadastrado");
         }
@@ -60,10 +66,20 @@ public class EstablishmentService {
         AddressCoord addressCoord = geoCodeGoogle.getCoordenadas(address.formatAddress());
         establishment.setLat(addressCoord.getLat());
         establishment.setLng(addressCoord.getLng());
+        Address addressSaved =  addressMapper.addressDTOtoAddress(address);
+        establishment.setAddress(addressSaved);
 
         establishment.setFavorite(false);
+        establishment.setPlan(null);
+        Establishment establishmentSaved = establishmentRepository.save(establishment);
+        Client client = clientRepository.findClientById(idClient)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin não encontrado"));
+        Set<Establishment> establishments = new HashSet<>(client.getEstablishments());
+        establishments.add(establishmentSaved);
+        client.setEstablishments(establishments);
+        clientRepository.save(client);
 
-        return establishmentRepository.save(establishment);
+        return establishmentSaved;
     }
 
 
@@ -108,13 +124,15 @@ public class EstablishmentService {
         if (clientOpt.get().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EMPLOYEE"))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Este usuário não é um funcionário");
         }
-        if(clientOpt.get().getEstablishment()!=null) {
+        if(clientOpt.get().getEstablishments()!=null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Este ja é um funcionário de um estabelecimento");
         }
-        if(clientOpt.get().getEstablishment().getCnpj() == establishmentOpt.get().getCnpj()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Este estabilecimento não pertence a este usuário");
+        if(clientOpt.get().getEstablishments().contains(establishmentOpt.get())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Este usuário já trabalha de neste estabelecimento");
         }
-        clientOpt.get().setEstablishment(establishmentOpt.get());
+        Set<Establishment> establishments = new HashSet<>();
+        establishments.add(establishmentOpt.get());
+        clientOpt.get().setEstablishments(establishments);
         return clientRepository.save(clientOpt.get());
     }
 
@@ -125,5 +143,16 @@ public class EstablishmentService {
         }
 
         return establishmentRepository.save(establishmentOpt.get());
+    }
+
+    public Set<Establishment> searchByOwnerId(Long id) {
+
+        Optional<Client> clientOpt = clientRepository.findById(id);
+        if (clientOpt.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Não há usuário com este id");
+        }
+
+
+        return clientOpt.get().getEstablishments();
     }
 }

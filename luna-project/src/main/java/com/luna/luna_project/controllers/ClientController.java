@@ -6,6 +6,7 @@ import com.luna.luna_project.dtos.establishment.FavoriteEstablishmentsDTO;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.models.Client;
 import com.luna.luna_project.mapper.ClientMapper;
+import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.repositories.FavoriteRepository;
 import com.luna.luna_project.services.ClientService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,17 +45,24 @@ public class ClientController {
     public ResponseEntity<ClientEmployeeResponse> registerEmployee(@RequestBody @Valid ClientEmployeeRequest dto) {
         Client savedClient = clientService.registerEmployee(dto);
 
+        String establishmentName = savedClient.getEstablishments().stream()
+                .findFirst()
+                .map(Establishment::getName)
+                .orElse(null);
+
         ClientEmployeeResponse response = ClientEmployeeResponse.builder()
+                .id(savedClient.getId())
                 .name(savedClient.getName())
                 .cpf(savedClient.getCpf())
                 .email(savedClient.getEmail())
                 .phoneNumber(savedClient.getPhoneNumber())
                 .birthDay(savedClient.getBirthDay())
-                .establishmentName(savedClient.getEstablishment().getName())
+                .establishmentName(establishmentName)
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 
     @Secured("ROLE_EMPLOYEE")
     @GetMapping
@@ -81,19 +90,26 @@ public class ClientController {
     public ResponseEntity<List<ClientEmployeeResponse>> getEmployeesByEstablishment(@PathVariable Long id) {
         List<Client> employees = clientService.getEmployeesByEstablishmentId(id);
 
-        List<ClientEmployeeResponse> response = employees.stream().map(client -> ClientEmployeeResponse.builder()
-                .id(client.getId())
-                .name(client.getName())
-                .cpf(client.getCpf())
-                .email(client.getEmail())
-                .phoneNumber(client.getPhoneNumber())
-                .birthDay(client.getBirthDay())
-                .establishmentName(client.getEstablishment() != null ? client.getEstablishment().getName() : null)
-                .build()
-        ).toList();
+        List<ClientEmployeeResponse> response = employees.stream().map(client -> {
+            List<Establishment> establishments = new ArrayList<>(client.getEstablishments());
+            String establishmentName = !establishments.isEmpty() && establishments.get(0).getName() != null
+                    ? establishments.get(0).getName()
+                    : null;
+
+            return ClientEmployeeResponse.builder()
+                    .id(client.getId())
+                    .name(client.getName())
+                    .cpf(client.getCpf())
+                    .email(client.getEmail())
+                    .phoneNumber(client.getPhoneNumber())
+                    .birthDay(client.getBirthDay())
+                    .establishmentName(establishmentName)
+                    .build();
+        }).toList();
 
         return ResponseEntity.ok(response);
     }
+
 
     @Secured("ROLE_EMPLOYEE")
     @GetMapping("/search-by-cpf")

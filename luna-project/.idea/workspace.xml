@@ -5,52 +5,153 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="edb912b1-b70e-4607-aa91-43001514e67f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/establishment/FavoriteEstablishmentsDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/FavoriteMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Favorite.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/FavoriteId.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/FavoriteRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hs_err_pid6284.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hs_err_pid6408.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/replay_pid6284.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/replay_pid6408.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/ClientController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/EstablishmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/EstablishmentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/establishment/EstablishmentRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/establishment/EstablishmentRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/establishment/EstablishmentResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/establishment/EstablishmentResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/EstablishmentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/EstablishmentMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/SchedulingMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/SchedulingMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Address.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Establishment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Establishment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/EstablishmentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/EstablishmentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/PlanRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/PlanRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/SubscriptionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/SubscriptionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/ClientRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/ClientRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/ClientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/LunaProjectApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/LunaProjectApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/AuthenticationFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/AuthenticationFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/SecurityConfiguration.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/SecurityConfiguration.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/controllers/ClientController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/controllers/ClientController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/controllers/PlanController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/controllers/PlanController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/OneStepDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/OneStepDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/PlanDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/PlanDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/gerencianet/subscription/json/PlanEFI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/gerencianet/subscription/json/PlanEFI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/ClientMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/ClientMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/ClientMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/ClientMapperImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/OneStepCardMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/OneStepCardMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/OneStepCardMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/OneStepCardMapperImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/PlanMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/PlanMapperImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/OneStepCardSubscription.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/OneStepCardSubscription.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Plan.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Plan.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Scheduling.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Scheduling.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Subscription.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Subscription.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/PlanRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/PlanRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/SchedulingRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/SchedulingRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/SubscriptionRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/SubscriptionRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/ChargeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/ChargeService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/ClientService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/ClientService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/OneStepService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/OneStepService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/PlanService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/PlanService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/AddressMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/AddressMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/ChargeMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/ChargeMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/ClientMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/ClientMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/OneStepCardMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/OneStepCardMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/OneStepLinkMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/OneStepLinkMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/PlanMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/PlanMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/SubscriptionMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/SubscriptionMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/EstablishmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/EstablishmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/SchedulingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/SchedulingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/LunaProjectApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/AppConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/AuthenticationEntryPoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/AuthenticationFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/AuthenticationProvider.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/SecurityConfiguration.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/jwt/GerenciadorTokenJwt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/configurations/swagger/OpenApiConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/controllers/AdministratorController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/controllers/ClientController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/controllers/FinanceController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/controllers/PlanController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/controllers/SchedulingController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/controllers/ViaCepController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/csv/agendamento/SchedulingCSV.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/AddressDTO$AddressDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/AddressDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/AddressRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/AdminLoginDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/AdminTokenDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/ChargeDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/ChargeRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/CpfDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/FrenquencyDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/OneStepClientResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/OneStepDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/OneStepLinkDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/PaymentRequestDTO$Payer$Identification.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/PaymentRequestDTO$Payer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/PaymentRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/PlanAndChargeRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/PlanDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/ResetPasswordDTO$ResetPasswordDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/ResetPasswordDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/SubscriptionDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/agendamentos/SchedulingClientDTO$SchedulingClientDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/agendamentos/SchedulingClientDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/agendamentos/SchedulingRequestDTO$SchedulingRequestDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/agendamentos/SchedulingRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/agendamentos/SchedulingRequestUpdateDTO$SchedulingRequestUpdateDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/agendamentos/SchedulingRequestUpdateDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/agendamentos/SchedulingResponseAdminDTO$SchedulingResponseAdminDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/agendamentos/SchedulingResponseAdminDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/agendamentos/SchedulingResponseDTO$SchedulingResponseDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/agendamentos/SchedulingResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/client/ClientDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/client/ClientDetailsDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/client/ClientLoginDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/client/ClientOverviewDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/client/ClientRequestDTO$ClientRequestDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/client/ClientRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/client/ClientResponseDTO$ClientResponseDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/client/ClientResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/client/ClientTokenDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/product/ProductRequestDTO$ProductRequestDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/product/ProductRequestDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/product/ProductResponseDTO$ProductResponseDTOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/dtos/product/ProductResponseDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/enums/Payment.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/enums/Plans.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/enums/StatusScheduling.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/exceptions/AdminAccessDeniedException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/exceptions/GlobalExceptionHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/exceptions/InvalidCepException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/exceptions/ValidationException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/gerencianet/Credentials.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/gerencianet/subscription/json/PlanEFI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/AddressMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/AddressMapperImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/ChargeMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/ChargeMapperImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/ClientMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/ClientMapperImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/OneStepCardMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/OneStepCardMapperImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/OneStepLinkMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/OneStepLinkMapperImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/PlanMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/PlanMapperImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/SchedulingMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/SubscriptionMapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/mapper/SubscriptionMapperImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Address$AddressBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Address.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Charge.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Client$ClientBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Client.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/FeedBack.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/ICalculationValue.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/OneStepCardSubscription.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/OneStepLink.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Plan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Queue.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Scheduling$SchedulingBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Scheduling.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Stack.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/models/Subscription.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/AddressRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/ChargeRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/ClientRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/OneStepCardRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/OneStepLinkRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/PlanRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/SchedulingRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/repositories/SubscriptionRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/AdminService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/AuthenticationService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/ChargeService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/ClientService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/FinanceService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/OneStepService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/PlanService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/SchedulingService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/luna/luna_project/services/ViaCepService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/credentials.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/AddressMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/ChargeMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/ClientMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/OneStepCardMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/OneStepLinkMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/PlanMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/luna/luna_project/mapper/SubscriptionMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/luna-project-0.0.1-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +174,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ArthurV0n&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/LunaLPWI/Back-end.git&quot;,
+    &quot;accountId&quot;: &quot;f55b8a42-40b3-499a-b40e-1ccbe276527b&quot;
+  }
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -98,10 +211,18 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Lucas Santos/OneDrive - V8.TECH/Documentos/PI IV/backend/Back-end/luna-project&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/LUNA/Nova pasta/Back-end/luna-project/pom.xml&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
     &quot;ChangesTree.GroupingKeys&quot;: [
@@ -131,6 +252,15 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="edb912b1-b70e-4607-aa91-43001514e67f" name="Changes" comment="" />
@@ -138,7 +268,39 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1746920845816</updated>
+      <workItem from="1747965014164" duration="4077000" />
+      <workItem from="1748035052842" duration="5575000" />
+      <workItem from="1748050328327" duration="5505000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/ClientMapper.java</url>
+          <line>14</line>
+          <properties class="com.luna.luna_project.mapper.ClientMapper" method="clientToClientDTOResponse">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

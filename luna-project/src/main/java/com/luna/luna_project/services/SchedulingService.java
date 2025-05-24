@@ -1,6 +1,7 @@
 package com.luna.luna_project.services;
 
 import com.luna.luna_project.enums.StatusScheduling;
+import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.models.Queue;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.repositories.SchedulingRepository;
@@ -126,18 +127,29 @@ public class SchedulingService {
     public Scheduling registerSchedule() throws SchedulerException {
         Scheduling scheduling = queue.poll();
         if (!validatyScheduleSave(scheduling)) {
-            throw new ResponseStatusException
-                    (HttpStatus.CONFLICT, "Já existe agendamentos nesse horário");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Já existe agendamentos nesse horário"
+            );
         }
         Scheduling scheduling1 = schedulingRepository.save(scheduling);
-        String texto = "Olá, "+scheduling1.getClient().getName()+
-                "! Seu horário na"+scheduling1.getEmployee().getEstablishment().getName()+
-                "foi confirmado para o dia "+scheduling1.getStartDateTime()+" com" +
-                " "+scheduling1.getEmployee().getName()+ ". Te esperamos lá!.";
-//        quartzScheduler.agendarEnvio(scheduling1,texto);
+
+        Establishment firstEstablishment = scheduling1.getEmployee().getEstablishments()
+                .stream()
+                .findFirst()
+                .orElse(null);
+
+        String estabelecimentoNome = (firstEstablishment != null) ? firstEstablishment.getName() : "Estabelecimento não encontrado";
+
+        String texto = "Olá, " + scheduling1.getClient().getName() +
+                "! Seu horário na " + estabelecimentoNome +
+                " foi confirmado para o dia " + scheduling1.getStartDateTime() + " com " +
+                scheduling1.getEmployee().getName() + ". Te esperamos lá!.";
+
+        // quartzScheduler.agendarEnvio(scheduling1,texto);
         System.out.println(scheduling1.toString());
         return scheduling1;
     }
+
 
 
     public Boolean validatyScheduleSave(Scheduling scheduling) {

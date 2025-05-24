@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
-@Table(name = "address_seq")
+@Table(name = "address")
 @Data
 @Builder
 @NoArgsConstructor

@@ -35,9 +35,13 @@ public class Client implements UserDetails {
     private Set<String> roles = new HashSet<>();
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EmployeeTask> employeeTasks = new HashSet<>();
-    @ManyToOne
-    @JoinColumn(name = "establishment_id_establishment", nullable = true)
-    private Establishment establishment;
+    @ManyToMany
+    @JoinTable(
+            name = "client_establishment",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "establishment_id")
+    )
+    private Set<Establishment> establishments = new HashSet<>();
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorite> favorites = new HashSet<>();
 

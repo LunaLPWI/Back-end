@@ -31,7 +31,8 @@ public class Establishment {
     private Time openHour;
     private Time closeHour;
     private Boolean favorite;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "address_id")
     private Address address;
     @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorite> favoritedByClients = new HashSet<>();

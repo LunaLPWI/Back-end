@@ -17,9 +17,11 @@ public class EstablishmentResponseDTO {
     private Long id;
     private String name;
     private AddressDTO addressDTO;
-    private OneStepDTO oneStepDTO;
+//    private OneStepDTO oneStepDTO;
     private String cnpj;
     private Time openHour;
     private Time closeHour;
     private Boolean favorite;
+    private double lat;
+    private double lng;
 }

@@ -24,5 +24,6 @@ public class EstablishmentRequestDTO {
     private Time openHour;
     private Time closeHour;
     private Boolean favorite;
+    private Long clientId;
 
 }

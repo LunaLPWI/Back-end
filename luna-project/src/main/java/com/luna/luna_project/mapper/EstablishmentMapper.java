@@ -44,11 +44,10 @@ public class EstablishmentMapper {
 
     public Establishment establishmentRequestToEstablishment(EstablishmentRequestDTO establishmentRequestDTO) {
         // Criação da instância de Address se presente
-        Address address = addressMapper.addressDTOtoAddress(establishmentRequestDTO.getAddressDTO());
         Establishment establishment = new Establishment();
         establishment.setName(establishmentRequestDTO.getName());
-        OneStepDTO oneStepDTO = establishmentRequestDTO.getOneStepDTO();
-        oneStepCardMapper.oneStepDTOtoOneStep(oneStepDTO);
+//        OneStepDTO oneStepDTO = establishmentRequestDTO.getOneStepDTO();
+//        oneStepCardMapper.oneStepDTOtoOneStep(oneStepDTO);
         establishment.setCnpj(establishmentRequestDTO.getCnpj());
         establishment.setCloseHour(establishmentRequestDTO.getCloseHour());
         establishment.setOpenHour(establishmentRequestDTO.getOpenHour());
@@ -58,7 +57,7 @@ public class EstablishmentMapper {
     }
 
 
-    public EstablishmentResponseDTO establishmentToEstablshmentResponse(Establishment establichment){
+    public  EstablishmentResponseDTO establishmentToEstablshmentResponse(Establishment establichment){
 
         // Criação do AddressDTO se presente
 
@@ -74,6 +73,11 @@ public class EstablishmentMapper {
         responseDTO.setCnpj(establichment.getCnpj());
         responseDTO.setOpenHour(establichment.getOpenHour());
         responseDTO.setCloseHour(establichment.getCloseHour());
+        responseDTO.setFavorite(establichment.getFavorite());
+        responseDTO.setLat(establichment.getLat());
+        responseDTO.setLng(establichment.getLng());
+        responseDTO.setAddressDTO(addressMapper.addressToAddressDTO(establichment.getAddress()));
+        responseDTO.setFavorite(establichment.getFavorite());
 
 
         return responseDTO;
