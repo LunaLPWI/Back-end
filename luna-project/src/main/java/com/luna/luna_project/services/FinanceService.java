@@ -2,6 +2,7 @@ package com.luna.luna_project.services;
 
 import com.luna.luna_project.dtos.FrenquencyDTO;
 import com.luna.luna_project.models.*;
+import com.luna.luna_project.repositories.ClientRepository;
 import com.luna.luna_project.repositories.PlanRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
 import org.springframework.stereotype.Service;
@@ -15,15 +16,20 @@ import java.util.List;
 @Service
 public class FinanceService {
 
-    private final SchedulingService SchedulingService;
-    private final FrenquencyDTO frenquencyDTO;
 
+    private final FrenquencyDTO frenquencyDTO;
+    private final ClientRepository clientRepository;
     private final SchedulingRepository schedulingRepository;
     private final PlanRepository planRepository;
 
-    public FinanceService(com.luna.luna_project.services.SchedulingService schedulingService, FrenquencyDTO frenquencyDTO, SchedulingRepository schedulingRepository, PlanRepository planRepository) {
-        SchedulingService = schedulingService;
+    public FinanceService(
+            FrenquencyDTO frenquencyDTO, ClientRepository clientRepository, SchedulingRepository schedulingRepository,
+            PlanRepository planRepository
+
+    ) {
+
         this.frenquencyDTO = frenquencyDTO;
+        this.clientRepository = clientRepository;
         this.schedulingRepository = schedulingRepository;
         this.planRepository = planRepository;
     }
@@ -116,27 +122,19 @@ public class FinanceService {
         return num;
     }
 
-    public FrenquencyDTO formFrequencyScheduleServices() {
-        LocalDateTime startDate = LocalDateTime.now();
-        LocalDateTime endDate = startDate.minusDays(15);
-
-
-        // Frequentes: 16/11/2024 - 01/12/2024
-        List<Client> frequentes = schedulingRepository.findClientsWithRecentSchedulingBetweenDatesAndWithoutRole(endDate,startDate,"ROLE_EMPLOYEE");
-        startDate = endDate.minusDays(15);
-        endDate = startDate.minusDays(15);
-        List<Client> medios = schedulingRepository.findClientsWithRecentSchedulingBetweenDatesAndWithoutRole(endDate,startDate,"ROLE_EMPLOYEE");
-        System.out.println("Médios: " + medios); // Log para depuração
-        startDate = endDate.minusDays(15);
-        endDate = startDate.minusDays(120);
-        List<Client> ocasionais = schedulingRepository.findClientsWithRecentSchedulingBetweenDatesAndWithoutRole(endDate,startDate,"ROLE_EMPLOYEE");
-        System.out.println("Ocasionais: " + ocasionais); // Log para depuração
-
-        frenquencyDTO.setOcasionais(ocasionais.size());
-        frenquencyDTO.setMedios(medios.size());
-        frenquencyDTO.setFrequentes(frequentes.size());
-
-
+    public FrenquencyDTO formFrequencyScheduleServices(Long stablishmentId) {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusMonths(3);
+        // Inicializa o DTO
+        FrenquencyDTO frenquencyDTO = new FrenquencyDTO();
+        // Frequentes, Médios e Ocasional
+        Long frequentes = clientRepository.getFrequencyClientsClientsByEstablishmentAndRole(startDate, endDate, stablishmentId, "ROLE_EMPLOYEE", 6);
+        Long medios = clientRepository.getFrequencyClientsClientsByEstablishmentAndRole(startDate, endDate, stablishmentId, "ROLE_EMPLOYEE", 3);
+        Long ocasionais = clientRepository.getFrequencyClientsClientsByEstablishmentAndRole(startDate, endDate, stablishmentId, "ROLE_EMPLOYEE", 1);
+        // Verifica se os valores são nulos e inicializa com 0 se necessário
+        frenquencyDTO.setFrequentes(frequentes != null ? frequentes : 0);
+        frenquencyDTO.setMedios(medios != null ? medios : 0);
+        frenquencyDTO.setOcasionais(ocasionais != null ? ocasionais : 0);
         return frenquencyDTO;
     }
 }

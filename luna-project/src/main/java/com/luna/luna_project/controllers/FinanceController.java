@@ -60,13 +60,6 @@ public class FinanceController {
         return financeService.formRevenuePlanQtt(startDate,endDate);
     }
 
-
-
-
-
-
-
-
     //Retorna a a quantidade de serviços dado o funcionário
     @GetMapping("/quantity/services-employee")
     public long qttQuantityServices(@RequestParam LocalDate startDate,
@@ -80,10 +73,9 @@ public class FinanceController {
 
     //Retorna a frequencia dos clientes
     @GetMapping("/revenue/frequence")
-    public FrenquencyDTO frequence(){
-        return financeService.formFrequencyScheduleServices();
+    public FrenquencyDTO frequence(Long stablishmentId){
+        return financeService.formFrequencyScheduleServices(stablishmentId);
     }
-
 
     private Path diretorioBase = Paths.get("src/arquivos");
 

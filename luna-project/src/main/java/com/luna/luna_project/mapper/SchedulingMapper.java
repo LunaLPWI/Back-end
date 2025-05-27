@@ -77,7 +77,7 @@ public class SchedulingMapper {
                 .id(scheduling.getId())
                 .startDateTime(scheduling.getStartDateTime())
                 .nameEmployee(scheduling.getEmployee().getName())
-                .stablishmentName(((List<Establishment>)scheduling.getEmployee().getEstablishments()).get(0).getName())
+                .stablishmentName("Barbearia do zé")
                 .items(scheduling.getItems().stream().map(employeeTaskMapper::toDTO).toList())
                 .status(scheduling.getStatusScheduling().toString())
                 .price(scheduling.totalPrice())
