@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="edb912b1-b70e-4607-aa91-43001514e67f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/FinanceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/FinanceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/EstablishmentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/EstablishmentMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/SchedulingMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/SchedulingMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/ClientRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/ClientRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/FinanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/FinanceService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -133,7 +129,7 @@
       <workItem from="1748288843980" duration="9029000" />
       <workItem from="1748301296993" duration="1211000" />
       <workItem from="1748307609193" duration="976000" />
-      <workItem from="1748380289698" duration="2004000" />
+      <workItem from="1748380289698" duration="3295000" />
     </task>
     <servers />
   </component>

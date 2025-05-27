@@ -128,9 +128,9 @@ public class FinanceService {
         // Inicializa o DTO
         FrenquencyDTO frenquencyDTO = new FrenquencyDTO();
         // Frequentes, Médios e Ocasional
-        Long frequentes = clientRepository.getFrequencyClientsClientsByEstablishmentAndRole(startDate, endDate, stablishmentId, "ROLE_EMPLOYEE", 6);
-        Long medios = clientRepository.getFrequencyClientsClientsByEstablishmentAndRole(startDate, endDate, stablishmentId, "ROLE_EMPLOYEE", 3);
-        Long ocasionais = clientRepository.getFrequencyClientsClientsByEstablishmentAndRole(startDate, endDate, stablishmentId, "ROLE_EMPLOYEE", 1);
+        Long frequentes = clientRepository.getFrequencyClientsClientsByEstablishmentAndRole(startDate, endDate, stablishmentId, "ROLE_EMPLOYEE", 999);
+        Long medios = clientRepository.getFrequencyClientsClientsByEstablishmentAndRole(startDate, endDate, stablishmentId, "ROLE_EMPLOYEE", 4);
+        Long ocasionais = clientRepository.getFrequencyClientsClientsByEstablishmentAndRole(startDate, endDate, stablishmentId, "ROLE_EMPLOYEE", 2);
         // Verifica se os valores são nulos e inicializa com 0 se necessário
         frenquencyDTO.setFrequentes(frequentes != null ? frequentes : 0);
         frenquencyDTO.setMedios(medios != null ? medios : 0);
