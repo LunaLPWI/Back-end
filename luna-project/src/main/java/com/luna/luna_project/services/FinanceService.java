@@ -5,10 +5,12 @@ import com.luna.luna_project.models.*;
 import com.luna.luna_project.repositories.ClientRepository;
 import com.luna.luna_project.repositories.PlanRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
+import org.mockito.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,55 +64,19 @@ public class FinanceService {
     }
 
 
-    public List <Integer> formRevenuePlanQtt(LocalDate startDate, LocalDate endDate) {
-        LocalDateTime start =
-                LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
-        LocalDateTime end =
-                LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), 0, 0, 0);
 
-        List <Plan> plans = planRepository.findPlanByCreatedAtBetween(start, end);
+    public List <Long> formRevenueScheduleServicesQtt(Long establishmentId) {
 
-        LocalDateTime time = start;
-        List <Integer> revenueMontlyList = new ArrayList<>();
-        for (int i = 1; i <= 12; i++) {
+        LocalDateTime endDateTime = LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1, 0, 0, 0);
+        LocalDateTime startDateTime = endDateTime.with(TemporalAdjusters.lastDayOfMonth());
 
-            LocalDateTime finalTime = time;
-            List<Plan> productsMonth = plans.stream()
-                    .filter(plan -> plan.getCreated_at().getMonth() == finalTime.getMonth()
-                            && plan.getCreated_at().getYear() == finalTime.getYear()).toList();
-
-
-            time = time.plusMonths(1);
-            revenueMontlyList.add(productsMonth.size());
+        List<Long> monthlyTotals = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            monthlyTotals.add(schedulingRepository.countTotalServicesByEstablishmentAndTimeRange(establishmentId, startDateTime, endDateTime));
+            startDateTime = startDateTime.minusMonths(1);
+            endDateTime = endDateTime.minusMonths(1);
         }
-        return revenueMontlyList;
-    }
-
-    public List <Integer> formRevenueScheduleServicesQtt(LocalDate startDate, LocalDate endDate) {
-        List <Integer> revenueMontlyList = new ArrayList<>();
-        LocalDateTime start =
-                LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
-        LocalDateTime end =
-                LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), 0, 0, 0);
-
-        List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
-
-        LocalDateTime time = start;
-        for (int i = 1; i <= 12; i++) {
-            LocalDateTime finalTime = time;
-            List<Scheduling> schedulingMounth = schedulings.stream()
-                    .filter(scheduling -> scheduling.getStartDateTime().getMonth() == finalTime.getMonth()
-                            && scheduling.getStartDateTime().getYear() == finalTime.getYear()).toList();
-
-            int sumMontly =schedulingMounth.stream().
-                    flatMap(Scheduling -> Scheduling.getItems().stream()).toList().size();
-
-
-            revenueMontlyList.add(sumMontly);
-            start = start.plusMonths(1);
-            time = time.plusMonths(1);
-        }
-        return revenueMontlyList;
+        return monthlyTotals;
     }
 
 

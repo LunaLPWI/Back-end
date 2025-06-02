@@ -31,34 +31,21 @@ public class FinanceController {
         this.financeService = financeService;
         this.schedulingCSV = schedulingCSV;
     }
-    /////!!!!!!!!!!!ATENÇÃO!!!!!!!!!!!!!
-
-    // retorna os valores dos serviços do primeiro gráfico de linhas, referente ao ano, então dependendo da data de inicio e da data de fim
-    //dependendo da data que colocar ele muda as posições da lista, mas a lista sempre retornará 12 valores,
-    //por exemplo se começar a partir de janeiro e ir até dezembro ele retornará os valores nas posições certas,
-    //se colocar a partir de fevereiro a dezembro, ele colocará o valor de fevereiro em janeiro e o de abril em março e
-    //assim em diante, se colocar a partir de março ele pulará 2 meses para trás, ENTÃO para trazer valores nas posições certas
 
 
-    ///SEMPRE MANDE UM ANO INTEIRO DE JANEIRO A DEZEMBRO, DE MARÇO a FEVEREIRO e assim em diante, completando sempre
-    /// ao todo  12 meses
+
     @GetMapping ("/revenue/services")
     public List<Double> revenueServices(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
         return financeService.formRevenueScheduleServicesValues(startDate,endDate);
     }
 
-    //mesma coisa do anterior porem para valor de produtos
 
     //mesma coisa do anterior porem para quantidade de serviços feitos
     @GetMapping("/quantity/services")
-    public List<Integer> revenueServicesLineQTT(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
-        return financeService.formRevenueScheduleServicesQtt(startDate,endDate);
+    public List<Long> revenueServicesLineQTT(@RequestParam Long establishmentId){
+        return financeService.formRevenueScheduleServicesQtt(establishmentId);
     }
-    //mesma coisa do anterior porem para quantidade de produtos vendidos
-    @GetMapping("/quantity/plans")
-    public List<Integer> revenueProductsLineQTT(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
-        return financeService.formRevenuePlanQtt(startDate,endDate);
-    }
+
 
     //Retorna a a quantidade de serviços dado o funcionário
     @GetMapping("/quantity/services-employee")

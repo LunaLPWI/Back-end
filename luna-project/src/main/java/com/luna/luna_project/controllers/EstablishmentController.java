@@ -2,21 +2,17 @@ package com.luna.luna_project.controllers;
 
 
 import com.luna.luna_project.dtos.OneStepDTO;
-import com.luna.luna_project.dtos.OneStepLinkDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
-import com.luna.luna_project.dtos.establishment.EstablichmentResponseDTO;
 import com.luna.luna_project.dtos.establishment.EstablishPlanRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablishmentRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablishmentResponseDTO;
 import com.luna.luna_project.mapper.AddressMapper;
-
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.mapper.EstablishmentMapper;
 import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.services.EstablishmentService;
 import com.luna.luna_project.services.GeoCodeGoogle;
 import com.luna.luna_project.services.OneStepService;
-
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -117,13 +113,12 @@ public class EstablishmentController {
                 .getAllEstablishments(lat, lgn)
                 .stream()
                 .map(establishment -> {
-                    EstablishmentResponseDTO responseDTO = establishmentMapper.establishmentToEstablshmentResponse(establishment);
                     try {
-                        responseDTO.setAddressDTO(geoCodeGoogle.getEnderecoFromCoordenadas(establishment.getLat(), establishment.getLng()));
+                        establishment.setAddressDTO(geoCodeGoogle.getEnderecoFromCoordenadas(establishment.getLat(), establishment.getLng()));
                     } catch (Exception e) {
                         throw new RuntimeException("Erro ao obter endereço do estabelecimento", e);
                     }
-                    return responseDTO;
+                    return establishment;
                 })
                 .toList();
 

@@ -15,6 +15,7 @@ import com.luna.luna_project.models.Client;
 import com.luna.luna_project.models.Establishment;
 
 import com.luna.luna_project.repositories.AddressRepository;
+import com.luna.luna_project.repositories.AssessmentRepository;
 import com.luna.luna_project.repositories.ClientRepository;
 import com.luna.luna_project.repositories.EstablishmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EstablishmentService {
@@ -49,6 +51,9 @@ public class EstablishmentService {
     private AddressRepository addressRepository;
     @Autowired
     private AddressMapper addressMapper;
+    @Autowired
+    private AssessmentRepository assessmentRepository;
+
 
 
     public EstablishmentService(EstablishmentRepository establishmentRepository) {
@@ -98,8 +103,19 @@ public class EstablishmentService {
     }
 
 
-    public List<Establishment> getAllEstablishments(double lat, double lng) {
-        return establishmentRepository.findEstablishmentsByLocationNative(lat, lng, 5.0);
+    public List<EstablishmentResponseDTO> getAllEstablishments(double lat, double lng) {
+        List<Establishment> establishments = establishmentRepository.findEstablishmentsByLocationNative(lat, lng, 5.0);
+
+        List<EstablishmentResponseDTO> responseList = establishments.stream()
+                .map(establishmentMapper::establishmentToEstablshmentResponse)
+                .toList();
+
+        responseList.forEach(dto -> {
+            Double avgRating = assessmentRepository.findAverageRatingByEstablishmentId(dto.getId());
+            dto.setAvarageRating(avgRating != null ? avgRating : 0.0);
+        });
+
+        return responseList;
     }
     @Transactional
     public void delete(Long id) {

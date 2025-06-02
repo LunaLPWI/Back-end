@@ -1,9 +1,11 @@
 package com.luna.luna_project.services;
 
 import com.luna.luna_project.enums.StatusScheduling;
+import com.luna.luna_project.models.Assessment;
 import com.luna.luna_project.models.Establishment;
 import com.luna.luna_project.models.Queue;
 import com.luna.luna_project.models.Scheduling;
+import com.luna.luna_project.repositories.AssessmentRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,14 @@ import java.util.*;
 public class SchedulingService {
 
     private final SchedulingRepository schedulingRepository;
+
+    private final AssessmentRepository assessmentRepository;
     private Queue<Scheduling> queue = new Queue<Scheduling>();
 
     @Autowired
-    public SchedulingService(SchedulingRepository schedulingRepository, ClientService clientService) {
+    public SchedulingService(SchedulingRepository schedulingRepository, AssessmentRepository assessmentRepository) {
         this.schedulingRepository = schedulingRepository;
+        this.assessmentRepository = assessmentRepository;
     }
 
     @Autowired
@@ -132,6 +137,13 @@ public class SchedulingService {
             );
         }
         Scheduling scheduling1 = schedulingRepository.save(scheduling);
+        Assessment assessment = Assessment.builder()
+                .messaging(null)
+                .rating(null)
+                .scheduling(scheduling1)
+                .establishment(scheduling.getEmployee().getEstablishments().stream().toList().get(0))
+                .build();
+        assessmentRepository.save(assessment);
 
         Establishment firstEstablishment = scheduling1.getEmployee().getEstablishments()
                 .stream()
@@ -145,7 +157,9 @@ public class SchedulingService {
                 " foi confirmado para o dia " + scheduling1.getStartDateTime() + " com " +
                 scheduling1.getEmployee().getName() + ". Te esperamos lá!.";
 
-        // quartzScheduler.agendarEnvio(scheduling1,texto);
+
+
+        quartzScheduler.agendarEnvio(scheduling1,texto);
         System.out.println(scheduling1.toString());
         return scheduling1;
     }
@@ -172,7 +186,7 @@ public class SchedulingService {
        Optional<Scheduling> scheduling =  schedulingRepository.findById(id);
         if (scheduling.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "CPF já cadastrado Agendamento de id: %d não encontrado".formatted(id));
+                    " Agendamento de id: %d não encontrado".formatted(id));
         }
 
         schedulingRepository.deleteById(id);

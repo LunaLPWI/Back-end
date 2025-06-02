@@ -28,7 +28,6 @@ public class SchedulingController {
     }
 
     //deleta com base no id
-    @Secured("ROLE_EMPLOYEE")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable long id) {
         schedulingService.deleteById(id);
@@ -37,7 +36,6 @@ public class SchedulingController {
     //salva um novo agendamento, tem verificação caso sobreponha horários de agendamentos ja existentes, volta 409 caso isso aconteça
     @PostMapping
     public ResponseEntity<SchedulingResponseDTO> saveScheduling(@RequestBody @Valid SchedulingRequestDTO schedulingRequestDTO) throws SchedulerException {
-
         Scheduling scheduling = schedulingService.schedulingSave(schedulingMapper.RequestToEntity(schedulingRequestDTO));
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
@@ -92,7 +90,6 @@ public class SchedulingController {
     ///     CONCLUDED, (Concluído)
     ///     DELAYED  (Atrasado)
     ///
-    @Secured("ROLE_ADMIN")
     @PutMapping("/change-status")
     public ResponseEntity<SchedulingResponseDTO> changeStatus(@RequestParam Long schedulingId,@RequestParam StatusScheduling statusScheduling) {
         Scheduling scheduling = schedulingService.changeStatus(schedulingId,statusScheduling);

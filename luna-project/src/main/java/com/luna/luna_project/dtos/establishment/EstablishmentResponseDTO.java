@@ -24,4 +24,5 @@ public class EstablishmentResponseDTO {
     private Boolean favorite;
     private double lat;
     private double lng;
+    private double avarageRating;
 }
