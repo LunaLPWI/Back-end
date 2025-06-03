@@ -1,7 +1,7 @@
 package com.luna.luna_project.dtos.client;
-import com.luna.luna_project.models.Address;
-import lombok.AllArgsConstructor;
+
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

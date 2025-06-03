@@ -51,20 +51,24 @@ public class EstablishmentService {
     @Transactional
     public Establishment saveEstablishment(Establishment establishment, AddressDTO address) throws Exception {
         if (establishmentRepository.existsByCnpj(establishment.getCnpj())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"CNPJ já cadastrado");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "CNPJ já cadastrado.");
         }
-        if (!viaCepService.isCepValid(address.getCep())){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"CEP invalido");
+        if (!viaCepService.isCepValid(address.getCep())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CEP inválido.");
         }
+
         GeoCodeGoogle geoCodeGoogle = new GeoCodeGoogle();
         AddressCoord addressCoord = geoCodeGoogle.getCoordenadas(address.formatAddress());
         establishment.setLat(addressCoord.getLat());
         establishment.setLng(addressCoord.getLng());
 
-        establishment.setFavorite(false);
+        if (establishment.getFavorite() == null) {
+            establishment.setFavorite(false);
+        }
 
         return establishmentRepository.save(establishment);
     }
+
 
 
     @Transactional

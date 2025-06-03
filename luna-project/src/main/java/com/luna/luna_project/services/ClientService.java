@@ -3,6 +3,7 @@ package com.luna.luna_project.services;
 import com.luna.luna_project.configurations.jwt.GerenciadorTokenJwt;
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
+import com.luna.luna_project.dtos.establishment.EstablishmentResponseDTO;
 import com.luna.luna_project.dtos.establishment.FavoriteEstablishmentsDTO;
 import com.luna.luna_project.mapper.EstablishmentMapper;
 import com.luna.luna_project.mapper.FavoriteMapper;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -292,6 +294,24 @@ public class ClientService {
 
         favoriteRepository.saveAll(favorites);
     }
+
+    @Transactional(readOnly = true)
+    public FavoriteEstablishmentsDTO getFavoriteEstablishments(Long clientId) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cliente com id " + clientId + " não encontrado."));
+
+        List<Long> establishmentIds = favoriteRepository.findAllByClient(client).stream()
+                .map(fav -> fav.getEstablishment().getId())
+                .toList();
+
+        FavoriteEstablishmentsDTO dto = new FavoriteEstablishmentsDTO();
+        dto.setClientId(clientId);
+        dto.setEstablishmentIds(establishmentIds);
+        return dto;
+    }
+
+
 
 
 

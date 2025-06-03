@@ -2,6 +2,7 @@ package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.dtos.ResetPasswordDTO;
 import com.luna.luna_project.dtos.client.*;
+import com.luna.luna_project.dtos.establishment.EstablishmentResponseDTO;
 import com.luna.luna_project.dtos.establishment.FavoriteEstablishmentsDTO;
 import com.luna.luna_project.exceptions.ValidationException;
 import com.luna.luna_project.models.Client;
@@ -196,5 +197,14 @@ public class ClientController {
         clientService.saveFavoriteEstablish(dto);
         return ResponseEntity.ok("Favoritos atualizados com sucesso");
     }
+
+    @GetMapping("/{clientId}/favorites")
+    public ResponseEntity<FavoriteEstablishmentsDTO> getFavoriteEstablishments(@PathVariable Long clientId) {
+        FavoriteEstablishmentsDTO favorites = clientService.getFavoriteEstablishments(clientId);
+        return ResponseEntity.ok(favorites);
+    }
+
+
+
 
 }
