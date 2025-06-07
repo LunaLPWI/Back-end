@@ -1,6 +1,7 @@
 package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.csv.agendamento.SchedulingCSV;
+import com.luna.luna_project.dtos.EmployeeServiceCount;
 import com.luna.luna_project.dtos.FrenquencyDTO;
 import com.luna.luna_project.services.FinanceService;
 import com.luna.luna_project.services.SchedulingService;
@@ -35,8 +36,8 @@ public class FinanceController {
 
 
     @GetMapping ("/revenue/services")
-    public List<Double> revenueServices(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate){
-        return financeService.formRevenueScheduleServicesValues(startDate,endDate);
+    public List<Double> revenueServices(@RequestParam Long establishmentId){
+        return financeService.formRevenueScheduleServicesValues(establishmentId);
     }
 
 
@@ -47,16 +48,11 @@ public class FinanceController {
     }
 
 
-    //Retorna a a quantidade de serviços dado o funcionário
-    @GetMapping("/quantity/services-employee")
-    public long qttQuantityServices(@RequestParam LocalDate startDate,
-                                    @RequestParam LocalDate endDate, @RequestParam Long funcId){
-        LocalDateTime start = LocalDateTime.of(startDate.getYear(),startDate.getMonth(),startDate.getDayOfMonth(),0,0,0);
-        LocalDateTime end = LocalDateTime.of(endDate.getYear(),endDate.getMonth(),endDate.getDayOfMonth(),23,59,0);
-        return financeService.getServiceQttforEmployee(start, end, funcId);
+    //Retorna a a quantidade de serviços por funcionário
+    @GetMapping("/quantity/services-employee/{establishmentId}")
+    public List<EmployeeServiceCount> qttQuantityServices(@PathVariable Long establishmentId) {
+        return financeService.getServicesPerEmployeeLast30Days(establishmentId);
     }
-
-
 
     //Retorna a frequencia dos clientes
     @GetMapping("/revenue/frequence")

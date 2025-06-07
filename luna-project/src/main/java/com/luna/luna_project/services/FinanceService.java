@@ -1,5 +1,6 @@
 package com.luna.luna_project.services;
 
+import com.luna.luna_project.dtos.EmployeeServiceCount;
 import com.luna.luna_project.dtos.FrenquencyDTO;
 import com.luna.luna_project.models.*;
 import com.luna.luna_project.repositories.ClientRepository;
@@ -44,30 +45,26 @@ public class FinanceService {
     }
 
     
-    public List <Double> formRevenueScheduleServicesValues(LocalDate startDate, LocalDate endDate) {
-        List <Double> revenueMontlyList = new ArrayList<>();
-        LocalDateTime start =
-                LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), 0, 0, 0);
-        LocalDateTime end =
-                LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), 0, 0, 0);
-
-        List < Scheduling> schedulings = schedulingRepository.findSchedulingByStartDateTimeBetween(start, end);
-        schedulings.forEach(s -> System.out.println(s));
-        LocalDateTime time = start;
-        for (int i = 1; i <= 12; i++) {
-            LocalDateTime finalTime = time;
-            List<Scheduling> schedulingMounth = schedulings.stream()
-                     .filter(scheduling -> scheduling.getStartDateTime().getMonth() == finalTime.getMonth()
-                             && scheduling.getStartDateTime().getYear() == finalTime.getYear()).toList();
-
-            double sumMontly =schedulingMounth.stream().
-                    flatMap(Scheduling -> Scheduling.getItems().stream()).
-                    mapToDouble(EmployeeTask::getValue).sum();
-            revenueMontlyList.add(sumMontly);
-            start = start.plusMonths(1);
-            time = time.plusMonths(1);
+    public List <Double> formRevenueScheduleServicesValues(Long establishmentId) {
+        Optional<Establishment> establishment = establishmentRepository.findById(establishmentId);
+        if (establishment.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    " Estabelecimento de id: %d não encontrado".formatted(establishmentId));
         }
-        return revenueMontlyList;
+        LocalDate today = LocalDate.now();
+        LocalDateTime startDateTime = LocalDateTime.of(today.getYear(), today.getMonth(), 1, 0, 0, 0);
+        LocalDateTime endDateTime = startDateTime.with(TemporalAdjusters.lastDayOfMonth()).with(LocalTime.MAX);
+
+        List<Double> monthlyTotals = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            Double total = schedulingRepository
+                    .sumTotalServiceValuesByEstablishmentAndTimeRange(establishmentId, startDateTime, endDateTime);
+            monthlyTotals.add(total != null ? total : 0L);
+
+            startDateTime = startDateTime.minusMonths(1);
+            endDateTime = endDateTime.minusMonths(1);
+        }
+        return monthlyTotals;
     }
 
 
@@ -95,12 +92,11 @@ public class FinanceService {
     }
 
 
-    public Long getServiceQttforEmployee(LocalDateTime startDate, LocalDateTime endDate, Long id) {
-        Long num = schedulingRepository.sumServicesByEmployeeAndDateRange(id,startDate, endDate);
-        if(num == null){
-            num = 0L;
-        }
-        return num;
+    public List<EmployeeServiceCount> getServicesPerEmployeeLast30Days(Long establishmentId) {
+        LocalDateTime now   = LocalDateTime.now();
+        LocalDateTime start = now.minusDays(30);
+        return schedulingRepository
+                .countServicesByEmployeeInPeriod(establishmentId, start, now);
     }
 
     public FrenquencyDTO formFrequencyScheduleServices(Long stablishmentId) {
