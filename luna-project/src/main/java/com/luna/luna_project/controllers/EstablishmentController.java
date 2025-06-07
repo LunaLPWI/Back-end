@@ -99,12 +99,6 @@ public class EstablishmentController {
     }
 
     // Endpoint para registrar um funcionário em um estabelecimento
-    @Secured("ROLE_ADMIN")
-    @PostMapping("/registerEmployee")
-    public ResponseEntity<ClientResponseDTO> registerEmployee(@RequestParam Long idEmployee, @RequestParam Long idEstablishment) {
-        ClientResponseDTO registeredClient = clientMapper.clientToClientDTOResponse(establishmentService.registerEmployee(idEmployee, idEstablishment));
-        return new ResponseEntity<>(registeredClient, HttpStatus.OK);
-    }
 
     @PostMapping("/nearbyestablishments")
     public ResponseEntity<List<EstablishmentResponseDTO>> getNearbyEstablishments(@RequestParam double lat, @RequestParam double lgn) {

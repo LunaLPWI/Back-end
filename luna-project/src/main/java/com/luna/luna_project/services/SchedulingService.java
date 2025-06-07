@@ -7,6 +7,7 @@ import com.luna.luna_project.models.Queue;
 import com.luna.luna_project.models.Scheduling;
 import com.luna.luna_project.repositories.AssessmentRepository;
 import com.luna.luna_project.repositories.SchedulingRepository;
+import jakarta.transaction.Transactional;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,8 @@ public class SchedulingService {
     private Queue<Scheduling> queue = new Queue<Scheduling>();
 
     @Autowired
-    public SchedulingService(SchedulingRepository schedulingRepository, AssessmentRepository assessmentRepository) {
+    public SchedulingService(SchedulingRepository schedulingRepository,
+                             AssessmentRepository assessmentRepository) {
         this.schedulingRepository = schedulingRepository;
         this.assessmentRepository = assessmentRepository;
     }
@@ -129,6 +131,7 @@ public class SchedulingService {
         return registerSchedule();
     }
 
+    @Transactional
     public Scheduling registerSchedule() throws SchedulerException {
         Scheduling scheduling = queue.poll();
         if (!validatyScheduleSave(scheduling)) {
@@ -156,6 +159,7 @@ public class SchedulingService {
                 "! Seu horário na " + estabelecimentoNome +
                 " foi confirmado para o dia " + scheduling1.getStartDateTime() + " com " +
                 scheduling1.getEmployee().getName() + ". Te esperamos lá!.";
+
 
 
 

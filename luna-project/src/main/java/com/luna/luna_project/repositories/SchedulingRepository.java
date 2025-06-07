@@ -18,17 +18,22 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
 
     List<Scheduling> findSchedulingByStartDateTimeBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
-    @Query("SELECT SUM(size(s.items)) FROM Scheduling s " +
-            "WHERE s.employee.id IN (" +
-            "   SELECT e.id FROM Client e JOIN e.roles r " +
-            "   WHERE r = 'ROLE_EMPLOYEE' " +
-            "   AND :establishmentId IN (SELECT est.id FROM Client c JOIN c.establishments est WHERE c.id = e.id)" +
-            ") " +
-            "AND s.startDateTime BETWEEN :startDateTime AND :endDateTime")
+    @Query("""
+    SELECT COUNT(task)
+      FROM Scheduling s
+      JOIN s.items task
+      JOIN s.employee emp
+      JOIN emp.establishments est
+     WHERE :establishmentId = est.id
+       AND 'ROLE_EMPLOYEE' IN ELEMENTS(emp.roles)
+       AND s.startDateTime BETWEEN :startDateTime AND :endDateTime
+""")
     Long countTotalServicesByEstablishmentAndTimeRange(
             @Param("establishmentId") Long establishmentId,
-            @Param("startDateTime") LocalDateTime startDateTime,
-            @Param("endDateTime") LocalDateTime endDateTime);
+            @Param("startDateTime")  LocalDateTime startDateTime,
+            @Param("endDateTime")    LocalDateTime endDateTime
+    );
+
 
 
 

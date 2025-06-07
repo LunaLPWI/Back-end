@@ -11,6 +11,7 @@ import com.luna.luna_project.repositories.SchedulingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -39,5 +40,8 @@ public class AssessmentService {
         return repository.findByEstablishment_Id(establishmentId);
     }
 
+    public List<Assessment> getPastAssessmentsByClientId(Long clientId,LocalDateTime currentDateTime ) {
+        return repository.findAssessmentsByClientIdAndPastScheduling(clientId, currentDateTime);
+    }
 
 }

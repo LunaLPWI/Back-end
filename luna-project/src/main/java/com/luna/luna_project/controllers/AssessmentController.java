@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,14 @@ public class AssessmentController {
     @GetMapping
     public ResponseEntity<List<AssessmentResponse>> getAllByEstablishmentId(@RequestParam Long establishmentId) {
         List<Assessment> assessments = service.getAssessmentsByEstablishmentId(establishmentId);
+        List<AssessmentResponse> responseList = assessments.stream().map(mapper::toResponse).toList();
+        return ResponseEntity.ok(responseList);
+    }
+
+    @GetMapping("/client")
+    public ResponseEntity<List<AssessmentResponse>> getPastAssessmentsByClientId(@RequestParam Long clientId,
+                                                                                 @RequestParam LocalDateTime timestamp) {
+        List<Assessment> assessments = service.getPastAssessmentsByClientId(clientId ,timestamp);
         List<AssessmentResponse> responseList = assessments.stream().map(mapper::toResponse).toList();
         return ResponseEntity.ok(responseList);
     }
