@@ -6,18 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="edb912b1-b70e-4607-aa91-43001514e67f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/AssessmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/AssessmentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/FinanceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/FinanceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/SchedulingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/SchedulingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/agendamentos/SchedulingClientDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/agendamentos/SchedulingClientDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/assessment/AssessmentRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/assessment/AssessmentRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/enums/Plans.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/enums/Plans.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Assessment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Assessment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/AssessmentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/AssessmentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/SchedulingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/SchedulingRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/SchedulingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/SchedulingService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +145,7 @@
       <workItem from="1749070190532" duration="1007000" />
       <workItem from="1749262621352" duration="8268000" />
       <workItem from="1749311016176" duration="3005000" />
-      <workItem from="1749317639642" duration="31455000" />
+      <workItem from="1749317639642" duration="31549000" />
     </task>
     <servers />
   </component>

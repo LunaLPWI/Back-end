@@ -9,11 +9,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Plans {
 
-    PURPLE("Cabelo ou barba", 1, 20),
+    PURPLE("Modulo agendamento", 1, 20),
 
-    GOLD("Corte de cabelo + barba", 1, 30),
+    GOLD("Agendamento e CRM", 1, 30),
 
-    PLATINUM("Raspar a cabeça", 1, 50);
+    PLATINUM("Agendamento CRM e Financeiro", 1, 50);
 
 
     private final String name;
