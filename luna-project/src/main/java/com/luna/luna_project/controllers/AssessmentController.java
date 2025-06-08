@@ -47,5 +47,4 @@ public class AssessmentController {
         List<AssessmentResponse> responseList = assessments.stream().map(mapper::toResponse).toList();
         return ResponseEntity.ok(responseList);
     }
-
 }

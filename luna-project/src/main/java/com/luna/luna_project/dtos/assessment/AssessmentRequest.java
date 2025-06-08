@@ -11,5 +11,5 @@ public class AssessmentRequest {
     private Long establishmentId;
     private Long schedulingId;
     private Double rating;
-    private Double messaging;
+    private String messaging;
 }

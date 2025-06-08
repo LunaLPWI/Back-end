@@ -19,5 +19,4 @@ public class SchedulingClientDTO {
     private String stablishmentName;
     private String status;
     private Double price;
-
 }

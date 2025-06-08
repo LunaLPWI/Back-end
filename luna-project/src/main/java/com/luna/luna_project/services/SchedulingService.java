@@ -1,5 +1,6 @@
 package com.luna.luna_project.services;
 
+import com.luna.luna_project.dtos.assessment.AssessmentRequest;
 import com.luna.luna_project.enums.StatusScheduling;
 import com.luna.luna_project.models.Assessment;
 import com.luna.luna_project.models.Establishment;
@@ -24,6 +25,8 @@ public class SchedulingService {
 
     private final AssessmentRepository assessmentRepository;
     private Queue<Scheduling> queue = new Queue<Scheduling>();
+    @Autowired
+    private AssessmentService assessmentService;
 
     @Autowired
     public SchedulingService(SchedulingRepository schedulingRepository,
@@ -134,19 +137,36 @@ public class SchedulingService {
     @Transactional
     public Scheduling registerSchedule() throws SchedulerException {
         Scheduling scheduling = queue.poll();
+
         if (!validatyScheduleSave(scheduling)) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, "Já existe agendamentos nesse horário"
             );
         }
+
+        System.out.println("Antes do save: " + scheduling.getId());
         Scheduling scheduling1 = schedulingRepository.save(scheduling);
-        Assessment assessment = Assessment.builder()
-                .messaging(null)
-                .rating(null)
-                .scheduling(scheduling1)
-                .establishment(scheduling.getEmployee().getEstablishments().stream().toList().get(0))
-                .build();
-        assessmentRepository.save(assessment);
+        System.out.println("Depois do save: " + scheduling1.getId());
+        schedulingRepository.flush();
+        // Verifica se já existe um Assessment vinculado a este Scheduling
+        Optional<Assessment> existingAssessment = assessmentRepository.findByScheduling(scheduling1);
+        if (existingAssessment.isEmpty()) {
+            AssessmentRequest assessment = AssessmentRequest.builder()
+                    .messaging(null)
+                    .schedulingId(scheduling.getId())
+                    .rating(null)
+                    .establishmentId( scheduling1.getEmployee()
+                            .getEstablishments()
+                            .stream()
+                            .findFirst()
+                            .map(Establishment::getId)
+                            .orElse(null))
+                    .rating(null)
+                            .build();
+            assessmentService.saveAssessment(assessment);
+        } else {
+            System.out.println("Assessment já existente para o scheduling ID: " + scheduling1.getId());
+        }
 
         Establishment firstEstablishment = scheduling1.getEmployee().getEstablishments()
                 .stream()
@@ -160,11 +180,9 @@ public class SchedulingService {
                 " foi confirmado para o dia " + scheduling1.getStartDateTime() + " com " +
                 scheduling1.getEmployee().getName() + ". Te esperamos lá!.";
 
-
-
-
-        quartzScheduler.agendarEnvio(scheduling1,texto);
+        quartzScheduler.agendarEnvio(scheduling1, texto);
         System.out.println(scheduling1.toString());
+
         return scheduling1;
     }
 
@@ -218,6 +236,13 @@ public class SchedulingService {
         }
         schedulingRepository.save(scheduling);
         return schedulingOptional.get();
+    }
+
+    public Scheduling getSchedulingById(Long id) {
+        return schedulingRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Agendamento com ID %d não encontrado".formatted(id)
+                ));
     }
 }
 

@@ -15,12 +15,12 @@ public class Assessment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int assessment_id;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "establishment_id")
     private Establishment establishment;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "scheduling_id")
     private Scheduling scheduling;
     private Double rating;
-    private Double messaging;
+    private String messaging;
 }

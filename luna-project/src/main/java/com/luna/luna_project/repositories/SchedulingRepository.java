@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
 
@@ -82,6 +83,8 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Long> {
     Long sumServicesByEmployeeAndDateRange(@Param("employeeId") Long employeeId,
                                                  @Param("startDate") LocalDateTime startDate,
                                                  @Param("endDate") LocalDateTime endDate);
+
+    Optional<Scheduling> findTopByClient_IdOrderByStartDateTimeDesc(Long clientId);
 
 
 

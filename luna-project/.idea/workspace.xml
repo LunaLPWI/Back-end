@@ -5,12 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="edb912b1-b70e-4607-aa91-43001514e67f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/EmployeeServiceCount.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/AssessmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/AssessmentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/FinanceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/FinanceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/SchedulingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/SchedulingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/agendamentos/SchedulingClientDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/agendamentos/SchedulingClientDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/assessment/AssessmentRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/assessment/AssessmentRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/enums/Plans.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/enums/Plans.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Assessment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Assessment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/AssessmentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/AssessmentRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/SchedulingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/SchedulingRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/FinanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/FinanceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/SchedulingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/SchedulingService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,8 +27,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -66,34 +73,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.LunaProjectApplication.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Projects/LUNA/Nova pasta/Back-end/luna-project/pom.xml&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.LunaProjectApplication.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Projects/LUNA/Nova pasta/Back-end/luna-project/pom.xml",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;module&quot;,
-      &quot;repository&quot;
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="LunaProjectApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.luna.luna_project.LunaProjectApplication" />
@@ -146,7 +154,9 @@
       <workItem from="1748910130761" duration="1581000" />
       <workItem from="1748984950672" duration="3844000" />
       <workItem from="1749070190532" duration="1007000" />
-      <workItem from="1749262621352" duration="5781000" />
+      <workItem from="1749262621352" duration="8268000" />
+      <workItem from="1749311016176" duration="3005000" />
+      <workItem from="1749317639642" duration="31455000" />
     </task>
     <servers />
   </component>

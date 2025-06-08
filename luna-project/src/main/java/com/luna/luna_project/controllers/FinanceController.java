@@ -33,8 +33,6 @@ public class FinanceController {
         this.schedulingCSV = schedulingCSV;
     }
 
-
-
     @GetMapping ("/revenue/services")
     public List<Double> revenueServices(@RequestParam Long establishmentId){
         return financeService.formRevenueScheduleServicesValues(establishmentId);

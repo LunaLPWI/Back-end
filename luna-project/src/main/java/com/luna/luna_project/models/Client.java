@@ -33,7 +33,7 @@ public class Client implements UserDetails {
     private String phoneNumber;
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<EmployeeTask> employeeTasks = new HashSet<>();
     @ManyToMany
     @JoinTable(

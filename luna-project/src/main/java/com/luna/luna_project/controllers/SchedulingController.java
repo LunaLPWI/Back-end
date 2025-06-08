@@ -82,8 +82,6 @@ public class SchedulingController {
         schedulingService.updateScheduling(scheduling);
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
-
-
     /// Para mudar os status deve passar o id do agendamento e o enum deseja sendo as opções:
     ///
     ///     PENDING, (pendente)
@@ -96,6 +94,10 @@ public class SchedulingController {
         return ResponseEntity.ok(schedulingMapper.EntityToResponse(scheduling));
     }
 
-
+    @GetMapping("/lastscheduling/{id}")
+    public ResponseEntity<SchedulingClientDTO> getLastScheduling(@PathVariable Long id) {
+        Scheduling scheduling = schedulingService.getSchedulingById(id);
+        return ResponseEntity.ok(schedulingMapper.EntityToClientSchedulling(scheduling));
+    }
 
 }
