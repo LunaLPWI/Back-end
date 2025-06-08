@@ -13,7 +13,7 @@ public enum Plans {
 
     GOLD("Corte de cabelo + barba", 1, 30),
 
-    PLATINUM("Raspar a cabeça", 1, 50);s
+    PLATINUM("Raspar a cabeça", 1, 50);
 
 
     private final String name;
