@@ -30,11 +30,12 @@ public class EstablishmentMapper {
 
 
 
-    public Establishment establichmentRequestToEstablishmentPlan(EstablishPlanRequestDTO establishPlanRequestDTO) {
+    public Establishment establishmentRequestToEstablishmentPlan(EstablishPlanRequestDTO establishPlanRequestDTO) {
         Establishment establishment = new Establishment();
         OneStepDTO oneStepDTO = establishPlanRequestDTO.getOneStepDTO();
         oneStepCardMapper.oneStepDTOtoOneStep(oneStepDTO);
         establishment.setCnpj(establishPlanRequestDTO.getCnpj());
+
 
         return establishment;
     }

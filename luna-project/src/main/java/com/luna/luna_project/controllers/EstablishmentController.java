@@ -2,6 +2,7 @@ package com.luna.luna_project.controllers;
 
 
 import com.luna.luna_project.dtos.OneStepDTO;
+import com.luna.luna_project.dtos.OneStepLinkDTO;
 import com.luna.luna_project.dtos.client.ClientResponseDTO;
 import com.luna.luna_project.dtos.establishment.EstablishPlanRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablishmentRequestDTO;
@@ -10,6 +11,7 @@ import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.mapper.ClientMapper;
 import com.luna.luna_project.mapper.EstablishmentMapper;
 import com.luna.luna_project.models.Establishment;
+import com.luna.luna_project.models.OneStepLink;
 import com.luna.luna_project.services.EstablishmentService;
 import com.luna.luna_project.services.GeoCodeGoogle;
 import com.luna.luna_project.services.OneStepService;
@@ -87,9 +89,11 @@ public class EstablishmentController {
     @PutMapping("/plan-for-establishment")
     public ResponseEntity<EstablishmentResponseDTO> savePlanEstablish(@RequestBody EstablishPlanRequestDTO establishmentRequest){
         OneStepDTO oneStepSaved = oneStepService.saveOneStep(establishmentRequest.getOneStepDTO(), establishmentRequest.getCnpj());
-        oneStepService.saveOneStepLink(oneStepSaved);
+        OneStepLinkDTO oneStep = oneStepService.saveOneStepLink(oneStepSaved);
 
         EstablishmentResponseDTO putEstablishPlan = establishmentService.putEstablishPlan(establishmentRequest,  oneStepSaved.getPlan());
+        putEstablishPlan.setOneStepDTO(oneStep);
+
         return new ResponseEntity<>(putEstablishPlan, HttpStatus.CREATED);
     }
 
@@ -121,6 +125,5 @@ public class EstablishmentController {
         Establishment updatedEstablishment = establishmentService.changeInfo(establishment);
         return new ResponseEntity<>(establishmentMapper.establishmentToEstablshmentResponse(updatedEstablishment), HttpStatus.OK);
     }
-
 
 }

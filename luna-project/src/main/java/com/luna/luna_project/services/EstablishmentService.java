@@ -4,7 +4,6 @@ import com.luna.luna_project.dtos.AddressDTO;
 
 import com.luna.luna_project.dtos.PlanDTO;
 import com.luna.luna_project.dtos.establishment.EstablishPlanRequestDTO;
-import com.luna.luna_project.dtos.establishment.EstablishmentRequestDTO;
 import com.luna.luna_project.dtos.establishment.EstablishmentResponseDTO;
 import com.luna.luna_project.mapper.AddressMapper;
 import com.luna.luna_project.mapper.EstablishmentMapper;
@@ -26,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class EstablishmentService {
@@ -90,7 +88,7 @@ public class EstablishmentService {
 
     @Transactional
     public EstablishmentResponseDTO putEstablishPlan(EstablishPlanRequestDTO establishment, PlanDTO plan) {
-        Establishment establishmentMapp = establishmentMapper.establichmentRequestToEstablishmentPlan(establishment);
+        Establishment establishmentMapp = establishmentMapper.establishmentRequestToEstablishmentPlan(establishment);
 
         Establishment existEstablish = establishmentRepository.findByCnpj(establishmentMapp.getCnpj())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estabelecimento com CPNJ " + establishment.getCnpj() + " não encontrado."));

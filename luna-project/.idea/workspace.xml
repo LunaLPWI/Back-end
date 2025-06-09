@@ -5,22 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="edb912b1-b70e-4607-aa91-43001514e67f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/assessment/AssessmentUpdateDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/AssessmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/AssessmentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/ClientController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/EstablishmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/controllers/EstablishmentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/assessment/AssessmentResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/assessment/AssessmentResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/AssessmentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/AssessmentMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Assessment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Assessment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Establishment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/models/Establishment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/AssessmentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/AssessmentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/FavoriteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/repositories/FavoriteRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/AssessmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/AssessmentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/ClientService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/SchedulingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/SchedulingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/WhatsAppService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/WhatsAppService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/establishment/EstablishmentResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/dtos/establishment/EstablishmentResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/EstablishmentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/mapper/EstablishmentMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/EstablishmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/EstablishmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/PlanService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/luna/luna_project/services/PlanService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,7 +152,8 @@
       <workItem from="1749262621352" duration="8268000" />
       <workItem from="1749311016176" duration="3005000" />
       <workItem from="1749317639642" duration="41288000" />
-      <workItem from="1749425697601" duration="9591000" />
+      <workItem from="1749425697601" duration="10278000" />
+      <workItem from="1749496337773" duration="4920000" />
     </task>
     <servers />
   </component>

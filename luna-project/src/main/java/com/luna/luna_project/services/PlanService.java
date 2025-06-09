@@ -36,6 +36,7 @@ public class PlanService {
         PlanDTO planDTO = request.getPlan();
 
         Plan planDTOSaved = PlanEFI.createPlan(request.getChargeRequest());
+        planDTOSaved.setInterval(1);
         if (planDTOSaved == null) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
