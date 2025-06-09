@@ -12,9 +12,9 @@ import lombok.*;
 @Builder
 public class AssessmentResponse {
 
-    private int assessment_id;
+    private Long assessment_id;
     private String establishmentName;
     private String clientName;
     private Double rating;
-    private Double messaging;
+    private String messaging;
 }

@@ -137,35 +137,46 @@ public class SchedulingService {
     @Transactional
     public Scheduling registerSchedule() throws SchedulerException {
         Scheduling scheduling = queue.poll();
+        System.out.println("[registerSchedule] Iniciando registro de agendamento...");
+        System.out.println("[registerSchedule] Scheduling polled da fila: " + scheduling);
 
         if (!validatyScheduleSave(scheduling)) {
+            System.out.println("[registerSchedule] Conflito de horário detectado para: " + scheduling);
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, "Já existe agendamentos nesse horário"
             );
         }
 
-        System.out.println("Antes do save: " + scheduling.getId());
+        System.out.println("[registerSchedule] Antes do save: scheduling.getId() = " + scheduling.getId());
         Scheduling scheduling1 = schedulingRepository.save(scheduling);
-        System.out.println("Depois do save: " + scheduling1.getId());
+        System.out.println("[registerSchedule] Depois do save: scheduling1.getId() = " + scheduling1.getId());
+
         schedulingRepository.flush();
-        // Verifica se já existe um Assessment vinculado a este Scheduling
+
         Optional<Assessment> existingAssessment = assessmentRepository.findByScheduling(scheduling1);
         if (existingAssessment.isEmpty()) {
+            System.out.println("[registerSchedule] Nenhum Assessment encontrado, criando novo...");
+
+            Long establishmentId = scheduling1.getEmployee()
+                    .getEstablishments()
+                    .stream()
+                    .findFirst()
+                    .map(Establishment::getId)
+                    .orElse(null);
+
+            System.out.println("[registerSchedule] establishmentId extraído: " + establishmentId);
+
             AssessmentRequest assessment = AssessmentRequest.builder()
                     .messaging(null)
-                    .schedulingId(scheduling.getId())
+                    .schedulingId(scheduling1.getId())
                     .rating(null)
-                    .establishmentId( scheduling1.getEmployee()
-                            .getEstablishments()
-                            .stream()
-                            .findFirst()
-                            .map(Establishment::getId)
-                            .orElse(null))
-                    .rating(null)
-                            .build();
+                    .establishmentId(establishmentId)
+                    .build();
+
+            System.out.println("[registerSchedule] Enviando para assessmentService.saveAssessment: " + assessment);
             assessmentService.saveAssessment(assessment);
         } else {
-            System.out.println("Assessment já existente para o scheduling ID: " + scheduling1.getId());
+            System.out.println("[registerSchedule] Assessment já existente para o scheduling ID: " + scheduling1.getId());
         }
 
         Establishment firstEstablishment = scheduling1.getEmployee().getEstablishments()
@@ -180,8 +191,11 @@ public class SchedulingService {
                 " foi confirmado para o dia " + scheduling1.getStartDateTime() + " com " +
                 scheduling1.getEmployee().getName() + ". Te esperamos lá!.";
 
+        System.out.println("[registerSchedule] Mensagem gerada para envio: " + texto);
+
         quartzScheduler.agendarEnvio(scheduling1, texto);
-        System.out.println(scheduling1.toString());
+        System.out.println("[registerSchedule] Agendamento enviado para o QuartzScheduler.");
+        System.out.println("[registerSchedule] Scheduling final: " + scheduling1);
 
         return scheduling1;
     }
@@ -206,11 +220,13 @@ public class SchedulingService {
 
     public void deleteById(Long id) {
        Optional<Scheduling> scheduling =  schedulingRepository.findById(id);
+
         if (scheduling.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     " Agendamento de id: %d não encontrado".formatted(id));
         }
-
+        Assessment assessment =  assessmentRepository.findByScheduling_Id(id).get();
+        assessmentRepository.deleteById(assessment.getAssessment_id());
         schedulingRepository.deleteById(id);
     }
 
@@ -239,7 +255,7 @@ public class SchedulingService {
     }
 
     public Scheduling getSchedulingById(Long id) {
-        return schedulingRepository.findById(id)
+        return schedulingRepository.findTopByClient_IdOrderByStartDateTimeDesc(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Agendamento com ID %d não encontrado".formatted(id)
                 ));

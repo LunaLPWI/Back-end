@@ -21,8 +21,10 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -48,9 +50,10 @@ public class EstablishmentController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Establishment>> searchByName(@RequestParam String name) {
+    public ResponseEntity<List<EstablishmentResponseDTO>> searchByName(@RequestParam String name) {
         List<Establishment> result = establishmentService.searchByName(name);
-        return ResponseEntity.ok(result);
+        List<EstablishmentResponseDTO> dtos = result.stream().map(establishmentMapper::establishmentToEstablshmentResponse).toList();
+        return ResponseEntity.ok(dtos);
     }
     @GetMapping("/owner/{id}")
     public ResponseEntity<List<EstablishmentResponseDTO>> getByOwnerId(@PathVariable Long id) {
@@ -102,19 +105,8 @@ public class EstablishmentController {
 
     @PostMapping("/nearbyestablishments")
     public ResponseEntity<List<EstablishmentResponseDTO>> getNearbyEstablishments(@RequestParam double lat, @RequestParam double lgn) {
-        GeoCodeGoogle geoCodeGoogle = new GeoCodeGoogle();
         List<EstablishmentResponseDTO> establishmentList = establishmentService
-                .getAllEstablishments(lat, lgn)
-                .stream()
-                .map(establishment -> {
-                    try {
-                        establishment.setAddressDTO(geoCodeGoogle.getEnderecoFromCoordenadas(establishment.getLat(), establishment.getLng()));
-                    } catch (Exception e) {
-                        throw new RuntimeException("Erro ao obter endereço do estabelecimento", e);
-                    }
-                    return establishment;
-                })
-                .toList();
+                .getAllEstablishments(lat, lgn);
 
         return ResponseEntity.ok(establishmentList);
     }

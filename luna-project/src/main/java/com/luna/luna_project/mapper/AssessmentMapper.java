@@ -30,6 +30,7 @@ public class AssessmentMapper {
         response.setAssessment_id(assessment.getAssessment_id());
         response.setClientName(assessment.getScheduling().getClient().getName());
         response.setEstablishmentName(assessment.getEstablishment().getName());
+        response.setMessaging(assessment.getMessaging());
         response.setRating(assessment.getRating());
         return response;
     }

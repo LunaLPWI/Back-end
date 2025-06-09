@@ -3,6 +3,7 @@ package com.luna.luna_project.controllers;
 
 import com.luna.luna_project.dtos.assessment.AssessmentRequest;
 import com.luna.luna_project.dtos.assessment.AssessmentResponse;
+import com.luna.luna_project.dtos.assessment.AssessmentUpdateDTO;
 import com.luna.luna_project.mapper.AssessmentMapper;
 import com.luna.luna_project.models.Assessment;
 import com.luna.luna_project.services.AssessmentService;
@@ -47,4 +48,12 @@ public class AssessmentController {
         List<AssessmentResponse> responseList = assessments.stream().map(mapper::toResponse).toList();
         return ResponseEntity.ok(responseList);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AssessmentResponse> updateAssessment(@PathVariable Long id, @RequestBody AssessmentUpdateDTO dto) {
+        return service.updateAssessment(id, dto)
+                .map(assessment -> ResponseEntity.ok(mapper.toResponse(assessment)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }

@@ -36,5 +36,4 @@ public class Establishment {
     private Address address;
     @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Favorite> favoritedByClients = new HashSet<>();
-
 }

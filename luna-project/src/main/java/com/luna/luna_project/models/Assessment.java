@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Assessment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int assessment_id;
+    private Long assessment_id;
     @ManyToOne
     @JoinColumn(name = "establishment_id")
     private Establishment establishment;

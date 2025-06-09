@@ -213,4 +213,10 @@ public class ClientController {
         return ResponseEntity.ok("Favoritos atualizados com sucesso");
     }
 
+    @GetMapping("/{clientId}/favorites")
+    public ResponseEntity<FavoriteEstablishmentsDTO> getFavoriteEstablishments(@PathVariable Long clientId) {
+        FavoriteEstablishmentsDTO favorites = clientService.getFavoriteEstablishments(clientId);
+        return ResponseEntity.ok(favorites);
+    }
+
 }
